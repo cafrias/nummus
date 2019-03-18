@@ -1,8 +1,6 @@
 import * as React from "react"
 import { connect } from "react-redux"
 
-import uuidv4 from "uuid/v4"
-
 import {
   Formik,
   Form,
@@ -19,7 +17,8 @@ import MenuItem from "@material-ui/core/MenuItem"
 import { Currency } from "~/models/Currency"
 import { StoreState } from "~/store"
 import { StoreCurrencySelectors } from "~/store/currency"
-import { StoreBudgetActionCreators } from "~/store/budget"
+import { StoreBudgetThunks, StoreBudgetCreateThunk } from "~/store/budget"
+import dataDebugUser from "~/data/debug/user"
 
 export interface BudgetCreateProps
   extends StateProps,
@@ -28,7 +27,7 @@ export interface BudgetCreateProps
 
 const BudgetCreate: React.SFC<BudgetCreateProps> = ({
   currencies,
-  addBudget,
+  createBudget,
 }) => {
   return (
     <Formik
@@ -37,24 +36,15 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
         currency: currencies[0].code,
       }}
       onSubmit={values => {
-        addBudget([
-          {
-            id: uuidv4(),
-            ...values,
-            currency: {
-              code: values.currency,
-              name: "any",
-            },
-            user: {
-              email: "me@me.com",
-              name: "pepe",
-            },
-          },
-        ])
+        createBudget({
+          userId: dataDebugUser.id,
+          currencyCode: values.currency,
+          name: values.name,
+        })
       }}
       validate={values => {
         const errors: FormikErrors<typeof values> = {}
-        if (!values.name) errors.name = "Add a name to yout budget"
+        if (!values.name) errors.name = "Add a name to your budget"
         return errors
       }}
     >
@@ -99,7 +89,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  addBudget: typeof StoreBudgetActionCreators.add
+  createBudget: StoreBudgetCreateThunk
 }
 
 interface OwnProps {}
@@ -109,6 +99,6 @@ export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
     currencies: StoreCurrencySelectors.getAll(state),
   }),
   {
-    addBudget: StoreBudgetActionCreators.add,
+    createBudget: StoreBudgetThunks.create,
   }
 )(BudgetCreate)

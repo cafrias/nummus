@@ -3,6 +3,7 @@ import { createSelector } from "reselect"
 
 import { StoreState } from "./index"
 import { Currency } from "~/models/Currency"
+import dataDebugCurrencies from "~/data/debug/currency"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -25,16 +26,7 @@ export const StoreCurrencySelectors = {
 // Default State
 // ---------------------------------------------------------------------------------------------------------------------
 // TODO: Remove hard-coded currencies when support for more currencies is available
-const StoreCurrencyDefaultState: StoreCurrencyState = {
-  ARS: {
-    code: "ARS",
-    name: "Argentine Peso",
-  },
-  USD: {
-    code: "USD",
-    name: "United States Dollar",
-  },
-}
+const StoreCurrencyDefaultState: StoreCurrencyState = dataDebugCurrencies
 
 export interface StoreCurrencyState {
   [code: string]: Currency

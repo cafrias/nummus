@@ -1,21 +1,23 @@
-import { Budget } from "~/models/Budget"
-import { User } from "~/models/User"
-import { Currency } from "~/models/Currency"
-import { SpendCategory } from "~/models/SpendCategory"
+import uuidv4 from "uuid/v4"
 
-interface CreateBudgetInput {
-  user: User
+import { Budget } from "~/models/Budget"
+import dataDebugCurrencies from "~/data/debug/currency"
+import dataDebugUser from "~/data/debug/user"
+
+export interface CreateBudgetInput {
   name: string
-  currency: Currency
-  category: SpendCategory
+  currencyCode: string
+  userId: string
 }
 
 export default class BudgetService {
   public async create(input: CreateBudgetInput): Promise<Budget> {
     // TODO: implement
     return {
-      id: "" + Math.random() * 100,
-      ...input,
+      id: uuidv4(),
+      currency: dataDebugCurrencies[input.currencyCode],
+      name: input.name,
+      user: dataDebugUser,
     }
   }
 }

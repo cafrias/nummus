@@ -1,8 +1,18 @@
 import uuidv4 from "uuid/v4"
-import { Action, Reducer } from "redux"
+import { Action, Reducer, Dispatch } from "redux"
+
+import { ThunkAction } from "redux-thunk"
 
 import { Currency } from "~/models/Currency"
-import { Budget } from "~/models/Budget"
+import {
+  Budget,
+  budgetSchema,
+  BudgetNormalized,
+  BudgetNormalizeResult,
+} from "~/models/Budget"
+import { CreateBudgetInput } from "~/services/BudgetService"
+import services from "~/services/services"
+import { normalize } from "normalizr"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -19,16 +29,12 @@ interface NormalizedTree<T> {
 }
 
 interface StoreBudgetAddAction extends Action<StoreBudgetActionTypes.Add> {
-  budgets: NormalizedTree<Budget>
+  budgets: NormalizedTree<BudgetNormalized>
 }
-function add(budgets: Budget[]): StoreBudgetAddAction {
-  const res = budgets.reduce((tree, bud) => {
-    tree[bud.id] = bud
-    return tree
-  }, {})
+function add(budgets: NormalizedTree<BudgetNormalized>): StoreBudgetAddAction {
   return {
     type: StoreBudgetActionTypes.Add,
-    budgets: res,
+    budgets,
   }
 }
 
@@ -37,29 +43,33 @@ export const StoreBudgetActionCreators = {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Thunks
+// ---------------------------------------------------------------------------------------------------------------------
+export type StoreBudgetCreateThunk = (input: CreateBudgetInput) => void
+function create(input: CreateBudgetInput) {
+  return async (dispatch: Dispatch): Promise<Budget> => {
+    const newBudget = await services.budget.create(input)
+
+    const { entities }: BudgetNormalizeResult = normalize(
+      newBudget,
+      budgetSchema
+    )
+    dispatch(add(entities.budgets))
+
+    return newBudget
+  }
+}
+
+export const StoreBudgetThunks = {
+  create,
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Default State
 // ---------------------------------------------------------------------------------------------------------------------
-// TODO: remove before deployment
-const firstBudget: Budget = {
-  id: uuidv4(),
-  currency: {
-    code: "ARS",
-    name: "Argentine Peso",
-  },
-  name: "My first budget",
-  user: {
-    email: "me@example.com",
-    name: "Me!",
-  },
-}
+const StoreBudgetDefaultState: StoreBudgetState = {}
 
-const StoreBudgetDefaultState: StoreBudgetState = {
-  [firstBudget.id]: firstBudget,
-}
-
-export interface StoreBudgetState {
-  [code: string]: Budget
-}
+export type StoreBudgetState = NormalizedTree<BudgetNormalized>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducer

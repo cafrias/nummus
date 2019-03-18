@@ -1,4 +1,6 @@
-import { combineReducers, createStore } from "redux"
+import { compose, combineReducers, createStore, applyMiddleware } from "redux"
+
+import ReduxThunk from "redux-thunk"
 
 import StoreCurrencyReducer, { StoreCurrencyState } from "./currency"
 import StoreBudgetReducer, { StoreBudgetState } from "./budget"
@@ -19,9 +21,10 @@ const rootReducer = combineReducers<StoreState>({
 // ---------------------------------------------------------------------------------------------------------------------
 // Store
 // ---------------------------------------------------------------------------------------------------------------------
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   rootReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  composeEnhancers(applyMiddleware(ReduxThunk))
 )
 
 export default store
