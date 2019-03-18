@@ -11,6 +11,7 @@ import {
 } from "formik"
 
 import Button from "@material-ui/core/Button"
+import Grid from "@material-ui/core/Grid"
 import TextField from "@material-ui/core/TextField"
 import MenuItem from "@material-ui/core/MenuItem"
 
@@ -49,36 +50,51 @@ const BudgetFormsCreate: React.SFC<BudgetFormsCreateProps> = ({
       {form => {
         return (
           <Form>
-            <Field name="name" placeholder="Name">
-              {({ field, form }: FieldProps) => (
-                <TextField
-                  {...field}
-                  error={form.touched["name"] && !!form.errors["name"]}
-                  variant="outlined"
-                  label="Name"
-                  helperText={<ErrorMessage name="name" />}
-                />
-              )}
-            </Field>
-            <Field name="currency" placeholder="Currency">
-              {({ field, form }: FieldProps) => (
-                <TextField
-                  {...field}
-                  select
-                  variant="outlined"
-                  label="Currency"
+            <Grid container justify="flex-end" spacing={16}>
+              <Grid item xs={12} md={6}>
+                <Field name="name" placeholder="Name">
+                  {({ field, form }: FieldProps) => (
+                    <TextField
+                      {...field}
+                      error={form.touched["name"] && !!form.errors["name"]}
+                      variant="outlined"
+                      label="Name"
+                      fullWidth
+                      helperText={<ErrorMessage name="name" />}
+                    />
+                  )}
+                </Field>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Field name="currency" placeholder="Currency">
+                  {({ field, form }: FieldProps) => (
+                    <TextField
+                      {...field}
+                      select
+                      fullWidth
+                      variant="outlined"
+                      label="Currency"
+                    >
+                      {currencies.map(currency => (
+                        <MenuItem key={currency.code} value={currency.code}>
+                          {currency.code}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                </Field>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  fullWidth
                 >
-                  {currencies.map(currency => (
-                    <MenuItem key={currency.code} value={currency.code}>
-                      {currency.code}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            </Field>
-            <Button color="primary" variant="contained" type="submit">
-              Create
-            </Button>
+                  Create
+                </Button>
+              </Grid>
+            </Grid>
           </Form>
         )
       }}
