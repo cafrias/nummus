@@ -1,6 +1,12 @@
-import { compose, combineReducers, createStore, applyMiddleware } from "redux"
+import {
+  compose,
+  combineReducers,
+  createStore,
+  applyMiddleware,
+  Action,
+} from "redux"
 
-import ReduxThunk from "redux-thunk"
+import ReduxThunk, { ThunkAction, ThunkDispatch } from "redux-thunk"
 
 import StoreCurrencyReducer, { StoreCurrencyState } from "./currency"
 import StoreBudgetReducer, { StoreBudgetState } from "./budget"
@@ -9,6 +15,12 @@ export interface StoreState {
   currency: StoreCurrencyState
   budget: StoreBudgetState
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Helper Types
+// ---------------------------------------------------------------------------------------------------------------------
+export type SimpleThunkAction<R> = ThunkAction<R, StoreState, undefined, Action>
+export type SimpleThunkDispatch = ThunkDispatch<StoreState, undefined, Action>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Root Reducer

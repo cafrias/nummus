@@ -1,24 +1,14 @@
 import * as React from "react"
 import { connect } from "react-redux"
 
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-  FieldProps,
-  FormikErrors,
-} from "formik"
-
-import Button from "@material-ui/core/Button"
-import TextField from "@material-ui/core/TextField"
-import MenuItem from "@material-ui/core/MenuItem"
-
 import { Currency } from "~/models/Currency"
-import { StoreState } from "~/store"
+import { StoreState, SimpleThunkDispatch } from "~/store"
 import { StoreCurrencySelectors } from "~/store/currency"
 import { StoreBudgetThunks, StoreBudgetCreateThunk } from "~/store/budget"
 import dataDebugUser from "~/data/debug/user"
+import BudgetFormsCreate from "~/components/Budget/Forms/Create"
+import { DataErrors } from "~/errors/DataErrors"
+import { CreateBudgetInput } from "~/services/BudgetService"
 
 export interface BudgetCreateProps
   extends StateProps,
@@ -30,54 +20,27 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
   createBudget,
 }) => {
   return (
-    <Formik
-      initialValues={{
-        name: "",
-        currency: currencies[0].code,
+    <BudgetFormsCreate
+      currencies={currencies}
+      onSubmit={async (values, actions) => {
+        try {
+          const result = await createBudget({
+            userId: dataDebugUser.id,
+            currencyCode: values.currency,
+            name: values.name,
+          })
+
+          // TODO: Redirect to next view
+        } catch (err) {
+          switch (err.code) {
+            case DataErrors.VALIDATION_ERROR:
+              actions.setErrors(err.errors)
+            default:
+              console.error(err)
+          }
+        }
       }}
-      onSubmit={values => {
-        createBudget({
-          userId: dataDebugUser.id,
-          currencyCode: values.currency,
-          name: values.name,
-        })
-      }}
-      validate={values => {
-        const errors: FormikErrors<typeof values> = {}
-        if (!values.name) errors.name = "Add a name to your budget"
-        return errors
-      }}
-    >
-      {form => (
-        <Form>
-          <Field name="name" placeholder="Name">
-            {({ field, form }: FieldProps) => (
-              <TextField
-                {...field}
-                error={form.touched["name"] && !!form.errors["name"]}
-                variant="outlined"
-                label="Name"
-                helperText={<ErrorMessage name="name" />}
-              />
-            )}
-          </Field>
-          <Field name="currency" placeholder="Currency">
-            {({ field, form }: FieldProps) => (
-              <TextField {...field} select variant="outlined" label="Currency">
-                {currencies.map(currency => (
-                  <MenuItem key={currency.code} value={currency.code}>
-                    {currency.code}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          </Field>
-          <Button color="primary" variant="contained" type="submit">
-            Create
-          </Button>
-        </Form>
-      )}
-    </Formik>
+    />
   )
 }
 
@@ -98,7 +61,8 @@ export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
   state => ({
     currencies: StoreCurrencySelectors.getAll(state),
   }),
-  {
-    createBudget: StoreBudgetThunks.create,
-  }
+  (dispatch: SimpleThunkDispatch) => ({
+    createBudget: (input: CreateBudgetInput) =>
+      dispatch(StoreBudgetThunks.create(input)),
+  })
 )(BudgetCreate)

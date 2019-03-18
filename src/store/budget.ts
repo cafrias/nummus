@@ -13,6 +13,7 @@ import {
 import { CreateBudgetInput } from "~/services/BudgetService"
 import services from "~/services/services"
 import { normalize } from "normalizr"
+import { StoreState, SimpleThunkAction } from "."
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -45,9 +46,12 @@ export const StoreBudgetActionCreators = {
 // ---------------------------------------------------------------------------------------------------------------------
 // Thunks
 // ---------------------------------------------------------------------------------------------------------------------
-export type StoreBudgetCreateThunk = (input: CreateBudgetInput) => void
-function create(input: CreateBudgetInput) {
-  return async (dispatch: Dispatch): Promise<Budget> => {
+export type StoreBudgetCreateThunk = (
+  input: CreateBudgetInput
+) => Promise<Budget>
+
+function create(input: CreateBudgetInput): SimpleThunkAction<Promise<Budget>> {
+  return async dispatch => {
     const newBudget = await services.budget.create(input)
 
     const { entities }: BudgetNormalizeResult = normalize(
