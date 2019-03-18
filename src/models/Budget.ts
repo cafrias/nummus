@@ -8,5 +8,4 @@ export interface Budget {
   user: User
   name: string
   currency: Currency
-  spendCategories: SpendCategory
 }

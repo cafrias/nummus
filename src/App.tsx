@@ -1,15 +1,21 @@
 import * as React from "react"
 
-import Button from "~/components/Button"
+import { Provider } from "react-redux"
+import store from "~/store"
+
+// MUI
+import CssBaseline from "@material-ui/core/CssBaseline"
+
+import Root from "./views/Root"
 
 export interface AppProps {}
 
 const App: React.SFC<AppProps> = props => {
   return (
-    <>
-      <h1>I'm the cool nummus app</h1>
-      <Button />
-    </>
+    <Provider store={store}>
+      <CssBaseline />
+      <Root />
+    </Provider>
   )
 }
 

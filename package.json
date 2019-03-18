@@ -12,12 +12,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "formik": "^1.5.1",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-redux": "^6.0.1",
+    "redux": "^4.0.1",
+    "reselect": "^4.0.0",
+    "store": "^2.0.12",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.2",
+    "@types/react-redux": "^7.0.3",
+    "@types/uuid": "^3.4.4",
     "parcel-bundler": "^1.12.2",
     "typescript": "^3.3.3333"
   }
