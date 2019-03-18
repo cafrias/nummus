@@ -1,7 +1,19 @@
-import { Budget } from "./Budget"
+import { schema } from "normalizr"
 
-export interface User {
+// ---------------------------------------------------------------------------------------------------------------------
+// Model
+// ---------------------------------------------------------------------------------------------------------------------
+interface UserModel {
+  id: string
   email: string
   name: string
-  budgets: Budget[]
+
+  budgets: string[]
 }
+export interface User extends UserModel {}
+export interface UserNormalized extends UserModel {}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Normalizr
+// ---------------------------------------------------------------------------------------------------------------------
+export const userSchema = new schema.Entity("users")

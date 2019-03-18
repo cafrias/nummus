@@ -1,4 +1,9 @@
-export interface Currency {
+import { schema } from "normalizr"
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Model
+// ---------------------------------------------------------------------------------------------------------------------
+interface CurrencyModel {
   /**
    * ISO 4217 compliant code
    */
@@ -9,3 +14,16 @@ export interface Currency {
    */
   name: string
 }
+export interface Currency extends CurrencyModel {}
+export interface CurrencyNormalized extends CurrencyModel {}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Normalizr
+// ---------------------------------------------------------------------------------------------------------------------
+export const currencySchema = new schema.Entity(
+  "currencies",
+  {},
+  {
+    idAttribute: "code",
+  }
+)
