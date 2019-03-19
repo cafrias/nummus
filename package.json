@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
     "check-types": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch"
