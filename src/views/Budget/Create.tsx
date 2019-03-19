@@ -104,7 +104,9 @@ interface DispatchProps {
   createBudget: StoreBudgetCreateThunk
 }
 
-interface OwnProps {}
+interface OwnProps {
+  path?: string
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
