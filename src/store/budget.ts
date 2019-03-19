@@ -10,6 +10,7 @@ import { CreateBudgetInput } from "~/services/BudgetService"
 import services from "~/services/services"
 import { normalize } from "normalizr"
 import { SimpleThunkAction } from "."
+import { NormalizedTree } from "~/models/NormalizedTree"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -21,10 +22,6 @@ export enum StoreBudgetActionTypes {
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Creators
 // ---------------------------------------------------------------------------------------------------------------------
-interface NormalizedTree<T> {
-  [id: string]: T
-}
-
 interface StoreBudgetAddAction extends Action<StoreBudgetActionTypes.Add> {
   budgets: NormalizedTree<BudgetNormalized>
 }

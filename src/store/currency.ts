@@ -4,6 +4,7 @@ import { createSelector } from "reselect"
 import { StoreState } from "./index"
 import { Currency } from "~/models/Currency"
 import dataDebugCurrencies from "~/data/debug/currency"
+import { NormalizedTree } from "~/models/NormalizedTree"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -28,9 +29,7 @@ export const StoreCurrencySelectors = {
 // TODO: Remove hard-coded currencies when support for more currencies is available
 const StoreCurrencyDefaultState: StoreCurrencyState = dataDebugCurrencies
 
-export interface StoreCurrencyState {
-  [code: string]: Currency
-}
+export type StoreCurrencyState = NormalizedTree<Currency>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducer

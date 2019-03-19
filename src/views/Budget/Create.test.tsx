@@ -1,29 +1,31 @@
 import * as React from "react"
-import {
-  render,
-  cleanup,
-  RenderResult,
-  fireEvent,
-  wait,
-  act,
-} from "react-testing-library"
+import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
 
+// Utils
 import "jest-dom/extend-expect"
 import renderWithRedux, {
   RenderWithReduxResult,
 } from "~/utils/test/renderWithRedux"
 
+// Router
+import { navigate } from "@reach/router"
+jest.mock("@reach/router")
+
+const navigateMock = navigate as jest.Mock<typeof navigate>
+
 // Redux
 import StoreCurrencyReducer, { StoreCurrencyState } from "~/store/currency"
 import StoreBudgetReducer, { StoreBudgetState } from "~/store/budget"
-import { combineReducers, Store } from "redux"
+import StoreUIReducer, { StoreUIState } from "~/store/ui"
+import { combineReducers } from "redux"
 
 // Components
 import BudgetCreate from "./Create"
+import UISnackbar from "~/components/UI/Snackbar"
 
 // Services
 import services from "~/services/services"
-import BudgetService, { CreateBudgetInput } from "~/services/BudgetService"
+import { CreateBudgetInput } from "~/services/BudgetService"
 import dataDebugCurrencies from "~/data/debug/currency"
 import dataDebugUser from "~/data/debug/user"
 import { ValidationError } from "~/errors/DataErrors"
@@ -36,10 +38,12 @@ jest.mock("~/services/BudgetService")
 interface PartialState {
   currency: StoreCurrencyState
   budget: StoreBudgetState
+  ui: StoreUIState
 }
 const reducer = combineReducers<PartialState>({
   currency: StoreCurrencyReducer,
   budget: StoreBudgetReducer,
+  ui: StoreUIReducer,
 })
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -58,12 +62,18 @@ describe("Budget create view", () => {
   let wrapper: RenderWithReduxResult<PartialState>
 
   beforeEach(() => {
-    wrapper = renderWithRedux(<BudgetCreate />, {
-      initialState: {
-        currency: dataDebugCurrencies,
-      },
-      reducer,
-    })
+    wrapper = renderWithRedux(
+      <>
+        <BudgetCreate />
+        <UISnackbar />
+      </>,
+      {
+        initialState: {
+          currency: dataDebugCurrencies,
+        },
+        reducer,
+      }
+    )
   })
 
   it("renders successfully", () => {
@@ -85,10 +95,16 @@ describe("Budget create view", () => {
     submitForm(wrapper, input)
 
     await wait(() => {
+      // Calls service
       expect(services.budget.create).toHaveBeenCalledTimes(1)
+
+      // Shows message to the user
       expect(
         wrapper.getByText(`Budget '${input.name}' created successfully`)
       ).toBeVisible()
+
+      // Redirects to create account
+      expect(navigateMock).toHaveBeenCalledWith("/accounts/create")
     })
   })
 

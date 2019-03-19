@@ -10,12 +10,10 @@ import { DataErrors } from "~/errors/DataErrors"
 import { CreateBudgetInput } from "~/services/BudgetService"
 
 // MUI
-import Snackbar from "@material-ui/core/Snackbar"
-import IconButton from "@material-ui/core/IconButton"
-
 import { makeStyles, createStyles } from "@material-ui/styles"
 
-import CloseIcon from "@material-ui/icons/Close"
+import { navigate } from "@reach/router"
+import { StoreUIActionCreators } from "~/store/ui"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Styles
@@ -36,10 +34,9 @@ const useStyles = makeStyles(
 const BudgetCreate: React.SFC<BudgetCreateProps> = ({
   currencies,
   createBudget,
+  openSnackbar,
 }) => {
   const classes = useStyles()
-
-  const [snackbar, setSnackbar] = React.useState({ text: "", open: false })
 
   return (
     <div className={classes.container}>
@@ -53,12 +50,9 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
               name: values.name,
             })
 
-            setSnackbar({
-              open: true,
-              text: `Budget '${result.name}' created successfully`,
-            })
+            openSnackbar(`Budget '${result.name}' created successfully`)
 
-            // TODO: Redirect to next view
+            navigate("/accounts/create")
           } catch (err) {
             switch (err.code) {
               case DataErrors.VALIDATION_ERROR:
@@ -69,20 +63,6 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
             }
           }
         }}
-      />
-      <Snackbar
-        open={snackbar.open}
-        message={snackbar.text}
-        action={
-          <IconButton
-            key="close"
-            aria-label="Close"
-            color="inherit"
-            onClick={() => setSnackbar({ ...snackbar, open: false })}
-          >
-            <CloseIcon />
-          </IconButton>
-        }
       />
     </div>
   )
@@ -102,6 +82,7 @@ interface StateProps {
 
 interface DispatchProps {
   createBudget: StoreBudgetCreateThunk
+  openSnackbar: (message: string) => void
 }
 
 interface OwnProps {
@@ -118,5 +99,7 @@ export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
   (dispatch: SimpleThunkDispatch) => ({
     createBudget: (input: CreateBudgetInput) =>
       dispatch(StoreBudgetThunks.create(input)),
+    openSnackbar: (message: string) =>
+      dispatch(StoreUIActionCreators.openSnackbar(message)),
   })
 )(BudgetCreate)
