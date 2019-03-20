@@ -22,7 +22,8 @@ export enum StoreAccountActionTypes {
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Creators
 // ---------------------------------------------------------------------------------------------------------------------
-interface StoreAccountAddAction extends Action<StoreAccountActionTypes.Add> {
+export interface StoreAccountAddAction
+  extends Action<StoreAccountActionTypes.Add> {
   accounts: NormalizedTree<AccountNormalized>
 }
 function add(

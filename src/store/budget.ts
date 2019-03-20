@@ -11,6 +11,7 @@ import services from "~/services/services"
 import { normalize } from "normalizr"
 import { SimpleThunkAction } from "."
 import { NormalizedTree } from "~/models/NormalizedTree"
+import { StoreAccountAddAction, StoreAccountActionTypes } from "./account"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -71,13 +72,23 @@ export type StoreBudgetState = NormalizedTree<BudgetNormalized>
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducer
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreBudgetReducer: Reducer<StoreBudgetState, StoreBudgetAddAction> = (
-  state = StoreBudgetDefaultState,
-  action
-) => {
+const StoreBudgetReducer: Reducer<
+  StoreBudgetState,
+  StoreBudgetAddAction | StoreAccountAddAction
+> = (state = StoreBudgetDefaultState, action) => {
   switch (action.type) {
     case StoreBudgetActionTypes.Add:
       return { ...state, ...action.budgets }
+    case StoreAccountActionTypes.Add:
+      // TODO: refactor it? maybe using Normalizr, investigate better option
+      const newState: StoreBudgetState = {}
+      for (const account of Object.values(action.accounts)) {
+        newState[account.budget] = {
+          ...state[account.budget],
+          accounts: [...state[account.budget].accounts, account.id],
+        }
+      }
+      return newState
     default:
       return state
   }

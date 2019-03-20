@@ -18,6 +18,7 @@ export default class BudgetService {
       currency: dataDebugCurrencies[input.currencyCode],
       name: input.name,
       user: dataDebugUser[input.userId],
+      accounts: [],
     }
   }
 }
