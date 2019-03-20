@@ -52,7 +52,7 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
 
             openSnackbar(`Budget '${result.name}' created successfully`)
 
-            navigate("/accounts/create")
+            navigate(`/budgets/${result.id}/accounts/create`)
           } catch (err) {
             switch (err.code) {
               case DataErrors.VALIDATION_ERROR:

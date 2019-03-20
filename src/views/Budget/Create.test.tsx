@@ -104,7 +104,7 @@ describe("Budget create view", () => {
       ).toBeVisible()
 
       // Redirects to create account
-      expect(navigateMock).toHaveBeenCalledWith("/accounts/create")
+      expect(navigateMock).toHaveBeenCalledWith("/budgets/1/accounts/create")
     })
   })
 
