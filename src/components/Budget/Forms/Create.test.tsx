@@ -6,11 +6,12 @@ import {
   fireEvent,
   RenderResult,
   wait,
+  act,
 } from "react-testing-library"
 
 import "jest-dom/extend-expect"
 
-import BudgetFormsCreate from "./Create"
+import BudgetFormsCreate, { BudgetFormsCreateValues } from "./Create"
 import dataDebugCurrencies from "~/data/debug/currency"
 
 beforeEach(cleanup)
@@ -30,16 +31,15 @@ describe("Budget: Create form", () => {
   })
 
   it("submits when valid", async () => {
-    fireEvent.change(wrapper.getByLabelText("Name"), {
-      target: { value: "My budget" },
-    })
-    fireEvent.change(wrapper.getByLabelText("Currency"), {
-      target: { value: "ARS" },
-    })
-    fireEvent.click(wrapper.getByTestId("budget_create"))
+    const input: BudgetFormsCreateValues = {
+      name: "My budget",
+      currency: "USD",
+    }
+
+    await submitForm(wrapper, input)
 
     await wait(() => {
-      expect(handleSubmit).toHaveBeenCalledTimes(1)
+      expect(handleSubmit.mock.calls[0][0]).toEqual(input)
     })
   })
 
@@ -52,3 +52,22 @@ describe("Budget: Create form", () => {
     })
   })
 })
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Helper
+// ---------------------------------------------------------------------------------------------------------------------
+async function submitForm(
+  wrapper: RenderResult,
+  input: BudgetFormsCreateValues
+) {
+  act(() => {
+    fireEvent.change(wrapper.getByLabelText("Name"), {
+      target: { value: input.name },
+    })
+    fireEvent.change(wrapper.getByLabelText("Currency"), {
+      target: { value: input.currency },
+    })
+  })
+
+  fireEvent.click(wrapper.getByTestId("budget_create"))
+}

@@ -1,19 +1,9 @@
 import * as React from "react"
 
-import {
-  Form,
-  Field,
-  ErrorMessage,
-  FieldProps,
-  Formik,
-  FormikErrors,
-  FormikActions,
-} from "formik"
+import { Form, Formik, FormikErrors, FormikActions } from "formik"
 
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
-import TextField from "@material-ui/core/TextField"
-import MenuItem from "@material-ui/core/MenuItem"
 
 import { Currency } from "~/models/Currency"
 import UIField from "~/components/UI/Field"
@@ -73,11 +63,14 @@ const BudgetFormsCreate: React.SFC<BudgetFormsCreateProps> = ({
                   TextFieldProps={{
                     id: "currency",
                     select: true,
+                    SelectProps: {
+                      native: true,
+                    },
                     label: "Currency",
                     children: currencies.map(currency => (
-                      <MenuItem key={currency.code} value={currency.code}>
+                      <option key={currency.code} value={currency.code}>
                         {currency.code}
-                      </MenuItem>
+                      </option>
                     )),
                   }}
                 />

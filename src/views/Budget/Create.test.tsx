@@ -89,14 +89,18 @@ describe("Budget create view", () => {
       id: "1",
       currency: dataDebugCurrencies[input.currency],
       name: input.name,
-      user: dataDebugUser[input.currency],
+      user: dataDebugUser["1"],
     }))
 
     submitForm(wrapper, input)
 
     await wait(() => {
-      // Calls service
-      expect(services.budget.create).toHaveBeenCalledTimes(1)
+      // Calls service with valid
+      expect((services.budget.create as jest.Mock).mock.calls[0][0]).toEqual({
+        name: input.name,
+        currencyCode: input.currency,
+        userId: "1",
+      })
 
       // Shows message to the user
       expect(

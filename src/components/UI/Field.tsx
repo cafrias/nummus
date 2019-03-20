@@ -23,6 +23,8 @@ const UIField: React.SFC<UIFieldProps> = ({
           }
           {...field}
           {...TextFieldProps}
+          // We use native selects to prevent bug in automatic testing using `react-testing-library`
+          SelectProps={TextFieldProps.select ? { native: true } : undefined}
           variant="outlined"
           fullWidth
           helperText={<ErrorMessage name={fieldProps.name} />}
