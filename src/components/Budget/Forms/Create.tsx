@@ -16,7 +16,11 @@ import TextField from "@material-ui/core/TextField"
 import MenuItem from "@material-ui/core/MenuItem"
 
 import { Currency } from "~/models/Currency"
+import UIField from "~/components/UI/Field"
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------------------------------------------------
 export interface BudgetFormsCreateValues {
   name: string
   currency: string
@@ -30,6 +34,9 @@ export interface BudgetFormsCreateProps {
   ) => any
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------------------------------------------------
 const BudgetFormsCreate: React.SFC<BudgetFormsCreateProps> = ({
   currencies,
   onSubmit,
@@ -52,39 +59,28 @@ const BudgetFormsCreate: React.SFC<BudgetFormsCreateProps> = ({
           <Form>
             <Grid container justify="flex-end" spacing={16}>
               <Grid item xs={12} md={6}>
-                <Field name="name" placeholder="Name">
-                  {({ field, form }: FieldProps) => (
-                    <TextField
-                      {...field}
-                      id="name"
-                      error={form.touched["name"] && !!form.errors["name"]}
-                      variant="outlined"
-                      label="Name"
-                      fullWidth
-                      helperText={<ErrorMessage name="name" />}
-                    />
-                  )}
-                </Field>
+                <UIField
+                  name="name"
+                  TextFieldProps={{
+                    id: "name",
+                    label: "Name",
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-                <Field name="currency" placeholder="Currency">
-                  {({ field, form }: FieldProps) => (
-                    <TextField
-                      {...field}
-                      id="currency"
-                      select
-                      fullWidth
-                      variant="outlined"
-                      label="Currency"
-                    >
-                      {currencies.map(currency => (
-                        <MenuItem key={currency.code} value={currency.code}>
-                          {currency.code}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                </Field>
+                <UIField
+                  name="currency"
+                  TextFieldProps={{
+                    id: "currency",
+                    select: true,
+                    label: "Currency",
+                    children: currencies.map(currency => (
+                      <MenuItem key={currency.code} value={currency.code}>
+                        {currency.code}
+                      </MenuItem>
+                    )),
+                  }}
+                />
               </Grid>
               <Grid item xs={12} md={4}>
                 <Button
