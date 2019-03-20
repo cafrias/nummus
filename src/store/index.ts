@@ -8,13 +8,18 @@ import {
 
 import ReduxThunk, { ThunkAction, ThunkDispatch } from "redux-thunk"
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Reducers
+// ---------------------------------------------------------------------------------------------------------------------
 import StoreCurrencyReducer, { StoreCurrencyState } from "./currency"
 import StoreBudgetReducer, { StoreBudgetState } from "./budget"
 import StoreUIReducer, { StoreUIState } from "./ui"
+import StoreAccountReducer, { StoreAccountState } from "./account"
 
 export interface StoreState {
-  currency: StoreCurrencyState
+  account: StoreAccountState
   budget: StoreBudgetState
+  currency: StoreCurrencyState
   ui: StoreUIState
 }
 
@@ -28,8 +33,9 @@ export type SimpleThunkDispatch = ThunkDispatch<StoreState, undefined, Action>
 // Root Reducer
 // ---------------------------------------------------------------------------------------------------------------------
 const rootReducer = combineReducers<StoreState>({
-  currency: StoreCurrencyReducer,
+  account: StoreAccountReducer,
   budget: StoreBudgetReducer,
+  currency: StoreCurrencyReducer,
   ui: StoreUIReducer,
 })
 

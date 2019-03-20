@@ -1,43 +1,31 @@
 import * as React from "react"
+import AccountFormsCreate from "~/components/Account/Forms/Create"
+import { StoreAccountCreateThunk, StoreAccountThunks } from "~/store/account"
 import { connect } from "react-redux"
-
-import { Currency } from "~/models/Currency"
 import { StoreState, SimpleThunkDispatch } from "~/store"
-import { StoreCurrencySelectors } from "~/store/currency"
-import { StoreBudgetThunks, StoreBudgetCreateThunk } from "~/store/budget"
-import BudgetFormsCreate from "~/components/Budget/Forms/Create"
-import { DataErrors } from "~/errors/DataErrors"
-import { CreateBudgetInput } from "~/services/BudgetService"
-
-import { navigate } from "@reach/router"
+import { CreateAccountInput } from "~/services/AccountService"
 import { StoreUIActionCreators } from "~/store/ui"
+import { navigate } from "@reach/router"
+import { DataErrors } from "~/errors/DataErrors"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const BudgetCreate: React.SFC<BudgetCreateProps> = ({
-  currencies,
-  createBudget,
-  openSnackbar,
-}) => {
+const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
   return (
-    <BudgetFormsCreate
-      currencies={currencies}
-      onSubmit={async (values, actions) => {
+    <AccountFormsCreate
+      onSubmit={async (values, form) => {
         try {
-          const result = await createBudget({
-            userId: "1",
-            currencyCode: values.currency,
-            name: values.name,
+          const account = await props.createAccount({
+            budgetId: props.budgetId || "",
+            ...values,
           })
-
-          openSnackbar(`Budget '${result.name}' created successfully`)
-
-          navigate(`/budgets/${result.id}/accounts/create`)
+          props.openSnackbar(`Account '${account.name}' created successfully`)
+          navigate(`/budgets/${props.budgetId}`)
         } catch (err) {
           switch (err.code) {
             case DataErrors.VALIDATION_ERROR:
-              actions.setErrors(err.errors)
+              form.setErrors(err.errors)
               break
             default:
               throw err
@@ -51,35 +39,32 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------------------------------------------------
-export interface BudgetCreateProps
+export interface BudgetsAccountsCreateProps
   extends StateProps,
     DispatchProps,
     OwnProps {}
 
-interface StateProps {
-  currencies: Currency[]
-}
+interface StateProps {}
 
 interface DispatchProps {
-  createBudget: StoreBudgetCreateThunk
+  createAccount: StoreAccountCreateThunk
   openSnackbar: (message: string) => void
 }
 
 interface OwnProps {
   path?: string
+  budgetId?: string
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
 export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
-  state => ({
-    currencies: StoreCurrencySelectors.getAll(state),
-  }),
+  null,
   (dispatch: SimpleThunkDispatch) => ({
-    createBudget: (input: CreateBudgetInput) =>
-      dispatch(StoreBudgetThunks.create(input)),
+    createAccount: (input: CreateAccountInput) =>
+      dispatch(StoreAccountThunks.create(input)),
     openSnackbar: (message: string) =>
       dispatch(StoreUIActionCreators.openSnackbar(message)),
   })
-)(BudgetCreate)
+)(BudgetsAccountsCreate)

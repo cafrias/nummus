@@ -1,9 +1,9 @@
 import BudgetService from "./BudgetService"
-
-const budget = new BudgetService()
+import AccountService from "./AccountService"
 
 const services = {
-  budget,
+  account: new AccountService(),
+  budget: new BudgetService(),
 }
 
 export default services
