@@ -1,4 +1,4 @@
-import Create from "./Create"
+import Create from "./create"
 
 import AccountsCreate from "./accounts/create"
 

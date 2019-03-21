@@ -15,35 +15,28 @@ const navigateMock = navigate as jest.Mock<typeof navigate>
 
 // Redux
 import StoreCurrencyReducer, { StoreCurrencyState } from "~/store/currency"
-import StoreBudgetReducer, { StoreBudgetState } from "~/store/budget"
+import { StoreBudgetThunks } from "~/store/budget"
 import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
 
 // Components
-import BudgetCreate from "./Create"
+import BudgetCreate from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 
-// Services
-import services from "~/services/services"
-import { CreateBudgetInput } from "~/services/BudgetService"
 import dataDebugCurrencies from "~/data/debug/currency"
 import dataDebugUser from "~/data/debug/user"
-import { ValidationError } from "~/errors/DataErrors"
 import { BudgetFormsCreateValues } from "~/components/Budget/Forms/Create"
 import { Budget } from "~/models/Budget"
-jest.mock("~/services/BudgetService")
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
 // ---------------------------------------------------------------------------------------------------------------------
 interface PartialState {
   currency: StoreCurrencyState
-  budget: StoreBudgetState
   ui: StoreUIState
 }
 const reducer = combineReducers<PartialState>({
   currency: StoreCurrencyReducer,
-  budget: StoreBudgetReducer,
   ui: StoreUIReducer,
 })
 
@@ -51,10 +44,6 @@ const reducer = combineReducers<PartialState>({
 // Cleanup
 // ---------------------------------------------------------------------------------------------------------------------
 afterEach(cleanup)
-
-beforeEach(() => {
-  ;(services.budget.create as jest.Mock).mockClear()
-})
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Tests
@@ -82,21 +71,21 @@ describe("Budget create view", () => {
       name: "My budget",
       currency: "USD",
     }
-    services.budget.create = jest.fn(
-      async (_: CreateBudgetInput): Promise<Budget> => ({
-        id: "1",
-        currency: dataDebugCurrencies[input.currency],
-        name: input.name,
-        user: dataDebugUser["1"],
-        accounts: [],
-      })
-    )
+    const newBudget: Budget = {
+      id: "1",
+      currency: dataDebugCurrencies[input.currency],
+      name: input.name,
+      user: dataDebugUser["1"],
+      accounts: [],
+    }
+
+    StoreBudgetThunks.create = jest.fn(() => async _ => newBudget)
 
     submitForm(wrapper, input)
 
     await wait(() => {
-      // Calls service with valid
-      expect((services.budget.create as jest.Mock).mock.calls[0][0]).toEqual({
+      // Calls thunk
+      expect(StoreBudgetThunks.create).toHaveBeenCalledWith({
         name: input.name,
         currencyCode: input.currency,
         userId: "1",

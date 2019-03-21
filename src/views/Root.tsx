@@ -10,7 +10,7 @@ import { makeStyles, createStyles } from "@material-ui/styles"
 
 // Routes
 import Dashboard from "./Dashboard"
-import BudgetViews from "./Budget"
+import BudgetViews from "./budgets"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Styles

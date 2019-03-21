@@ -16,28 +16,21 @@ const navigateMock = navigate as jest.Mock<typeof navigate>
 // Redux
 import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
+import { StoreAccountThunks } from "~/store/account"
 
 // Components
 import AccountCreate from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
-
-// Services
-import services from "~/services/services"
 import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
 import { AccountType, Account } from "~/models/Account"
-import { CreateAccountInput } from "~/services/AccountService"
-import StoreAccountReducer, { StoreAccountState } from "~/store/account"
-jest.mock("~/services/AccountService")
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
 // ---------------------------------------------------------------------------------------------------------------------
 interface PartialState {
-  account: StoreAccountState
   ui: StoreUIState
 }
 const reducer = combineReducers<PartialState>({
-  account: StoreAccountReducer,
   ui: StoreUIReducer,
 })
 
@@ -45,10 +38,6 @@ const reducer = combineReducers<PartialState>({
 // Cleanup
 // ---------------------------------------------------------------------------------------------------------------------
 afterEach(cleanup)
-
-beforeEach(() => {
-  ;(services.account.create as jest.Mock).mockClear()
-})
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Tests
@@ -73,27 +62,25 @@ describe("Account: create view", () => {
       name: "My account",
       type: AccountType.CreditCard,
     }
-    services.account.create = jest.fn(
-      async (_: CreateAccountInput): Promise<Account> => ({
-        id: "1",
-        budget: "1",
-        inTransactions: [],
-        outTransactions: [],
-        initialBalance: 0,
-        name: input.name,
-        type: input.type,
-      })
-    )
+    const newAccount: Account = {
+      id: "1",
+      budget: "1",
+      inTransactions: [],
+      outTransactions: [],
+      initialBalance: 0,
+      name: input.name,
+      type: input.type,
+    }
+
+    StoreAccountThunks.create = jest.fn(() => async _ => newAccount)
 
     submitForm(wrapper, input)
 
     await wait(() => {
-      // Calls service
-      expect(services.account.create).toHaveBeenCalled()
-      expect((services.account.create as jest.Mock).mock.calls[0][0]).toEqual({
+      // Calls thunk
+      expect(StoreAccountThunks.create).toHaveBeenCalledWith({
         budgetId: "1",
-        type: input.type,
-        name: input.name,
+        ...input,
       })
 
       // Shows message to the user
