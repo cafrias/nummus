@@ -16,7 +16,7 @@ import { AccountType } from "~/models/Account"
 
 beforeEach(cleanup)
 
-describe("Account: Create form", () => {
+describe("Account/Forms/Create", () => {
   let wrapper: RenderResult
   const handleSubmit = jest.fn()
 

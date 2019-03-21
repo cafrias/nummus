@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid"
 
 import { Currency } from "~/models/Currency"
 import UIField from "~/components/UI/Field"
+import { CreateFormProps } from "~/components/UI/Forms/Create"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -18,19 +19,14 @@ export interface BudgetFormsCreateValues {
 
 export interface BudgetFormsCreateProps {
   currencies: Currency[]
-  onSubmit: (
-    values: BudgetFormsCreateValues,
-    formActions: FormikActions<BudgetFormsCreateValues>
-  ) => any
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const BudgetFormsCreate: React.SFC<BudgetFormsCreateProps> = ({
-  currencies,
-  onSubmit,
-}) => {
+const BudgetFormsCreate: React.SFC<
+  BudgetFormsCreateProps & CreateFormProps<BudgetFormsCreateValues>
+> = ({ currencies, onSubmit }) => {
   return (
     <Formik
       initialValues={{

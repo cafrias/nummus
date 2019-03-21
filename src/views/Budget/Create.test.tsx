@@ -30,6 +30,7 @@ import dataDebugCurrencies from "~/data/debug/currency"
 import dataDebugUser from "~/data/debug/user"
 import { ValidationError } from "~/errors/DataErrors"
 import { BudgetFormsCreateValues } from "~/components/Budget/Forms/Create"
+import { Budget } from "~/models/Budget"
 jest.mock("~/services/BudgetService")
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -76,21 +77,20 @@ describe("Budget create view", () => {
     )
   })
 
-  it("renders successfully", () => {
-    expect(wrapper.getByText("Create")).toBeVisible()
-  })
-
   it("creates new budget", async () => {
     const input = {
       name: "My budget",
       currency: "USD",
     }
-    services.budget.create = jest.fn(async (_: CreateBudgetInput) => ({
-      id: "1",
-      currency: dataDebugCurrencies[input.currency],
-      name: input.name,
-      user: dataDebugUser["1"],
-    }))
+    services.budget.create = jest.fn(
+      async (_: CreateBudgetInput): Promise<Budget> => ({
+        id: "1",
+        currency: dataDebugCurrencies[input.currency],
+        name: input.name,
+        user: dataDebugUser["1"],
+        accounts: [],
+      })
+    )
 
     submitForm(wrapper, input)
 
@@ -109,24 +109,6 @@ describe("Budget create view", () => {
 
       // Redirects to create account
       expect(navigateMock).toHaveBeenCalledWith("/budgets/1/accounts/create")
-    })
-  })
-
-  it("interprets validation errors from server", async () => {
-    const errorMessage = "You should fill it"
-    services.budget.create = jest.fn(async () => {
-      throw new ValidationError<BudgetFormsCreateValues>("Invalid entity", {
-        name: errorMessage,
-      })
-    })
-
-    submitForm(wrapper, {
-      name: "name",
-      currency: "ARS",
-    })
-
-    await wait(() => {
-      expect(wrapper.getByText(errorMessage)).toBeVisible()
     })
   })
 })

@@ -27,7 +27,6 @@ import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
 import { AccountType, Account } from "~/models/Account"
 import { CreateAccountInput } from "~/services/AccountService"
 import StoreAccountReducer, { StoreAccountState } from "~/store/account"
-import { ValidationError } from "~/errors/DataErrors"
 jest.mock("~/services/AccountService")
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -104,24 +103,6 @@ describe("Account: create view", () => {
 
       // Redirects to create account
       expect(navigateMock).toHaveBeenCalledWith("/budgets/1")
-    })
-  })
-
-  it("interprets validation errors from server", async () => {
-    const errorMessage = "You should fill it"
-    services.account.create = jest.fn(async () => {
-      throw new ValidationError<AccountFormsCreateValues>("Invalid entity", {
-        name: errorMessage,
-      })
-    })
-
-    submitForm(wrapper, {
-      name: "name",
-      type: AccountType.Bank,
-    })
-
-    await wait(() => {
-      expect(wrapper.getByText(errorMessage)).toBeVisible()
     })
   })
 })

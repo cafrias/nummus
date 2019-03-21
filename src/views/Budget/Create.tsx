@@ -5,12 +5,15 @@ import { Currency } from "~/models/Currency"
 import { StoreState, SimpleThunkDispatch } from "~/store"
 import { StoreCurrencySelectors } from "~/store/currency"
 import { StoreBudgetThunks, StoreBudgetCreateThunk } from "~/store/budget"
-import BudgetFormsCreate from "~/components/Budget/Forms/Create"
-import { DataErrors } from "~/errors/DataErrors"
+import BudgetFormsCreate, {
+  BudgetFormsCreateProps,
+  BudgetFormsCreateValues,
+} from "~/components/Budget/Forms/Create"
 import { CreateBudgetInput } from "~/services/BudgetService"
 
 import { navigate } from "@reach/router"
 import { StoreUIActionCreators } from "~/store/ui"
+import UIFormsCreate from "~/components/UI/Forms/Create"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -20,32 +23,23 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = ({
   createBudget,
   openSnackbar,
 }) => {
-  return (
-    <BudgetFormsCreate
-      currencies={currencies}
-      onSubmit={async (values, actions) => {
-        try {
-          const result = await createBudget({
-            userId: "1",
-            currencyCode: values.currency,
-            name: values.name,
-          })
+  return UIFormsCreate<BudgetFormsCreateProps, BudgetFormsCreateValues>({
+    async create(values) {
+      const result = await createBudget({
+        userId: "1",
+        currencyCode: values.currency,
+        name: values.name,
+      })
 
-          openSnackbar(`Budget '${result.name}' created successfully`)
+      openSnackbar(`Budget '${result.name}' created successfully`)
 
-          navigate(`/budgets/${result.id}/accounts/create`)
-        } catch (err) {
-          switch (err.code) {
-            case DataErrors.VALIDATION_ERROR:
-              actions.setErrors(err.errors)
-              break
-            default:
-              throw err
-          }
-        }
-      }}
-    />
-  )
+      navigate(`/budgets/${result.id}/accounts/create`)
+    },
+    FormProps: {
+      currencies,
+    },
+    component: BudgetFormsCreate,
+  })
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

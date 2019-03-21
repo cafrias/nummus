@@ -16,7 +16,7 @@ import dataDebugCurrencies from "~/data/debug/currency"
 
 beforeEach(cleanup)
 
-describe("Budget: Create form", () => {
+describe("Budget/Forms/Create", () => {
   let wrapper: RenderResult
   const handleSubmit = jest.fn()
 

@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import UIField from "~/components/UI/Field"
 import { AccountType } from "~/models/Account"
+import { CreateFormProps } from "~/components/UI/Forms/Create"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -15,19 +16,14 @@ export interface AccountFormsCreateValues {
   type: AccountType
 }
 
-export interface AccountFormsCreateProps {
-  onSubmit: (
-    values: AccountFormsCreateValues,
-    formActions: FormikActions<AccountFormsCreateValues>
-  ) => any
-}
+export interface AccountFormsCreateProps {}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const AccountFormsCreate: React.SFC<AccountFormsCreateProps> = ({
-  onSubmit,
-}) => {
+const AccountFormsCreate: React.SFC<
+  AccountFormsCreateProps & CreateFormProps<AccountFormsCreateValues>
+> = ({ onSubmit }) => {
   return (
     <Formik
       initialValues={{
