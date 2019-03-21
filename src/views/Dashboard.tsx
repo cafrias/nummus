@@ -56,6 +56,16 @@ const Dashboard: React.SFC<DashboardProps> = () => {
           Create account
         </Button>
       </Grid>
+      <Grid item xs={12} md={4}>
+        <Button
+          fullWidth
+          variant="text"
+          component={RouterLink}
+          {...{ to: "/budgets/1/accounts/1/transactions/create" }}
+        >
+          Create transaction
+        </Button>
+      </Grid>
     </Grid>
   )
 }

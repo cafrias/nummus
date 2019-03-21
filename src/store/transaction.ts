@@ -1,90 +1,91 @@
 import { Action, Reducer } from "redux"
 
-import {
-  Budget,
-  budgetSchema,
-  BudgetNormalized,
-  BudgetNormalizeResult,
-} from "~/models/Budget"
-import { CreateBudgetInput } from "~/services/BudgetService"
 import services from "~/services/services"
 import { normalize } from "normalizr"
 import { SimpleThunkAction } from "."
 import { NormalizedTree } from "~/models/NormalizedTree"
-import { StoreAccountAddAction, StoreAccountActionTypes } from "./account"
-import updateReferences from "~/utils/updateReferences"
+import {
+  TransactionNormalized,
+  Transaction,
+  TransactionNormalizeResult,
+  transactionSchema,
+} from "~/models/Transaction"
+import { CreateTransactionInput } from "~/services/TransactionService"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
 // ---------------------------------------------------------------------------------------------------------------------
-export enum StoreBudgetActionTypes {
-  Add = "budget/add",
+export enum StoreTransactionActionTypes {
+  Add = "transaction/add",
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Creators
 // ---------------------------------------------------------------------------------------------------------------------
-interface StoreBudgetAddAction extends Action<StoreBudgetActionTypes.Add> {
-  budgets: NormalizedTree<BudgetNormalized>
+export interface StoreTransactionAddAction
+  extends Action<StoreTransactionActionTypes.Add> {
+  payload: NormalizedTree<TransactionNormalized>
 }
-function add(budgets: NormalizedTree<BudgetNormalized>): StoreBudgetAddAction {
+function add(
+  transactions: NormalizedTree<TransactionNormalized>
+): StoreTransactionAddAction {
   return {
-    type: StoreBudgetActionTypes.Add,
-    budgets,
+    type: StoreTransactionActionTypes.Add,
+    payload: transactions,
   }
 }
 
-export const StoreBudgetActionCreators = {
+export const StoreTransactionActionCreators = {
   add,
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Thunks
 // ---------------------------------------------------------------------------------------------------------------------
-export type StoreBudgetCreateThunk = (
-  input: CreateBudgetInput
-) => Promise<Budget>
+export type StoreTransactionCreateThunk = (
+  input: CreateTransactionInput
+) => Promise<Transaction[]>
 
-function create(input: CreateBudgetInput): SimpleThunkAction<Promise<Budget>> {
+function create(
+  input: CreateTransactionInput
+): SimpleThunkAction<Promise<Transaction[]>> {
   return async dispatch => {
-    const newBudget = await services.budget.create(input)
+    const newTransactions = await services.transaction.create(input)
 
-    const { entities }: BudgetNormalizeResult = normalize(
-      newBudget,
-      budgetSchema
+    const { entities }: TransactionNormalizeResult = normalize(
+      newTransactions,
+      [transactionSchema]
     )
-    dispatch(add(entities.budgets))
+    dispatch(add(entities.transactions))
 
-    return newBudget
+    return newTransactions
   }
 }
 
-export const StoreBudgetThunks = {
+export const StoreTransactionThunks = {
   create,
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Default State
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreBudgetDefaultState: StoreBudgetState = {}
+const StoreTransactionDefaultState: StoreTransactionState = {}
 
-export type StoreBudgetState = NormalizedTree<BudgetNormalized>
+export type StoreTransactionState = NormalizedTree<TransactionNormalized>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducer
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreBudgetReducer: Reducer<
-  StoreBudgetState,
-  StoreBudgetAddAction | StoreAccountAddAction
-> = (state = StoreBudgetDefaultState, action) => {
+const StoreTransactionReducer: Reducer<
+  StoreTransactionState,
+  StoreTransactionAddAction
+> = (state = StoreTransactionDefaultState, action) => {
   switch (action.type) {
-    case StoreBudgetActionTypes.Add:
-      return { ...state, ...action.budgets }
-    case StoreAccountActionTypes.Add:
-      return updateReferences(state, "budget", "accounts", action.accounts)
+    case StoreTransactionActionTypes.Add:
+      return { ...state, ...action.payload }
     default:
       return state
   }
 }
 
-export default StoreBudgetReducer
+export default StoreTransactionReducer

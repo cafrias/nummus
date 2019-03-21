@@ -14,8 +14,7 @@ export default class AccountService {
     return {
       id: uuidv4(),
       budget: input.budgetId,
-      inTransactions: [],
-      outTransactions: [],
+      transactions: [],
       initialBalance: 0,
       type: input.type,
       name: input.name,

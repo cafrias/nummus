@@ -65,8 +65,7 @@ describe("Account: create view", () => {
     const newAccount: Account = {
       id: "1",
       budget: "1",
-      inTransactions: [],
-      outTransactions: [],
+      transactions: [],
       initialBalance: 0,
       name: input.name,
       type: input.type,

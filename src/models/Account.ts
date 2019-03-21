@@ -24,18 +24,15 @@ export interface AccountModel {
   budget: string
 
   initialBalance: number
-  inTransactions: Transaction[] | string[]
-  outTransactions: Transaction[] | string[]
+  transactions: Transaction[] | string[]
 }
 
 export interface Account extends AccountModel {
-  inTransactions: Transaction[]
-  outTransactions: Transaction[]
+  transactions: Transaction[]
 }
 
 export interface AccountNormalized extends AccountModel {
-  inTransactions: string[]
-  outTransactions: string[]
+  transactions: string[]
 }
 
 export enum AccountType {

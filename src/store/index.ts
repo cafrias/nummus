@@ -15,11 +15,15 @@ import StoreCurrencyReducer, { StoreCurrencyState } from "./currency"
 import StoreBudgetReducer, { StoreBudgetState } from "./budget"
 import StoreUIReducer, { StoreUIState } from "./ui"
 import StoreAccountReducer, { StoreAccountState } from "./account"
+import StoreSpendCategoryReducer, { StoreSpendCategoryState } from "./spendCategory";
+import StoreTransactionReducer, { StoreTransactionState } from "./transaction";
 
 export interface StoreState {
   account: StoreAccountState
   budget: StoreBudgetState
   currency: StoreCurrencyState
+  spendCategory: StoreSpendCategoryState
+  transaction: StoreTransactionState
   ui: StoreUIState
 }
 
@@ -36,6 +40,8 @@ const rootReducer = combineReducers<StoreState>({
   account: StoreAccountReducer,
   budget: StoreBudgetReducer,
   currency: StoreCurrencyReducer,
+  spendCategory: StoreSpendCategoryReducer,
+  transaction: StoreTransactionReducer,
   ui: StoreUIReducer,
 })
 
