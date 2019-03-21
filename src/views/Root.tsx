@@ -43,6 +43,7 @@ const Root: React.SFC<RootProps> = props => {
           <Dashboard path="/" />
           <BudgetViews.Create path="/budgets/create" />
           <BudgetViews.accounts.create path="/budgets/:budgetId/accounts/create" />
+          <BudgetViews.accounts.transactions.create path="/budgets/:budgetId/accounts/:accountId/transactions/create" />
         </Router>
         <UISnackbar />
       </div>

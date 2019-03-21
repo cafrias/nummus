@@ -25,6 +25,8 @@ export interface TransactionModel {
   from?: string
 
   category: SpendCategory | string
+
+  amount: number
 }
 
 export interface Transaction extends TransactionModel {
