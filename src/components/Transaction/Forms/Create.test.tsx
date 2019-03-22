@@ -14,6 +14,8 @@ import "jest-dom/extend-expect"
 import TransactionFormsCreate, { TransactionFormsCreateValues } from "./Create"
 import { AccountType, Account } from "~/models/Account"
 import dataDebugAccount from "~/data/debug/account"
+import { SpendCategory } from "~/models/SpendCategory"
+import { SpendGroup } from "~/models/SpendGroup"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture
@@ -26,6 +28,15 @@ const accounts: Account[] = [
     initialBalance: 0,
     name: "My bank account",
     type: AccountType.Bank,
+  },
+]
+
+const categories: SpendCategory[] = [
+  {
+    id: "1",
+    budget: "1",
+    group: SpendGroup.ImmediateObligations,
+    name: "Rent/Mortgage",
   },
 ]
 
@@ -47,6 +58,7 @@ describe("Account/Forms/Create", () => {
       <TransactionFormsCreate
         accountId="1"
         accounts={accounts}
+        categories={categories}
         onSubmit={handleSubmit}
       />
     )
@@ -57,8 +69,9 @@ describe("Account/Forms/Create", () => {
       amount: 1000,
       incoming: false,
       account: "1",
+      category: "1",
     }
-    submitForm(wrapper, values)
+    submitTransactionFormsCreate(wrapper, values)
 
     await wait(() => {
       expect(handleSubmit).toHaveBeenCalled()
@@ -81,13 +94,16 @@ describe("Account/Forms/Create", () => {
         expect(wrapper.getByText("Should be greater than 0")).toBeVisible()
       })
     }
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+    expect(wrapper.getByText("Select a category")).toBeVisible()
   })
 })
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------
-function submitForm(
+export function submitTransactionFormsCreate(
   wrapper: RenderResult,
   values: TransactionFormsCreateValues
 ) {
@@ -105,6 +121,10 @@ function submitForm(
       target: { value: values.account },
     }
   )
+
+  fireEvent.change(wrapper.getByLabelText("Category"), {
+    target: { value: values.category },
+  })
 
   fireEvent.click(wrapper.getByTestId("transaction_create"))
 }

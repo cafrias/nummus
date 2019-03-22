@@ -20,7 +20,8 @@ import Icon from "@material-ui/core/Icon"
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from "@material-ui/icons/Remove"
 
-import { makeStyles, createStyles, getThemeProps } from "@material-ui/styles"
+import { makeStyles, createStyles } from "@material-ui/styles"
+import { SpendCategory } from "~/models/SpendCategory"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -29,10 +30,12 @@ export interface TransactionFormsCreateValues {
   amount: number
   account: string
   incoming: boolean
+  category: string
 }
 
 export interface TransactionFormsCreateProps {
   accounts: Account[]
+  categories: SpendCategory[]
   accountId: string
 }
 
@@ -55,7 +58,7 @@ const useStyles = makeStyles(() =>
 // ---------------------------------------------------------------------------------------------------------------------
 const TransactionFormsCreate: React.SFC<
   TransactionFormsCreateProps & CreateFormProps<TransactionFormsCreateValues>
-> = ({ onSubmit, accounts, accountId }) => {
+> = ({ onSubmit, accounts, accountId, categories }) => {
   const classes = useStyles()
 
   return (
@@ -64,11 +67,13 @@ const TransactionFormsCreate: React.SFC<
         amount: 0,
         account: "",
         incoming: false,
+        category: "",
       }}
       onSubmit={onSubmit}
       validate={values => {
         const errors: FormikErrors<TransactionFormsCreateValues> = {}
         if (values.amount <= 0) errors.amount = "Should be greater than 0"
+        if (!values.category) errors.category = "Select a category"
         return errors
       }}
     >
@@ -126,6 +131,28 @@ const TransactionFormsCreate: React.SFC<
                           value={account.id}
                         >
                           {account.name}
+                        </option>
+                      )),
+                    ],
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <UIField
+                  name="category"
+                  TextFieldProps={{
+                    id: "category",
+                    label: "Category",
+                    select: true,
+                    children: [
+                      <option key={0} value="" />,
+                      ...categories.map(category => (
+                        <option
+                          disabled={category.id === accountId}
+                          key={category.id}
+                          value={category.id}
+                        >
+                          {category.name}
                         </option>
                       )),
                     ],

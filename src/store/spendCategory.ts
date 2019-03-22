@@ -1,18 +1,16 @@
-import { Action, Reducer, DeepPartial } from "redux"
-
-import merge from "lodash/merge"
+import { Action, Reducer } from "redux"
 
 import services from "~/services/services"
 import { normalize } from "normalizr"
 import { SimpleThunkAction, StoreState } from "."
 import { NormalizedTree } from "~/models/NormalizedTree"
-import { CreateAccountInput } from "~/services/AccountService"
+import { CreateSpendCategoryInput } from "~/services/SpendCategoryService"
 import {
-  Account,
-  AccountNormalized,
-  AccountNormalizeResult,
-  accountSchema,
-} from "~/models/Account"
+  SpendCategory,
+  SpendCategoryNormalized,
+  SpendCategoryNormalizeResult,
+  spendCategorySchema,
+} from "~/models/SpendCategory"
 import {
   StoreTransactionAddAction,
   StoreTransactionActionTypes,
@@ -23,16 +21,16 @@ import { createSelector } from "reselect"
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
 // ---------------------------------------------------------------------------------------------------------------------
-export enum StoreAccountActionTypes {
-  Add = "account/add",
+export enum StoreSpendCategoryActionTypes {
+  Add = "spendCategory/add",
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Selectors
 // ---------------------------------------------------------------------------------------------------------------------
 const getAll = createSelector(
-  [(state: StoreState) => state.account],
-  account => Object.values(account)
+  [(state: StoreState) => state.spendCategory],
+  spendCategory => Object.values(spendCategory)
 )
 
 export const StoreCurrencySelectors = {
@@ -42,71 +40,71 @@ export const StoreCurrencySelectors = {
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Creators
 // ---------------------------------------------------------------------------------------------------------------------
-export interface StoreAccountAddAction
-  extends Action<StoreAccountActionTypes.Add> {
-  accounts: NormalizedTree<AccountNormalized>
+export interface StoreSpendCategoryAddAction
+  extends Action<StoreSpendCategoryActionTypes.Add> {
+  spendCategorys: NormalizedTree<SpendCategoryNormalized>
 }
 function add(
-  accounts: NormalizedTree<AccountNormalized>
-): StoreAccountAddAction {
+  spendCategorys: NormalizedTree<SpendCategoryNormalized>
+): StoreSpendCategoryAddAction {
   return {
-    type: StoreAccountActionTypes.Add,
-    accounts,
+    type: StoreSpendCategoryActionTypes.Add,
+    spendCategorys,
   }
 }
 
-export const StoreAccountActionCreators = {
+export const StoreSpendCategoryActionCreators = {
   add,
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Thunks
 // ---------------------------------------------------------------------------------------------------------------------
-export type StoreAccountCreateThunk = (
-  input: CreateAccountInput
-) => Promise<Account>
+export type StoreSpendCategoryCreateThunk = (
+  input: CreateSpendCategoryInput
+) => Promise<SpendCategory>
 
 function create(
-  input: CreateAccountInput
-): SimpleThunkAction<Promise<Account>> {
+  input: CreateSpendCategoryInput
+): SimpleThunkAction<Promise<SpendCategory>> {
   return async dispatch => {
-    const newAccount = await services.account.create(input)
+    const newSpendCategory = await services.spendCategory.create(input)
 
-    const { entities }: AccountNormalizeResult = normalize(
-      newAccount,
-      accountSchema
+    const { entities }: SpendCategoryNormalizeResult = normalize(
+      newSpendCategory,
+      spendCategorySchema
     )
-    dispatch(add(entities.accounts))
+    dispatch(add(entities.spendCategorys))
 
-    return newAccount
+    return newSpendCategory
   }
 }
 
-export const StoreAccountThunks = {
+export const StoreSpendCategoryThunks = {
   create,
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Default State
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreAccountDefaultState: StoreAccountState = {}
+const StoreSpendCategoryDefaultState: StoreSpendCategoryState = {}
 
-export type StoreAccountState = NormalizedTree<AccountNormalized>
+export type StoreSpendCategoryState = NormalizedTree<SpendCategoryNormalized>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducer
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreAccountReducer: Reducer<
-  StoreAccountState,
-  StoreAccountAddAction | StoreTransactionAddAction
-> = (state = StoreAccountDefaultState, action) => {
+const StoreSpendCategoryReducer: Reducer<
+  StoreSpendCategoryState,
+  StoreSpendCategoryAddAction | StoreTransactionAddAction
+> = (state = StoreSpendCategoryDefaultState, action) => {
   switch (action.type) {
-    case StoreAccountActionTypes.Add:
-      return { ...state, ...action.accounts }
+    case StoreSpendCategoryActionTypes.Add:
+      return { ...state, ...action.spendCategorys }
     case StoreTransactionActionTypes.Add:
       return updateReferences<typeof state, typeof action.payload>(
         state,
-        "account",
+        "spendCategory",
         "transactions",
         action.payload
       )
@@ -115,4 +113,4 @@ const StoreAccountReducer: Reducer<
   }
 }
 
-export default StoreAccountReducer
+export default StoreSpendCategoryReducer
