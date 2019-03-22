@@ -22,8 +22,7 @@ const accounts: Account[] = [
   {
     id: "1",
     budget: "1",
-    inTransactions: [],
-    outTransactions: [],
+    transactions: [],
     initialBalance: 0,
     name: "My bank account",
     type: AccountType.Bank,

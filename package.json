@@ -32,11 +32,13 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "store": "^2.0.12",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.7",
     "@types/jest": "^24.0.11",
+    "@types/lodash": "^4.14.123",
     "@types/reach__router": "^1.2.3",
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.2",

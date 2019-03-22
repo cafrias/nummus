@@ -17,20 +17,18 @@ const BudgetsAccountsTransactionsCreate: React.SFC<
         {
           budget: "1",
           id: "1",
-          inTransactions: [],
+          transactions: [],
           initialBalance: 0,
           name: "My first one",
           type: AccountType.Cash,
-          outTransactions: [],
         },
         {
           budget: "1",
           id: "2",
-          inTransactions: [],
+          transactions: [],
           initialBalance: 0,
           name: "My second one",
           type: AccountType.CreditCard,
-          outTransactions: [],
         },
       ]}
       onSubmit={async v => console.log(v)}

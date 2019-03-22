@@ -5,9 +5,8 @@ const dataDebugAccount: NormalizedTree<AccountNormalized> = {
   "1": {
     id: "1",
     budget: "1",
-    inTransactions: [],
+    transactions: [],
     initialBalance: 0,
-    outTransactions: [],
     name: "My bank account",
     type: AccountType.Bank,
   },

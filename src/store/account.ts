@@ -1,4 +1,6 @@
-import { Action, Reducer } from "redux"
+import { Action, Reducer, DeepPartial } from "redux"
+
+import merge from "lodash/merge"
 
 import services from "~/services/services"
 import { normalize } from "normalizr"
@@ -11,6 +13,11 @@ import {
   AccountNormalizeResult,
   accountSchema,
 } from "~/models/Account"
+import {
+  StoreTransactionAddAction,
+  StoreTransactionActionTypes,
+} from "./transaction"
+import updateReferences from "~/utils/updateReferences"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -76,13 +83,20 @@ export type StoreAccountState = NormalizedTree<AccountNormalized>
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducer
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreAccountReducer: Reducer<StoreAccountState, StoreAccountAddAction> = (
-  state = StoreAccountDefaultState,
-  action
-) => {
+const StoreAccountReducer: Reducer<
+  StoreAccountState,
+  StoreAccountAddAction | StoreTransactionAddAction
+> = (state = StoreAccountDefaultState, action) => {
   switch (action.type) {
     case StoreAccountActionTypes.Add:
       return { ...state, ...action.accounts }
+    case StoreTransactionActionTypes.Add:
+      return updateReferences<typeof state, typeof action.payload>(
+        state,
+        "account",
+        "transactions",
+        action.payload
+      )
     default:
       return state
   }
