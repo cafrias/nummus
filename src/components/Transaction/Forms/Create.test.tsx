@@ -12,37 +12,76 @@ import {
 import "jest-dom/extend-expect"
 
 import TransactionFormsCreate, { TransactionFormsCreateValues } from "./Create"
-import { AccountType } from "~/models/Account"
+import { AccountType, Account } from "~/models/Account"
+import dataDebugAccount from "~/data/debug/account"
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Fixture
+// ---------------------------------------------------------------------------------------------------------------------
+const accounts: Account[] = [
+  {
+    id: "1",
+    budget: "1",
+    inTransactions: [],
+    outTransactions: [],
+    initialBalance: 0,
+    name: "My bank account",
+    type: AccountType.Bank,
+  },
+]
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Hooks
+// ---------------------------------------------------------------------------------------------------------------------
 beforeEach(cleanup)
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Test suite
+// ---------------------------------------------------------------------------------------------------------------------
 describe("Account/Forms/Create", () => {
   let wrapper: RenderResult
   const handleSubmit = jest.fn()
 
   beforeEach(() => {
     handleSubmit.mockClear()
-    wrapper = render(<TransactionFormsCreate onSubmit={handleSubmit} />)
+    wrapper = render(
+      <TransactionFormsCreate
+        accountId="1"
+        accounts={accounts}
+        onSubmit={handleSubmit}
+      />
+    )
   })
 
-  xit("submits when valid", async () => {
+  it("submits when valid", async () => {
     const values: TransactionFormsCreateValues = {
       amount: 1000,
+      incoming: false,
+      account: "1",
     }
     submitForm(wrapper, values)
 
     await wait(() => {
+      expect(handleSubmit).toHaveBeenCalled()
       expect(handleSubmit.mock.calls[0][0]).toEqual(values)
     })
   })
 
-  xit("validates data", async () => {
-    fireEvent.click(wrapper.getByTestId("account_create"))
+  it("validates data", async () => {
+    const amounts = [0, -100]
 
-    await wait(() => {
-      expect(handleSubmit).not.toHaveBeenCalled()
-      expect(wrapper.getByText("Add a name to your account")).toBeVisible()
-    })
+    for (const amount of amounts) {
+      fireEvent.change(wrapper.getByLabelText("Amount"), {
+        target: { value: amount },
+      })
+
+      fireEvent.click(wrapper.getByTestId("transaction_create"))
+
+      await wait(() => {
+        expect(handleSubmit).not.toHaveBeenCalled()
+        expect(wrapper.getByText("Should be greater than 0")).toBeVisible()
+      })
+    }
   })
 })
 
@@ -53,9 +92,20 @@ function submitForm(
   wrapper: RenderResult,
   values: TransactionFormsCreateValues
 ) {
-  fireEvent.change(wrapper.getByLabelText("Name"), {
+  fireEvent.change(wrapper.getByLabelText("Incoming"), {
+    target: { value: values.incoming },
+  })
+
+  fireEvent.change(wrapper.getByLabelText("Amount"), {
     target: { value: values.amount },
   })
 
-  fireEvent.click(wrapper.getByTestId("account_create"))
+  fireEvent.change(
+    wrapper.getByLabelText(values.incoming ? "From account" : "To account"),
+    {
+      target: { value: values.account },
+    }
+  )
+
+  fireEvent.click(wrapper.getByTestId("transaction_create"))
 }

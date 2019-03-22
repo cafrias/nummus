@@ -1,11 +1,11 @@
 import * as React from "react"
 
-import { Form, Formik, FormikErrors, FormikActions } from "formik"
+import { Form, Formik, FormikErrors, Field, FieldProps } from "formik"
 
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import UIField from "~/components/UI/Field"
-import { AccountType, Account } from "~/models/Account"
+import { Account } from "~/models/Account"
 import { CreateFormProps } from "~/components/UI/Forms/Create"
 
 import classNames from "classnames"
@@ -28,6 +28,7 @@ import { makeStyles, createStyles, getThemeProps } from "@material-ui/styles"
 export interface TransactionFormsCreateValues {
   amount: number
   account: string
+  incoming: boolean
 }
 
 export interface TransactionFormsCreateProps {
@@ -55,7 +56,6 @@ const useStyles = makeStyles(() =>
 const TransactionFormsCreate: React.SFC<
   TransactionFormsCreateProps & CreateFormProps<TransactionFormsCreateValues>
 > = ({ onSubmit, accounts, accountId }) => {
-  const [incoming, setIncoming] = React.useState(false)
   const classes = useStyles()
 
   return (
@@ -63,29 +63,29 @@ const TransactionFormsCreate: React.SFC<
       initialValues={{
         amount: 0,
         account: "",
+        incoming: false,
       }}
       onSubmit={onSubmit}
       validate={values => {
         const errors: FormikErrors<TransactionFormsCreateValues> = {}
-        if (!values.amount) errors.amount = "Add amount"
+        if (values.amount <= 0) errors.amount = "Should be greater than 0"
         return errors
       }}
     >
       {form => {
+        const { incoming } = form.values
         return (
           <Form>
             <Grid container justify="flex-end" spacing={16}>
               <Grid item xs={12} md={6}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={incoming}
-                      onChange={() => setIncoming(!incoming)}
-                      value="incoming"
+                <Field name="incoming">
+                  {({ field }: FieldProps) => (
+                    <FormControlLabel
+                      control={<Switch {...field} checked={field.value} />}
+                      label="Incoming"
                     />
-                  }
-                  label="Incoming"
-                />
+                  )}
+                </Field>
               </Grid>
               <Grid item xs={12} md={6}>
                 <UIField
@@ -115,7 +115,7 @@ const TransactionFormsCreate: React.SFC<
                   name="account"
                   TextFieldProps={{
                     id: "account",
-                    label: incoming ? "From" : "To",
+                    label: incoming ? "From account" : "To account",
                     select: true,
                     children: [
                       <option key={0} value="" />,
