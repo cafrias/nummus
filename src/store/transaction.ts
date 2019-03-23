@@ -44,7 +44,7 @@ export const StoreTransactionActionCreators = {
 // ---------------------------------------------------------------------------------------------------------------------
 export type StoreTransactionCreateThunk = (
   input: CreateTransactionInput
-) => Promise<Transaction>
+) => Promise<Transaction[]>
 
 function create(
   input: CreateTransactionInput

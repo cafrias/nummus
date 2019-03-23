@@ -148,7 +148,6 @@ const TransactionFormsCreate: React.SFC<
                       <option key={0} value="" />,
                       ...categories.map(category => (
                         <option
-                          disabled={category.id === accountId}
                           key={category.id}
                           value={category.id}
                         >

@@ -25,14 +25,22 @@ import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Cre
 import { Transaction } from "~/models/Transaction"
 import dataDebugSpendCategory from "~/data/debug/spendCategory"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
+import StoreAccountReducer, { StoreAccountState } from "~/store/account";
+import StoreSpendCategoryReducer, { StoreSpendCategoryState } from "~/store/spendCategory";
+import dataDebugAccount from "~/data/debug/account";
+import { CreateTransactionInput } from "~/services/TransactionService";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
 // ---------------------------------------------------------------------------------------------------------------------
 interface PartialState {
+  account: StoreAccountState,
+  spendCategory: StoreSpendCategoryState,
   ui: StoreUIState
 }
 const reducer = combineReducers<PartialState>({
+  account: StoreAccountReducer,
+  spendCategory: StoreSpendCategoryReducer,
   ui: StoreUIReducer,
 })
 
@@ -50,10 +58,14 @@ describe("Transaction: create view", () => {
   beforeEach(() => {
     wrapper = renderWithRedux(
       <>
-        <TransactionCreate accountId="1" />
+        <TransactionCreate budgetId="1" accountId="2" />
         <UISnackbar />
       </>,
       {
+        initialState: {
+          spendCategory: dataDebugSpendCategory,
+          account: dataDebugAccount,
+        },
         reducer,
       }
     )
@@ -64,22 +76,28 @@ describe("Transaction: create view", () => {
     // Fixture
     //
     const input: TransactionFormsCreateValues = {
-      account: "2",
+      account: "1",
       amount: 800,
       incoming: false,
       category: "1",
     }
+    const createInput: CreateTransactionInput = {
+      amount: input.amount,
+        category: "1",
+        from: "2",
+        to: "1",
+    }
     const newTransactions: Transaction[] = [
       {
         id: "1",
-        account: "1",
+        account: "2",
         amount: input.amount,
         incoming: false,
         category: dataDebugSpendCategory[input.category],
       },
       {
         id: "2",
-        account: "2",
+        account: "1",
         amount: input.amount,
         incoming: true,
         category: dataDebugSpendCategory[input.category],
@@ -92,15 +110,12 @@ describe("Transaction: create view", () => {
 
     await wait(() => {
       // Calls thunk
-      expect(StoreTransactionThunks.create).toHaveBeenCalledWith({
-        budgetId: "1",
-        ...input,
-      })
+      expect(StoreTransactionThunks.create).toHaveBeenCalledWith(createInput)
 
       // Shows message to the user
       expect(wrapper.getByText(`Transaction saved`)).toBeVisible()
 
-      // Redirects to create transaction
+      // Redirects back to the budget
       expect(navigateMock).toHaveBeenCalledWith("/budgets/1")
     })
   })

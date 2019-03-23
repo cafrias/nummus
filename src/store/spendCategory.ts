@@ -17,6 +17,7 @@ import {
 } from "./transaction"
 import updateReferences from "~/utils/updateReferences"
 import { createSelector } from "reselect"
+import dataDebugSpendCategory from "~/data/debug/spendCategory";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -33,7 +34,7 @@ const getAll = createSelector(
   spendCategory => Object.values(spendCategory)
 )
 
-export const StoreCurrencySelectors = {
+export const StoreSpendCategorySelectors = {
   getAll,
 }
 
@@ -42,14 +43,14 @@ export const StoreCurrencySelectors = {
 // ---------------------------------------------------------------------------------------------------------------------
 export interface StoreSpendCategoryAddAction
   extends Action<StoreSpendCategoryActionTypes.Add> {
-  spendCategorys: NormalizedTree<SpendCategoryNormalized>
+  payload: NormalizedTree<SpendCategoryNormalized>
 }
 function add(
-  spendCategorys: NormalizedTree<SpendCategoryNormalized>
+  categories: NormalizedTree<SpendCategoryNormalized>
 ): StoreSpendCategoryAddAction {
   return {
     type: StoreSpendCategoryActionTypes.Add,
-    spendCategorys,
+    payload: categories,
   }
 }
 
@@ -74,7 +75,7 @@ function create(
       newSpendCategory,
       spendCategorySchema
     )
-    dispatch(add(entities.spendCategorys))
+    dispatch(add(entities.spendCategories))
 
     return newSpendCategory
   }
@@ -87,7 +88,7 @@ export const StoreSpendCategoryThunks = {
 // ---------------------------------------------------------------------------------------------------------------------
 // Default State
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreSpendCategoryDefaultState: StoreSpendCategoryState = {}
+const StoreSpendCategoryDefaultState: StoreSpendCategoryState = dataDebugSpendCategory
 
 export type StoreSpendCategoryState = NormalizedTree<SpendCategoryNormalized>
 
@@ -100,14 +101,7 @@ const StoreSpendCategoryReducer: Reducer<
 > = (state = StoreSpendCategoryDefaultState, action) => {
   switch (action.type) {
     case StoreSpendCategoryActionTypes.Add:
-      return { ...state, ...action.spendCategorys }
-    case StoreTransactionActionTypes.Add:
-      return updateReferences<typeof state, typeof action.payload>(
-        state,
-        "spendCategory",
-        "transactions",
-        action.payload
-      )
+      return { ...state, ...action.payload }
     default:
       return state
   }

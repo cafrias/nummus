@@ -1,11 +1,16 @@
 import * as React from "react"
-import TransactionFormsCreate from "~/components/Transaction/Forms/Create"
-import { AccountType, Account } from "~/models/Account"
-import { SpendGroup } from "~/models/SpendGroup"
+import TransactionFormsCreate, { TransactionFormsCreateProps, TransactionFormsCreateValues } from "~/components/Transaction/Forms/Create"
+import { Account } from "~/models/Account"
 import { SpendCategory } from "~/models/SpendCategory";
-import { StoreTransactionCreateThunk } from "~/store/transaction";
+import { StoreTransactionCreateThunk, StoreTransactionThunks } from "~/store/transaction";
 import { connect } from "react-redux";
-import { StoreCurrencySelectors } from "~/store/account";
+import { StoreAccountSelectors } from "~/store/account";
+import { StoreSpendCategorySelectors } from "~/store/spendCategory";
+import { StoreState, SimpleThunkDispatch } from "~/store";
+import UIFormsCreate from "~/components/UI/Forms/Create";
+import { CreateTransactionInput } from "~/services/TransactionService";
+import { StoreUIActionCreators } from "~/store/ui";
+import { navigate } from "@reach/router";
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -14,38 +19,24 @@ import { StoreCurrencySelectors } from "~/store/account";
 const BudgetsAccountsTransactionsCreate: React.SFC<
   BudgetsAccountsTransactionsCreateProps
 > = props => {
-  return (
-    <TransactionFormsCreate
-      accountId={props.accountId || ""}
-      categories={[
-        {
-          budget: "1",
-          group: SpendGroup.ImmediateObligations,
-          id: "1",
-          name: "Rent",
-        },
-      ]}
-      accounts={[
-        {
-          budget: "1",
-          id: "1",
-          transactions: [],
-          initialBalance: 0,
-          name: "My first one",
-          type: AccountType.Cash,
-        },
-        {
-          budget: "1",
-          id: "2",
-          transactions: [],
-          initialBalance: 0,
-          name: "My second one",
-          type: AccountType.CreditCard,
-        },
-      ]}
-      onSubmit={async v => console.log(v)}
-    />
-  )
+  return UIFormsCreate<TransactionFormsCreateProps, TransactionFormsCreateValues>({
+    FormProps: {
+      accountId: props.accountId || "",
+      categories: props.categories,
+      accounts: props.accounts
+    },
+    component: TransactionFormsCreate,
+    async create(values) {
+      await props.createTransaction({
+        amount: values.amount,
+        category: values.category,
+        from: values.incoming ? values.account : props.accountId,
+        to: values.incoming ? props.accountId : values.account
+      })
+      props.openSnackbar(`Transaction saved`)
+      navigate(`/budgets/${props.budgetId || ''}`)
+    }
+  })
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -61,21 +52,25 @@ interface StateProps {
 
 interface DispatchProps {
   createTransaction: StoreTransactionCreateThunk
+  openSnackbar: (message: string) => void
 }
 
 interface OwnProps {
   path?: string
   accountId?: string
+  budgetId?: string
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, State>(
+export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
   state => ({
-    accounts: StoreCurrencySelectors.getAll,
-    categories: 
+    accounts: StoreAccountSelectors.getAll(state),
+    categories: StoreSpendCategorySelectors.getAll(state)
   }),
-  // dispatch => ({
-  //   : bindActionCreators(, dispatch),
-  // })
+  (dispatch: SimpleThunkDispatch) => ({
+    createTransaction: (input: CreateTransactionInput) =>
+      dispatch(StoreTransactionThunks.create(input)),
+    openSnackbar: (message: string) =>
+      dispatch(StoreUIActionCreators.openSnackbar(message)),
+  })
 )(BudgetsAccountsTransactionsCreate)
 
-export default BudgetsAccountsTransactionsCreate

@@ -3,7 +3,7 @@ import { Action, Reducer, DeepPartial } from "redux"
 import merge from "lodash/merge"
 
 import services from "~/services/services"
-import { normalize } from "normalizr"
+import { normalize, denormalize } from "normalizr"
 import { SimpleThunkAction, StoreState } from "."
 import { NormalizedTree } from "~/models/NormalizedTree"
 import { CreateAccountInput } from "~/services/AccountService"
@@ -19,6 +19,7 @@ import {
 } from "./transaction"
 import updateReferences from "~/utils/updateReferences"
 import { createSelector } from "reselect"
+import dataDebugAccount from "~/data/debug/account";
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Action Types
@@ -32,10 +33,10 @@ export enum StoreAccountActionTypes {
 // ---------------------------------------------------------------------------------------------------------------------
 const getAll = createSelector(
   [(state: StoreState) => state.account],
-  account => Object.values(account)
+  (account): Account[] => denormalize(Object.keys(account), [accountSchema], { accounts: account})
 )
 
-export const StoreCurrencySelectors = {
+export const StoreAccountSelectors = {
   getAll,
 }
 
@@ -89,7 +90,7 @@ export const StoreAccountThunks = {
 // ---------------------------------------------------------------------------------------------------------------------
 // Default State
 // ---------------------------------------------------------------------------------------------------------------------
-const StoreAccountDefaultState: StoreAccountState = {}
+const StoreAccountDefaultState: StoreAccountState = dataDebugAccount
 
 export type StoreAccountState = NormalizedTree<AccountNormalized>
 
