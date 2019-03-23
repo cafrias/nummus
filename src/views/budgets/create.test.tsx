@@ -2,7 +2,7 @@ import * as React from "react"
 import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
 
 // GraphQL
-import { MockedProvider, MockedResponse } from 'react-apollo/test-utils';
+import { MockedProvider, MockedResponse } from "react-apollo/test-utils"
 
 // Utils
 import "jest-dom/extend-expect"
@@ -23,14 +23,17 @@ import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
 
 // Components
-import BudgetCreate, { BudgetCreateQueries, BudgetCreateMutations } from "./create"
+import BudgetCreate, {
+  BudgetCreateInitQuery,
+  BudgetCreateMutation,
+} from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 
 import dataDebugCurrencies from "~/data/debug/currency"
 import dataDebugUser from "~/data/debug/user"
 import { BudgetFormsCreateValues } from "~/components/Budget/Forms/Create"
 import { Budget } from "~/models/Budget"
-import { Currency } from "~/models/Currency";
+import { Currency } from "~/models/Currency"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mock data
@@ -38,13 +41,13 @@ import { Currency } from "~/models/Currency";
 // TODO: create new currency model
 const currencies: Currency[] = [
   {
-    id: 'ARS',
-    name: "Argentine Peso"
+    id: "ARS",
+    name: "Argentine Peso",
   },
   {
     id: "USD",
-    name: "US Dollar"
-  }
+    name: "US Dollar",
+  },
 ]
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -53,27 +56,31 @@ const currencies: Currency[] = [
 const apolloMocks: MockedResponse[] = [
   {
     request: {
-      query: BudgetCreateQueries.init,
+      query: BudgetCreateInitQuery.gql,
     },
     result: {
-      data: { currencies }
-    }
+      data: { currencies },
+    },
   },
   {
     request: {
-      query: BudgetCreateMutations.createBudget,
-      variables: { input: {
-        name: "My budget",
-        currencyCode: "USD",
-        userId: "1"
-      } }
+      query: BudgetCreateMutation.gql,
+      variables: {
+        input: {
+          name: "My budget",
+          currencyCode: "USD",
+          userId: "1",
+        },
+      },
     },
     result: {
-      data: { createBudget: {
-        id: "1"
-      } }
-    }
-  }
+      data: {
+        createBudget: {
+          id: "1",
+        },
+      },
+    },
+  },
 ]
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -128,15 +135,18 @@ describe("Budget create view", () => {
       submitForm(wrapper, input)
     })
 
-    await wait(() => {
-      // Shows message to the user
-      expect(
-        wrapper.getByText(`Budget '${input.name}' created successfully`)
-      ).toBeVisible()
+    await wait(
+      () => {
+        // Shows message to the user
+        expect(
+          wrapper.getByText(`Budget '${input.name}' created successfully`)
+        ).toBeVisible()
 
-      // Redirects to create account
-      expect(navigateMock).toHaveBeenCalledWith("/budgets/1/accounts/create")
-    }, { timeout: 1000 })
+        // Redirects to create account
+        expect(navigateMock).toHaveBeenCalledWith("/budgets/1/accounts/create")
+      },
+      { timeout: 1000 }
+    )
   })
 })
 
