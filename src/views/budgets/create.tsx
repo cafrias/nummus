@@ -1,6 +1,9 @@
 import * as React from "react"
 import { connect } from "react-redux"
 
+import gql from 'graphql-tag'
+import { Query, Mutation } from 'react-apollo'
+
 import { Currency } from "~/models/Currency"
 import { StoreState, SimpleThunkDispatch } from "~/store"
 import { StoreCurrencySelectors } from "~/store/currency"
@@ -16,30 +19,82 @@ import { StoreUIActionCreators } from "~/store/ui"
 import UIFormsCreate from "~/components/UI/Forms/Create"
 
 // ---------------------------------------------------------------------------------------------------------------------
+// Queries
+// ---------------------------------------------------------------------------------------------------------------------
+export const BudgetCreateQueries = {
+  init: gql`
+    query BudgetCreateInit {
+      currencies {
+        id
+        name
+      }
+    }
+  `
+}
+export interface BudgetCreateQueriesGetCurrenciesResult {
+  currencies: {
+    id: string
+    name: string
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Mutations
+// ---------------------------------------------------------------------------------------------------------------------
+export const BudgetCreateMutations = {
+  createBudget: gql`
+    mutation CreateBudget($input: CreateBudgetInput) {
+            createBudget(input: $input) {
+              id
+            }
+          }
+  `
+}
+export interface BudgetCreateMutationsCreateBudgetResult {
+  createBudget: {
+    id: string
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
 const BudgetCreate: React.SFC<BudgetCreateProps> = ({
-  currencies,
   createBudget,
   openSnackbar,
 }) => {
-  return UIFormsCreate<BudgetFormsCreateProps, BudgetFormsCreateValues>({
-    async create(values) {
-      const result = await createBudget({
-        userId: "1",
-        currencyCode: values.currency,
-        name: values.name,
-      })
+  return <Query query={BudgetCreateQueries.init}>
+    {(res) => {
+      if (res.loading) return 'Loading ...'
+      if (res.error) return 'Something went wrong'
 
-      openSnackbar(`Budget '${result.name}' created successfully`)
+      const currencies: Currency[] = res.data.currencies
 
-      navigate(`/budgets/${result.id}/accounts/create`)
-    },
-    FormProps: {
-      currencies,
-    },
-    component: BudgetFormsCreate,
-  })
+      return <Mutation
+        mutation={BudgetCreateMutations.createBudget}
+      >
+        {
+          (createBudget) => {
+            return <BudgetFormsCreate currencies={currencies} onSubmit={async (values) => {
+              const result = await createBudget({
+                variables: {
+                  input: {
+                    name: values.name,
+                    currencyCode: values.currency,
+                    userId: "1"
+                  }
+                }
+              })
+
+              openSnackbar(`Budget '${values.name}' created successfully`)
+
+              navigate(`/budgets/${(result as any).data.createBudget.id}/accounts/create`)
+            }}/>
+          }
+        }
+        </Mutation>
+    }}
+  </Query>
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -51,7 +106,6 @@ export interface BudgetCreateProps
     OwnProps {}
 
 interface StateProps {
-  currencies: Currency[]
 }
 
 interface DispatchProps {
@@ -67,9 +121,7 @@ interface OwnProps {
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
 export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
-  state => ({
-    currencies: StoreCurrencySelectors.getAll(state),
-  }),
+  null,
   (dispatch: SimpleThunkDispatch) => ({
     createBudget: (input: CreateBudgetInput) =>
       dispatch(StoreBudgetThunks.create(input)),

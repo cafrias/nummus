@@ -31,7 +31,7 @@ const BudgetFormsCreate: React.SFC<
     <Formik
       initialValues={{
         name: "",
-        currency: currencies[0].code,
+        currency: currencies[0].id,
       }}
       onSubmit={onSubmit}
       validate={values => {
@@ -64,8 +64,8 @@ const BudgetFormsCreate: React.SFC<
                     },
                     label: "Currency",
                     children: currencies.map(currency => (
-                      <option key={currency.code} value={currency.code}>
-                        {currency.code}
+                      <option key={currency.id} value={currency.id}>
+                        {currency.id}
                       </option>
                     )),
                   }}

@@ -14,8 +14,11 @@ interface CurrencyModel {
    */
   name: string
 }
-export interface Currency extends CurrencyModel {}
-export interface CurrencyNormalized extends CurrencyModel {}
+export interface Currency {
+  id: string
+  name: string
+}
+export interface CurrencyNormalized extends Currency {}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Normalizr

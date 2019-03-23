@@ -1,6 +1,9 @@
 import * as React from "react"
 import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
 
+// GraphQL
+import { MockedProvider, MockedResponse } from 'react-apollo/test-utils';
+
 // Utils
 import "jest-dom/extend-expect"
 import renderWithRedux, {
@@ -20,23 +23,66 @@ import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
 
 // Components
-import BudgetCreate from "./create"
+import BudgetCreate, { BudgetCreateQueries, BudgetCreateMutations } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 
 import dataDebugCurrencies from "~/data/debug/currency"
 import dataDebugUser from "~/data/debug/user"
 import { BudgetFormsCreateValues } from "~/components/Budget/Forms/Create"
 import { Budget } from "~/models/Budget"
+import { Currency } from "~/models/Currency";
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Mock data
+// ---------------------------------------------------------------------------------------------------------------------
+// TODO: create new currency model
+const currencies: Currency[] = [
+  {
+    id: 'ARS',
+    name: "Argentine Peso"
+  },
+  {
+    id: "USD",
+    name: "US Dollar"
+  }
+]
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Apollo mocks
+// ---------------------------------------------------------------------------------------------------------------------
+const apolloMocks: MockedResponse[] = [
+  {
+    request: {
+      query: BudgetCreateQueries.init,
+    },
+    result: {
+      data: { currencies }
+    }
+  },
+  {
+    request: {
+      query: BudgetCreateMutations.createBudget,
+      variables: { input: {
+        name: "My budget",
+        currencyCode: "USD",
+        userId: "1"
+      } }
+    },
+    result: {
+      data: { createBudget: {
+        id: "1"
+      } }
+    }
+  }
+]
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
 // ---------------------------------------------------------------------------------------------------------------------
 interface PartialState {
-  currency: StoreCurrencyState
   ui: StoreUIState
 }
 const reducer = combineReducers<PartialState>({
-  currency: StoreCurrencyReducer,
   ui: StoreUIReducer,
 })
 
@@ -53,14 +99,11 @@ describe("Budget create view", () => {
 
   beforeEach(() => {
     wrapper = renderWithRedux(
-      <>
+      <MockedProvider mocks={apolloMocks} addTypename={false}>
         <BudgetCreate />
         <UISnackbar />
-      </>,
+      </MockedProvider>,
       {
-        initialState: {
-          currency: dataDebugCurrencies,
-        },
         reducer,
       }
     )
@@ -73,7 +116,7 @@ describe("Budget create view", () => {
     }
     const newBudget: Budget = {
       id: "1",
-      currency: dataDebugCurrencies[input.currency],
+      currency: currencies[1],
       name: input.name,
       user: dataDebugUser["1"],
       accounts: [],
@@ -81,16 +124,11 @@ describe("Budget create view", () => {
 
     StoreBudgetThunks.create = jest.fn(() => async _ => newBudget)
 
-    submitForm(wrapper, input)
+    await wait(() => {
+      submitForm(wrapper, input)
+    })
 
     await wait(() => {
-      // Calls thunk
-      expect(StoreBudgetThunks.create).toHaveBeenCalledWith({
-        name: input.name,
-        currencyCode: input.currency,
-        userId: "1",
-      })
-
       // Shows message to the user
       expect(
         wrapper.getByText(`Budget '${input.name}' created successfully`)
@@ -98,7 +136,7 @@ describe("Budget create view", () => {
 
       // Redirects to create account
       expect(navigateMock).toHaveBeenCalledWith("/budgets/1/accounts/create")
-    })
+    }, { timeout: 1000 })
   })
 })
 

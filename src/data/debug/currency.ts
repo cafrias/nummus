@@ -3,11 +3,11 @@ import { NormalizedTree } from "~/models/NormalizedTree"
 
 const dataDebugCurrencies: NormalizedTree<CurrencyNormalized> = {
   ARS: {
-    code: "ARS",
+    id: "ARS",
     name: "Argentine Peso",
   },
   USD: {
-    code: "USD",
+    id: "USD",
     name: "United States Dollar",
   },
 }
