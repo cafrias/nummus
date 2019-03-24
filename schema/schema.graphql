@@ -12,6 +12,8 @@ type Query {
 
 type Mutation {
   createBudget(input: CreateBudgetInput): Budget!
+
+  createAccount(input: CreateAccountInput): Account!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -19,6 +21,25 @@ type Mutation {
 # ----------------------------------------------------------------------------------------------------------------------
 type Account {
   id: ID!
+  type: AccountType!
+  name: String!
+  budget: Budget!
+  initialBalance: Int!
+  transactions: [Transaction!]!
+}
+
+input CreateAccountInput {
+  type: AccountType!
+  name: String!
+  budgetId: ID!
+  initialBalance: Int!
+  transactions: [ID!]!
+}
+
+enum AccountType {
+  BANK
+  CASH
+  CREDIT_CARD
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -53,5 +74,12 @@ input CreateBudgetInput {
 # User
 # ----------------------------------------------------------------------------------------------------------------------
 type User {
+  id: ID!
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Transaction
+# ----------------------------------------------------------------------------------------------------------------------
+type Transaction {
   id: ID!
 }

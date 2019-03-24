@@ -3,9 +3,7 @@ import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
 
 // Utils
 import "jest-dom/extend-expect"
-import renderWithRedux, {
-  RenderWithReduxResult,
-} from "~/utils/test/renderWithRedux"
+import renderWithRedux from "~/utils/test/renderWithRedux"
 
 // Router
 import { navigate } from "@reach/router"
@@ -16,13 +14,13 @@ const navigateMock = navigate as jest.Mock<typeof navigate>
 // Redux
 import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
-import { StoreAccountThunks } from "~/store/account"
 
 // Components
-import AccountCreate from "./create"
+import AccountCreate, { BudgetsAccountsCreateMutation } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
-import { AccountType, Account } from "~/models/Account"
+import { AccountType } from "~/models/Account"
+import { MockedProvider } from "react-apollo/test-utils"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
@@ -43,45 +41,60 @@ afterEach(cleanup)
 // Tests
 // ---------------------------------------------------------------------------------------------------------------------
 describe("Account: create view", () => {
-  let wrapper: RenderWithReduxResult<PartialState>
-
-  beforeEach(() => {
-    wrapper = renderWithRedux(
-      <>
-        <AccountCreate budgetId="1" />
-        <UISnackbar />
-      </>,
-      {
-        reducer,
-      }
-    )
-  })
-
   it("creates new account", async () => {
+    //
+    // Setup
+    //
+    const budgetId = "1"
     const input: AccountFormsCreateValues = {
       name: "My account",
       type: AccountType.CreditCard,
     }
-    const newAccount: Account = {
-      id: "1",
-      budget: "1",
-      transactions: [],
-      initialBalance: 0,
-      name: input.name,
-      type: input.type,
-    }
 
-    StoreAccountThunks.create = jest.fn(() => async _ => newAccount)
+    const wrapper = renderWithRedux(
+      <MockedProvider
+        mocks={[
+          //
+          // Create Mutation
+          //
+          {
+            request: {
+              query: BudgetsAccountsCreateMutation.gql,
+              variables: {
+                input: {
+                  budgetId,
+                  ...input,
+                },
+              },
+            },
+            result: {
+              data: {
+                createAccount: {
+                  id: "1",
+                },
+              },
+            },
+          },
+        ]}
+        addTypename={false}
+      >
+        <AccountCreate budgetId={budgetId} />
+        <UISnackbar />
+      </MockedProvider>,
+      {
+        reducer,
+      }
+    )
 
+    //
+    // Action
+    //
     submitForm(wrapper, input)
 
+    //
+    // Assert
+    //
     await wait(() => {
-      // Calls thunk
-      expect(StoreAccountThunks.create).toHaveBeenCalledWith({
-        budgetId: "1",
-        ...input,
-      })
-
       // Shows message to the user
       expect(
         wrapper.getByText(`Account '${input.name}' created successfully`)
