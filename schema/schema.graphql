@@ -1,12 +1,12 @@
 type Query {
-  # 
+  #
   # Budget
-  # 
+  #
   budgets(userId: String!): [Budget!]!
 
-  # 
+  #
   # Currency
-  # 
+  #
   currencies: [Currency!]!
 }
 
@@ -42,7 +42,7 @@ type Budget {
   accounts: [Account!]!
 }
 
-type CreateBudgetInput {
+input CreateBudgetInput {
   name: String!
   # ISO 4217 compliant currency code
   currencyCode: String!
