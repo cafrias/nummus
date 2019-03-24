@@ -41,6 +41,14 @@ export enum AccountType {
   CreditCard = "CREDIT_CARD",
 }
 
+export interface CreateAccountInput {
+  type: AccountType
+  name: string
+  budgetId: string
+  initialBalance: number
+  transactions: string[]
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Normalizr
 // ---------------------------------------------------------------------------------------------------------------------

@@ -1,31 +1,39 @@
 import * as React from "react"
-import AccountFormsCreate, {
-  AccountFormsCreateProps,
-  AccountFormsCreateValues,
-} from "~/components/Account/Forms/Create"
+import AccountFormsCreate from "~/components/Account/Forms/Create"
 import { StoreAccountCreateThunk, StoreAccountThunks } from "~/store/account"
 import { connect } from "react-redux"
 import { StoreState, SimpleThunkDispatch } from "~/store"
 import { CreateAccountInput } from "~/services/AccountService"
 import { StoreUIActionCreators } from "~/store/ui"
 import { navigate } from "@reach/router"
-import UIFormsCreate from "~/components/UI/Forms/Create"
+import { Mutation } from "react-apollo"
+import gql from "graphql-tag"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
 const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
-  return UIFormsCreate<AccountFormsCreateProps, AccountFormsCreateValues>({
-    async create(values) {
-      const account = await props.createAccount({
-        budgetId: props.budgetId || "",
-        ...values,
-      })
-      props.openSnackbar(`Account '${account.name}' created successfully`)
-      navigate(`/budgets/${props.budgetId}`)
-    },
-    component: AccountFormsCreate,
-  })
+  return (
+    <BudgetsAccountsCreateMutation mutation={BudgetsAccountsCreateMutation.gql}>
+      {createAccount => (
+        <AccountFormsCreate
+          onSubmit={async values => {
+            await createAccount({
+              variables: {
+                input: {
+                  budgetId: props.budgetId,
+                  name: values.name,
+                  type: values.type,
+                },
+              },
+            })
+            props.openSnackbar(`Account '${values.name}' created successfully`)
+            navigate(`/budgets/${props.budgetId}`)
+          }}
+        />
+      )}
+    </BudgetsAccountsCreateMutation>
+  )
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -46,6 +54,26 @@ interface DispatchProps {
 interface OwnProps {
   path?: string
   budgetId?: string
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Mutations
+// ---------------------------------------------------------------------------------------------------------------------
+export class BudgetsAccountsCreateMutation extends Mutation<
+  {
+    createAccount: { id: string }
+  },
+  {
+    input: CreateAccountInput
+  }
+> {
+  static gql = gql`
+    mutation CreateAccount($input: CreateAccountInput) {
+      createAccount(input: $input) {
+        id
+      }
+    }
+  `
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

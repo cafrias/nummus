@@ -2,13 +2,11 @@ import * as React from "react"
 import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
 
 // GraphQL
-import { MockedProvider, MockedResponse } from "react-apollo/test-utils"
+import { MockedProvider } from "react-apollo/test-utils"
 
 // Utils
 import "jest-dom/extend-expect"
-import renderWithRedux, {
-  RenderWithReduxResult,
-} from "~/utils/test/renderWithRedux"
+import renderWithRedux from "~/utils/test/renderWithRedux"
 
 // Router
 import { navigate } from "@reach/router"
@@ -17,8 +15,6 @@ jest.mock("@reach/router")
 const navigateMock = navigate as jest.Mock<typeof navigate>
 
 // Redux
-import StoreCurrencyReducer, { StoreCurrencyState } from "~/store/currency"
-import { StoreBudgetThunks } from "~/store/budget"
 import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
 
@@ -29,16 +25,12 @@ import BudgetCreate, {
 } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 
-import dataDebugCurrencies from "~/data/debug/currency"
-import dataDebugUser from "~/data/debug/user"
 import { BudgetFormsCreateValues } from "~/components/Budget/Forms/Create"
-import { Budget } from "~/models/Budget"
 import { Currency } from "~/models/Currency"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mock data
 // ---------------------------------------------------------------------------------------------------------------------
-// TODO: create new currency model
 const currencies: Currency[] = [
   {
     id: "ARS",
@@ -47,39 +39,6 @@ const currencies: Currency[] = [
   {
     id: "USD",
     name: "US Dollar",
-  },
-]
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Apollo mocks
-// ---------------------------------------------------------------------------------------------------------------------
-const apolloMocks: MockedResponse[] = [
-  {
-    request: {
-      query: BudgetCreateInitQuery.gql,
-    },
-    result: {
-      data: { currencies },
-    },
-  },
-  {
-    request: {
-      query: BudgetCreateMutation.gql,
-      variables: {
-        input: {
-          name: "My budget",
-          currencyCode: "USD",
-          userId: "1",
-        },
-      },
-    },
-    result: {
-      data: {
-        createBudget: {
-          id: "1",
-        },
-      },
-    },
   },
 ]
 
@@ -102,11 +61,52 @@ afterEach(cleanup)
 // Tests
 // ---------------------------------------------------------------------------------------------------------------------
 describe("Budget create view", () => {
-  let wrapper: RenderWithReduxResult<PartialState>
+  it("creates new budget", async () => {
+    const input = {
+      name: "My budget",
+      currency: "USD",
+    }
+    const userId = "1"
 
-  beforeEach(() => {
-    wrapper = renderWithRedux(
-      <MockedProvider mocks={apolloMocks} addTypename={false}>
+    const wrapper = renderWithRedux(
+      <MockedProvider
+        mocks={[
+          //
+          // Init query
+          //
+          {
+            request: {
+              query: BudgetCreateInitQuery.gql,
+            },
+            result: {
+              data: { currencies },
+            },
+          },
+          //
+          // Create mutation
+          //
+          {
+            request: {
+              query: BudgetCreateMutation.gql,
+              variables: {
+                input: {
+                  userId,
+                  currencyCode: input.currency,
+                  name: input.name,
+                },
+              },
+            },
+            result: {
+              data: {
+                createBudget: {
+                  id: "1",
+                },
+              },
+            },
+          },
+        ]}
+        addTypename={false}
+      >
         <BudgetCreate />
         <UISnackbar />
       </MockedProvider>,
@@ -114,27 +114,17 @@ describe("Budget create view", () => {
         reducer,
       }
     )
-  })
 
-  it("creates new budget", async () => {
-    const input = {
-      name: "My budget",
-      currency: "USD",
-    }
-    const newBudget: Budget = {
-      id: "1",
-      currency: currencies[1],
-      name: input.name,
-      user: dataDebugUser["1"],
-      accounts: [],
-    }
-
-    StoreBudgetThunks.create = jest.fn(() => async _ => newBudget)
-
+    //
+    // Action
+    //
     await wait(() => {
       submitForm(wrapper, input)
     })
 
+    //
+    // Assert
+    //
     await wait(
       () => {
         // Shows message to the user

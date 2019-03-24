@@ -5,7 +5,6 @@ import { Form, Formik, FormikErrors, Field, FieldProps } from "formik"
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import UIField from "~/components/UI/Field"
-import { Account } from "~/models/Account"
 import { CreateFormProps } from "~/components/UI/Forms/Create"
 
 import classNames from "classnames"
@@ -28,13 +27,11 @@ import { SpendCategory } from "~/models/SpendCategory"
 // ---------------------------------------------------------------------------------------------------------------------
 export interface TransactionFormsCreateValues {
   amount: number
-  account: string
   incoming: boolean
   category: string
 }
 
 export interface TransactionFormsCreateProps {
-  accounts: Account[]
   categories: SpendCategory[]
   accountId: string
 }
@@ -58,14 +55,13 @@ const useStyles = makeStyles(() =>
 // ---------------------------------------------------------------------------------------------------------------------
 const TransactionFormsCreate: React.SFC<
   TransactionFormsCreateProps & CreateFormProps<TransactionFormsCreateValues>
-> = ({ onSubmit, accounts, accountId, categories }) => {
+> = ({ onSubmit, accountId, categories }) => {
   const classes = useStyles()
 
   return (
     <Formik
       initialValues={{
         amount: 0,
-        account: "",
         incoming: false,
         category: "",
       }}
@@ -117,28 +113,6 @@ const TransactionFormsCreate: React.SFC<
               </Grid>
               <Grid item xs={12} md={6}>
                 <UIField
-                  name="account"
-                  TextFieldProps={{
-                    id: "account",
-                    label: incoming ? "From account" : "To account",
-                    select: true,
-                    children: [
-                      <option key={0} value="" />,
-                      ...accounts.map(account => (
-                        <option
-                          disabled={account.id === accountId}
-                          key={account.id}
-                          value={account.id}
-                        >
-                          {account.name}
-                        </option>
-                      )),
-                    ],
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <UIField
                   name="category"
                   TextFieldProps={{
                     id: "category",
@@ -147,10 +121,7 @@ const TransactionFormsCreate: React.SFC<
                     children: [
                       <option key={0} value="" />,
                       ...categories.map(category => (
-                        <option
-                          key={category.id}
-                          value={category.id}
-                        >
+                        <option key={category.id} value={category.id}>
                           {category.name}
                         </option>
                       )),

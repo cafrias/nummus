@@ -25,22 +25,38 @@ import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Cre
 import { Transaction } from "~/models/Transaction"
 import dataDebugSpendCategory from "~/data/debug/spendCategory"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
-import StoreAccountReducer, { StoreAccountState } from "~/store/account";
-import StoreSpendCategoryReducer, { StoreSpendCategoryState } from "~/store/spendCategory";
-import dataDebugAccount from "~/data/debug/account";
-import { CreateTransactionInput } from "~/services/TransactionService";
+import StoreAccountReducer, { StoreAccountState } from "~/store/account"
+import StoreSpendCategoryReducer, {
+  StoreSpendCategoryState,
+} from "~/store/spendCategory"
+import dataDebugAccount from "~/data/debug/account"
+import { CreateTransactionInput } from "~/services/TransactionService"
+import { MockedProvider } from "react-apollo/test-utils"
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Mocked data
+// ---------------------------------------------------------------------------------------------------------------------
+const spendCategories = [
+  {
+    id: "1",
+    name: "Electric",
+  },
+]
+
+const accounts = [
+  {
+    id: "1",
+    name: "Savings",
+  },
+]
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
 // ---------------------------------------------------------------------------------------------------------------------
 interface PartialState {
-  account: StoreAccountState,
-  spendCategory: StoreSpendCategoryState,
   ui: StoreUIState
 }
 const reducer = combineReducers<PartialState>({
-  account: StoreAccountReducer,
-  spendCategory: StoreSpendCategoryReducer,
   ui: StoreUIReducer,
 })
 
@@ -53,14 +69,71 @@ afterEach(cleanup)
 // Tests
 // ---------------------------------------------------------------------------------------------------------------------
 describe("Transaction: create view", () => {
-  let wrapper: RenderWithReduxResult<PartialState>
+  it("creates new transaction", async () => {
+    //
+    // Fixture
+    //
+    const budgetId = "1"
+    const originAccount = "2"
+    const categoryId = "1"
 
-  beforeEach(() => {
-    wrapper = renderWithRedux(
-      <>
-        <TransactionCreate budgetId="1" accountId="2" />
+    const formValues: TransactionFormsCreateValues = {
+      account: originAccount,
+      amount: 800,
+      incoming: false,
+      category: categoryId,
+    }
+    const createInput: CreateTransactionInput = {
+      amount: formValues.amount,
+      category: categoryId,
+      from: originAccount,
+    }
+
+    const wrapper = renderWithRedux(
+      <MockedProvider
+        mocks={[
+          //
+          // Init query
+          //
+          {
+            request: {
+              query: BudgetsAccountsTransactionsInitQuery.gql,
+            },
+            result: {
+              data: {
+                spendCategories: [{}],
+              },
+            },
+          },
+          //
+          // Create Mutation
+          //
+          {
+            request: {
+              query: BudgetsAccountsTransactionsCreateMutation.gql,
+              variables: {
+                input: createInput,
+              },
+            },
+            result: {
+              data: {
+                createTransaction: [
+                  {
+                    id: "1",
+                  },
+                  {
+                    id: "2",
+                  },
+                ],
+              },
+            },
+          },
+        ]}
+        addTypename={false}
+      >
+        <TransactionCreate budgetId={budgetId} accountId={originAccount} />
         <UISnackbar />
-      </>,
+      </MockedProvider>,
       {
         initialState: {
           spendCategory: dataDebugSpendCategory,
@@ -69,44 +142,10 @@ describe("Transaction: create view", () => {
         reducer,
       }
     )
-  })
-
-  it("creates new transaction", async () => {
-    //
-    // Fixture
-    //
-    const input: TransactionFormsCreateValues = {
-      account: "1",
-      amount: 800,
-      incoming: false,
-      category: "1",
-    }
-    const createInput: CreateTransactionInput = {
-      amount: input.amount,
-        category: "1",
-        from: "2",
-        to: "1",
-    }
-    const newTransactions: Transaction[] = [
-      {
-        id: "1",
-        account: "2",
-        amount: input.amount,
-        incoming: false,
-        category: dataDebugSpendCategory[input.category],
-      },
-      {
-        id: "2",
-        account: "1",
-        amount: input.amount,
-        incoming: true,
-        category: dataDebugSpendCategory[input.category],
-      },
-    ]
 
     StoreTransactionThunks.create = jest.fn(() => async _ => newTransactions)
 
-    submitTransactionFormsCreate(wrapper, input)
+    submitTransactionFormsCreate(wrapper, formValues)
 
     await wait(() => {
       // Calls thunk
