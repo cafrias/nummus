@@ -82,8 +82,10 @@ describe("Account: create view", () => {
         ]}
         addTypename={false}
       >
-        <AccountCreate budgetId={budgetId} />
-        <UISnackbar />
+        <>
+          <AccountCreate budgetId={budgetId} />
+          <UISnackbar />
+        </>
       </MockedProvider>,
       {
         reducer,

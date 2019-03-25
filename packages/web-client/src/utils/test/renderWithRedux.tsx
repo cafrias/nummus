@@ -1,15 +1,7 @@
 import * as React from "react"
-import {
-  createStore,
-  Store,
-  Reducer,
-  Action,
-  DeepPartial,
-  applyMiddleware,
-} from "redux"
+import { createStore, Store, Reducer, Action, DeepPartial } from "redux"
 import { render, RenderResult } from "react-testing-library"
 import { Provider } from "react-redux"
-import ReduxThunk from "redux-thunk"
 
 /**
  * @template S The type of the Redux store State
@@ -33,11 +25,7 @@ export default function renderWithRedux<S>(
   {
     initialState,
     reducer,
-    store = createStore<S, Action, {}, {}>(
-      reducer,
-      initialState,
-      applyMiddleware(ReduxThunk)
-    ),
+    store = createStore<S, Action, {}, {}>(reducer, initialState),
   }: Options<S> = {}
 ) {
   return {

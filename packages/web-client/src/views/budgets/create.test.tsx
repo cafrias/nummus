@@ -107,8 +107,10 @@ describe("Budget create view", () => {
         ]}
         addTypename={false}
       >
-        <BudgetCreate />
-        <UISnackbar />
+        <>
+          <BudgetCreate />
+          <UISnackbar />
+        </>
       </MockedProvider>,
       {
         reducer,

@@ -1,8 +1,7 @@
 module.exports = {
+  // roots: ["<rootDir>/packages/web-client/src", ],
   preset: "ts-jest",
   testEnvironment: "jsdom",
-  roots: ["<rootDir>/src"],
-  moduleNameMapper: {
-    "^~/(.*)$": "<rootDir>/src/$1",
-  },
+  verbose: true,
+  projects: ["<rootDir>/packages/*"],
 }

@@ -1,4 +1,5 @@
 .cache/
 dist
+coverage/
 
 node_modules/
