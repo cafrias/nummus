@@ -39,6 +39,13 @@ export interface TransactionNormalized extends TransactionModel {
   category: string
 }
 
+export interface CreateTransactionInput {
+  accountId: string
+  categoryId: string
+  amount: number
+  incoming: boolean
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Normalizr
 // ---------------------------------------------------------------------------------------------------------------------

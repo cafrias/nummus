@@ -12,25 +12,12 @@ import {
 import "jest-dom/extend-expect"
 
 import TransactionFormsCreate, { TransactionFormsCreateValues } from "./Create"
-import { AccountType, Account } from "~/models/Account"
-import dataDebugAccount from "~/data/debug/account"
 import { SpendCategory } from "~/models/SpendCategory"
 import { SpendGroup } from "~/models/SpendGroup"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture
 // ---------------------------------------------------------------------------------------------------------------------
-const accounts: Account[] = [
-  {
-    id: "1",
-    budget: "1",
-    transactions: [],
-    initialBalance: 0,
-    name: "My bank account",
-    type: AccountType.Bank,
-  },
-]
-
 const categories: SpendCategory[] = [
   {
     id: "1",
@@ -57,7 +44,6 @@ describe("Account/Forms/Create", () => {
     wrapper = render(
       <TransactionFormsCreate
         accountId="1"
-        accounts={accounts}
         categories={categories}
         onSubmit={handleSubmit}
       />
@@ -68,7 +54,6 @@ describe("Account/Forms/Create", () => {
     const values: TransactionFormsCreateValues = {
       amount: 1000,
       incoming: false,
-      account: "1",
       category: "1",
     }
     submitTransactionFormsCreate(wrapper, values)
@@ -114,13 +99,6 @@ export function submitTransactionFormsCreate(
   fireEvent.change(wrapper.getByLabelText("Amount"), {
     target: { value: values.amount },
   })
-
-  fireEvent.change(
-    wrapper.getByLabelText(values.incoming ? "From account" : "To account"),
-    {
-      target: { value: values.account },
-    }
-  )
 
   fireEvent.change(wrapper.getByLabelText("Category"), {
     target: { value: values.category },

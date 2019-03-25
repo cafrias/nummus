@@ -1,12 +1,10 @@
 type Query {
-  #
-  # Budget
-  #
+  accounts(budgetId: ID!): [Account!]!
+
   budgets(userId: String!): [Budget!]!
 
-  #
-  # Currency
-  #
+  spendCategories: [SpendCategory!]!
+
   currencies: [Currency!]!
 }
 
@@ -14,6 +12,8 @@ type Mutation {
   createBudget(input: CreateBudgetInput): Budget!
 
   createAccount(input: CreateAccountInput): Account!
+
+  createTransaction(input: CreateTransactionInput): Transaction!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -71,15 +71,34 @@ input CreateBudgetInput {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
-# User
+# Spend Category
 # ----------------------------------------------------------------------------------------------------------------------
-type User {
+type SpendCategory {
   id: ID!
+  name: String!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Transaction
 # ----------------------------------------------------------------------------------------------------------------------
 type Transaction {
+  id: ID!
+  account: Account!
+  category: SpendCategory!
+  amount: Int!
+  incoming: Boolean!
+}
+
+input CreateTransactionInput {
+  accountId: ID!
+  categoryId: ID!
+  amount: Int!
+  incoming: Boolean!
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# User
+# ----------------------------------------------------------------------------------------------------------------------
+type User {
   id: ID!
 }
