@@ -30,6 +30,12 @@ export interface BudgetNormalized extends BudgetModel {
   accounts: string[]
 }
 
+export interface CreateBudgetInput {
+  name: string
+  currencyCode: string
+  userId: string
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Normalizr
 // ---------------------------------------------------------------------------------------------------------------------

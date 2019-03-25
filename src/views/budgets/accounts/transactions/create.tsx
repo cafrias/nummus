@@ -1,19 +1,7 @@
 import * as React from "react"
-import TransactionFormsCreate, {
-  TransactionFormsCreateProps,
-  TransactionFormsCreateValues,
-} from "~/components/Transaction/Forms/Create"
-import { Account } from "~/models/Account"
-import { SpendCategory } from "~/models/SpendCategory"
-import {
-  StoreTransactionCreateThunk,
-  StoreTransactionThunks,
-} from "~/store/transaction"
+import TransactionFormsCreate from "~/components/Transaction/Forms/Create"
 import { connect } from "react-redux"
-import { StoreAccountSelectors } from "~/store/account"
-import { StoreSpendCategorySelectors } from "~/store/spendCategory"
-import { StoreState, SimpleThunkDispatch } from "~/store"
-import UIFormsCreate from "~/components/UI/Forms/Create"
+import { StoreState } from "~/store"
 import { StoreUIActionCreators } from "~/store/ui"
 import { navigate } from "@reach/router"
 import { Query, Mutation } from "react-apollo"
@@ -28,21 +16,38 @@ const BudgetsAccountsTransactionsCreate: React.SFC<
   BudgetsAccountsTransactionsCreateProps
 > = props => {
   return (
-    <BudgetsAccountsTransactionsCreateInitQuery>
+    <BudgetsAccountsTransactionsCreateInitQuery
+      query={BudgetsAccountsTransactionsCreateInitQuery.gql}
+    >
       {res => {
         if (res.loading) return "Loading ..."
         if (res.error) return "Error"
 
         return (
-          <TransactionFormsCreate
-            accountId={props.accountId}
-            categories={res.data.categories as SpendCategory[]}
-            onSubmit={values => {
-              // TODO: seguimos
-              props.openSnackbar(`Transaction saved`)
-              navigate(`/budgets/${props.budgetId || ""}`)
-            }}
-          />
+          <BudgetsAccountsTransactionsCreateMutation
+            mutation={BudgetsAccountsTransactionsCreateMutation.gql}
+          >
+            {createTransaction => (
+              <TransactionFormsCreate
+                accountId={props.accountId}
+                categories={res.data.spendCategories}
+                onSubmit={async values => {
+                  await createTransaction({
+                    variables: {
+                      input: {
+                        accountId: props.accountId,
+                        amount: values.amount,
+                        categoryId: values.category,
+                        incoming: values.incoming,
+                      },
+                    },
+                  })
+                  props.openSnackbar(`Transaction saved`)
+                  navigate(`/budgets/${props.budgetId || ""}`)
+                }}
+              />
+            )}
+          </BudgetsAccountsTransactionsCreateMutation>
         )
       }}
     </BudgetsAccountsTransactionsCreateInitQuery>
@@ -54,21 +59,15 @@ const BudgetsAccountsTransactionsCreate: React.SFC<
 // ---------------------------------------------------------------------------------------------------------------------
 export class BudgetsAccountsTransactionsCreateInitQuery extends Query<
   {
-    categories: Array<{ id: string; name: string }>
-    accounts: Array<{ id: string; name: string }>
+    spendCategories: Array<{ id: string; name: string }>
   },
   {
     budgetId: string
   }
 > {
   static gql = gql`
-    query BudgetsAccountsTransactionsCreateInit($budgetId: ID!) {
+    query BudgetsAccountsTransactionsCreateInit {
       spendCategories {
-        id
-        name
-      }
-
-      accounts(budgetId: $budgetId) {
         id
         name
       }
@@ -103,10 +102,7 @@ export interface BudgetsAccountsTransactionsCreateProps
   extends StateProps,
     DispatchProps,
     OwnProps {}
-interface StateProps {
-  accounts: Account[]
-  categories: SpendCategory[]
-}
+interface StateProps {}
 
 interface DispatchProps {
   openSnackbar: (message: string) => void
@@ -119,10 +115,7 @@ interface OwnProps {
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
-  state => ({
-    accounts: StoreAccountSelectors.getAll(state),
-    categories: StoreSpendCategorySelectors.getAll(state),
-  }),
+  null,
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,
   }

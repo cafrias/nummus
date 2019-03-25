@@ -20,7 +20,6 @@ import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from "@material-ui/icons/Remove"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
-import { SpendCategory } from "~/models/SpendCategory"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -34,6 +33,11 @@ export interface TransactionFormsCreateValues {
 export interface TransactionFormsCreateProps {
   categories: SpendCategory[]
   accountId: string
+}
+
+interface SpendCategory {
+  id: string
+  name: string
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

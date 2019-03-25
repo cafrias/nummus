@@ -25,7 +25,7 @@ type Account {
   name: String!
   budget: Budget!
   initialBalance: Int!
-  transactions: [Transaction!]!
+  records: [Record!]!
 }
 
 input CreateAccountInput {
@@ -33,7 +33,6 @@ input CreateAccountInput {
   name: String!
   budgetId: ID!
   initialBalance: Int!
-  transactions: [ID!]!
 }
 
 enum AccountType {
@@ -71,6 +70,16 @@ input CreateBudgetInput {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
+# Record
+# ----------------------------------------------------------------------------------------------------------------------
+interface Record {
+  id: ID!
+  account: Account!
+  amount: Int!
+  incoming: Boolean!
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
 # Spend Category
 # ----------------------------------------------------------------------------------------------------------------------
 type SpendCategory {
@@ -81,12 +90,13 @@ type SpendCategory {
 # ----------------------------------------------------------------------------------------------------------------------
 # Transaction
 # ----------------------------------------------------------------------------------------------------------------------
-type Transaction {
+type Transaction implements Record {
   id: ID!
   account: Account!
-  category: SpendCategory!
   amount: Int!
   incoming: Boolean!
+
+  category: SpendCategory!
 }
 
 input CreateTransactionInput {
@@ -94,6 +104,18 @@ input CreateTransactionInput {
   categoryId: ID!
   amount: Int!
   incoming: Boolean!
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Transfer
+# ----------------------------------------------------------------------------------------------------------------------
+type Transfer implements Record {
+  id: ID!
+  account: Account!
+  amount: Int!
+  incoming: Boolean!
+
+  pair: Transfer!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------

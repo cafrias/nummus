@@ -7,7 +7,6 @@ import { Query, Mutation } from "react-apollo"
 import { Currency } from "~/models/Currency"
 import { StoreState } from "~/store"
 import BudgetFormsCreate from "~/components/Budget/Forms/Create"
-import { CreateBudgetInput } from "~/services/BudgetService"
 
 import { navigate } from "@reach/router"
 import { StoreUIActionCreators } from "~/store/ui"
@@ -36,6 +35,7 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = props => {
                         input: {
                           name: values.name,
                           currencyCode: values.currency,
+                          // TODO: use currently logged-in user
                           userId: "1",
                         },
                       },
@@ -98,14 +98,9 @@ export class BudgetCreateInitQuery extends Query<{
 // ---------------------------------------------------------------------------------------------------------------------
 // Mutations
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetCreateMutation extends Mutation<
-  {
-    createBudget: { id: string }
-  },
-  {
-    input: CreateBudgetInput
-  }
-> {
+export class BudgetCreateMutation extends Mutation<{
+  createBudget: { id: string }
+}> {
   static gql = gql`
     mutation CreateBudget($input: CreateBudgetInput) {
       createBudget(input: $input) {

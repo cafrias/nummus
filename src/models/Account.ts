@@ -46,7 +46,6 @@ export interface CreateAccountInput {
   name: string
   budgetId: string
   initialBalance: number
-  transactions: string[]
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
