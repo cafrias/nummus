@@ -19,7 +19,7 @@ import { combineReducers } from "redux"
 import AccountCreate, { BudgetsAccountsCreateMutation } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
-import { AccountType, CreateAccountInput } from "~/models/Account"
+import { AccountType, CreateAccountInput } from "~/types/Account"
 import { MockedProvider } from "react-apollo/test-utils"
 
 // ---------------------------------------------------------------------------------------------------------------------

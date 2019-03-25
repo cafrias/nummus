@@ -1,3 +1,3 @@
 interface Window {
-  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: (m: any) => any
+  __REDUX_DEVTOOLS_EXTENSION__?: () => any
 }

@@ -6,7 +6,7 @@ import { StoreUIActionCreators } from "~/store/ui"
 import { navigate } from "@reach/router"
 import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
-import { CreateAccountInput } from "~/models/Account"
+import { CreateAccountInput } from "~/types/Account"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -39,12 +39,7 @@ const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------------------------------------------------
-export interface BudgetsAccountsCreateProps
-  extends StateProps,
-    DispatchProps,
-    OwnProps {}
-
-interface StateProps {}
+export interface BudgetsAccountsCreateProps extends DispatchProps, OwnProps {}
 
 interface DispatchProps {
   openSnackbar: (message: string) => void
@@ -78,7 +73,7 @@ export class BudgetsAccountsCreateMutation extends Mutation<
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
-export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
+export default connect<{}, DispatchProps, OwnProps, StoreState>(
   null,
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,

@@ -59,7 +59,7 @@ const useStyles = makeStyles(() =>
 // ---------------------------------------------------------------------------------------------------------------------
 const TransactionFormsCreate: React.SFC<
   TransactionFormsCreateProps & CreateFormProps<TransactionFormsCreateValues>
-> = ({ onSubmit, accountId, categories }) => {
+> = ({ onSubmit, categories }) => {
   const classes = useStyles()
 
   return (

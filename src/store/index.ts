@@ -1,12 +1,4 @@
-import {
-  compose,
-  combineReducers,
-  createStore,
-  applyMiddleware,
-  Action,
-} from "redux"
-
-import ReduxThunk, { ThunkAction, ThunkDispatch } from "redux-thunk"
+import { combineReducers, createStore } from "redux"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Reducers
@@ -18,12 +10,6 @@ export interface StoreState {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Helper Types
-// ---------------------------------------------------------------------------------------------------------------------
-export type SimpleThunkAction<R> = ThunkAction<R, StoreState, undefined, Action>
-export type SimpleThunkDispatch = ThunkDispatch<StoreState, undefined, Action>
-
-// ---------------------------------------------------------------------------------------------------------------------
 // Root Reducer
 // ---------------------------------------------------------------------------------------------------------------------
 const rootReducer = combineReducers<StoreState>({
@@ -33,10 +19,9 @@ const rootReducer = combineReducers<StoreState>({
 // ---------------------------------------------------------------------------------------------------------------------
 // Store
 // ---------------------------------------------------------------------------------------------------------------------
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(ReduxThunk))
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
 export default store

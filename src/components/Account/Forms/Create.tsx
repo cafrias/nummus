@@ -5,7 +5,7 @@ import { Form, Formik, FormikErrors, FormikActions } from "formik"
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import UIField from "~/components/UI/Field"
-import { AccountType } from "~/models/Account"
+import { AccountType } from "~/types/Account"
 import { CreateFormProps } from "~/components/UI/Forms/Create"
 
 // ---------------------------------------------------------------------------------------------------------------------

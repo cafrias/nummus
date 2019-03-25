@@ -1,13 +1,13 @@
 import * as React from "react"
 
-import { Form, Formik, FormikErrors, FormikActions } from "formik"
+import { Form, Formik, FormikErrors } from "formik"
 
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 
-import { Currency } from "~/models/Currency"
 import UIField from "~/components/UI/Field"
 import { CreateFormProps } from "~/components/UI/Forms/Create"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -18,7 +18,7 @@ export interface BudgetFormsCreateValues {
 }
 
 export interface BudgetFormsCreateProps {
-  currencies: Currency[]
+  currencies: IdName[]
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

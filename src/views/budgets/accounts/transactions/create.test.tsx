@@ -22,7 +22,7 @@ import TransactionCreate, {
 } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Create"
-import { CreateTransactionInput } from "~/models/Transaction"
+import { CreateTransactionInput } from "~/types/Transaction"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
 import { MockedProvider } from "react-apollo/test-utils"
 

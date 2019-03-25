@@ -12,7 +12,6 @@ import {
 import "jest-dom/extend-expect"
 
 import BudgetFormsCreate, { BudgetFormsCreateValues } from "./Create"
-import dataDebugCurrencies from "~/data/debug/currency"
 
 beforeEach(cleanup)
 
@@ -24,7 +23,12 @@ describe("Budget/Forms/Create", () => {
     handleSubmit.mockClear()
     wrapper = render(
       <BudgetFormsCreate
-        currencies={Object.values(dataDebugCurrencies)}
+        currencies={[
+          {
+            id: "USD",
+            name: "US Dollar",
+          },
+        ]}
         onSubmit={handleSubmit}
       />
     )

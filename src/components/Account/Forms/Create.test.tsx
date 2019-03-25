@@ -12,7 +12,7 @@ import {
 import "jest-dom/extend-expect"
 
 import AccountFormsCreate, { AccountFormsCreateValues } from "./Create"
-import { AccountType } from "~/models/Account"
+import { AccountType } from "~/types/Account"
 
 beforeEach(cleanup)
 
