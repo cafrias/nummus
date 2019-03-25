@@ -27,31 +27,26 @@ import { CreateTransactionInput } from "~/models/Transaction"
 const BudgetsAccountsTransactionsCreate: React.SFC<
   BudgetsAccountsTransactionsCreateProps
 > = props => {
-  return <TransactionFormsCreate
-    accountId={props.accountId}
-    
-  /></TransactionFormsCreate>
-  return UIFormsCreate<
-    TransactionFormsCreateProps,
-    TransactionFormsCreateValues
-  >({
-    FormProps: {
-      accountId: props.accountId || "",
-      categories: props.categories,
-      accounts: props.accounts,
-    },
-    component: TransactionFormsCreate,
-    async create(values) {
-      await props.createTransaction({
-        amount: values.amount,
-        category: values.category,
-        from: values.incoming ? values.account : props.accountId,
-        to: values.incoming ? props.accountId : values.account,
-      })
-      props.openSnackbar(`Transaction saved`)
-      navigate(`/budgets/${props.budgetId || ""}`)
-    },
-  })
+  return (
+    <BudgetsAccountsTransactionsCreateInitQuery>
+      {res => {
+        if (res.loading) return "Loading ..."
+        if (res.error) return "Error"
+
+        return (
+          <TransactionFormsCreate
+            accountId={props.accountId}
+            categories={res.data.categories as SpendCategory[]}
+            onSubmit={values => {
+              // TODO: seguimos
+              props.openSnackbar(`Transaction saved`)
+              navigate(`/budgets/${props.budgetId || ""}`)
+            }}
+          />
+        )
+      }}
+    </BudgetsAccountsTransactionsCreateInitQuery>
+  )
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
