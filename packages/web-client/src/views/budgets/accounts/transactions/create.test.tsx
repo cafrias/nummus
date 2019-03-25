@@ -112,8 +112,10 @@ describe("Transaction: create view", () => {
         ]}
         addTypename={false}
       >
-        <TransactionCreate budgetId={budgetId} accountId={originAccount} />
-        <UISnackbar />
+        <>
+          <TransactionCreate budgetId={budgetId} accountId={originAccount} />
+          <UISnackbar />
+        </>
       </MockedProvider>,
       {
         reducer,
