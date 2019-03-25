@@ -6,8 +6,7 @@ import { StoreUIActionCreators } from "~/store/ui"
 import { navigate } from "@reach/router"
 import { Query, Mutation } from "react-apollo"
 import gql from "graphql-tag"
-
-import { CreateTransactionInput } from "~/models/Transaction"
+import { CreateTransactionInput } from "~/types/Transaction"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -99,10 +98,8 @@ export class BudgetsAccountsTransactionsCreateMutation extends Mutation<
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
 export interface BudgetsAccountsTransactionsCreateProps
-  extends StateProps,
-    DispatchProps,
+  extends DispatchProps,
     OwnProps {}
-interface StateProps {}
 
 interface DispatchProps {
   openSnackbar: (message: string) => void
@@ -114,7 +111,7 @@ interface OwnProps {
   budgetId?: string
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
+export default connect<{}, DispatchProps, OwnProps, StoreState>(
   null,
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,

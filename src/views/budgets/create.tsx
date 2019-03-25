@@ -4,12 +4,12 @@ import { connect } from "react-redux"
 import gql from "graphql-tag"
 import { Query, Mutation } from "react-apollo"
 
-import { Currency } from "~/models/Currency"
 import { StoreState } from "~/store"
 import BudgetFormsCreate from "~/components/Budget/Forms/Create"
 
 import { navigate } from "@reach/router"
 import { StoreUIActionCreators } from "~/store/ui"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -21,7 +21,7 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = props => {
         if (res.loading) return "Loading ..."
         if (res.error) return "Something went wrong"
 
-        const currencies: Currency[] = res.data.currencies
+        const currencies: IdName[] = res.data.currencies
 
         return (
           <BudgetCreateMutation mutation={BudgetCreateMutation.gql}>
@@ -64,12 +64,7 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = props => {
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------------------------------------------------
-export interface BudgetCreateProps
-  extends StateProps,
-    DispatchProps,
-    OwnProps {}
-
-interface StateProps {}
+export interface BudgetCreateProps extends DispatchProps, OwnProps {}
 
 interface DispatchProps {
   openSnackbar: (message: string) => void
@@ -83,7 +78,7 @@ interface OwnProps {
 // Queries
 // ---------------------------------------------------------------------------------------------------------------------
 export class BudgetCreateInitQuery extends Query<{
-  currencies: Currency[]
+  currencies: IdName[]
 }> {
   static gql = gql`
     query BudgetCreateInit {
@@ -113,7 +108,7 @@ export class BudgetCreateMutation extends Mutation<{
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
-export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
+export default connect<{}, DispatchProps, OwnProps, StoreState>(
   null,
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,

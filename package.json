@@ -28,15 +28,11 @@
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "lodash": "^4.17.11",
-    "normalizr": "^3.3.0",
     "react": "^16.8.4",
     "react-apollo": "^2.5.2",
     "react-dom": "^16.8.4",
     "react-redux": "^6.0.1",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0",
-    "store": "^2.0.12",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

@@ -26,12 +26,12 @@ import BudgetCreate, {
 import UISnackbar from "~/components/UI/Snackbar"
 
 import { BudgetFormsCreateValues } from "~/components/Budget/Forms/Create"
-import { Currency } from "~/models/Currency"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mock data
 // ---------------------------------------------------------------------------------------------------------------------
-const currencies: Currency[] = [
+const currencies: IdName[] = [
   {
     id: "ARS",
     name: "Argentine Peso",
