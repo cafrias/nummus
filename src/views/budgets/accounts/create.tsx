@@ -1,13 +1,12 @@
 import * as React from "react"
 import AccountFormsCreate from "~/components/Account/Forms/Create"
-import { StoreAccountCreateThunk, StoreAccountThunks } from "~/store/account"
 import { connect } from "react-redux"
-import { StoreState, SimpleThunkDispatch } from "~/store"
-import { CreateAccountInput } from "~/services/AccountService"
+import { StoreState } from "~/store"
 import { StoreUIActionCreators } from "~/store/ui"
 import { navigate } from "@reach/router"
 import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
+import { CreateAccountInput } from "~/models/Account"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -21,6 +20,7 @@ const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
             await createAccount({
               variables: {
                 input: {
+                  initialBalance: 0,
                   budgetId: props.budgetId,
                   name: values.name,
                   type: values.type,
@@ -47,7 +47,6 @@ export interface BudgetsAccountsCreateProps
 interface StateProps {}
 
 interface DispatchProps {
-  createAccount: StoreAccountCreateThunk
   openSnackbar: (message: string) => void
 }
 
@@ -81,10 +80,7 @@ export class BudgetsAccountsCreateMutation extends Mutation<
 // ---------------------------------------------------------------------------------------------------------------------
 export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
   null,
-  (dispatch: SimpleThunkDispatch) => ({
-    createAccount: (input: CreateAccountInput) =>
-      dispatch(StoreAccountThunks.create(input)),
-    openSnackbar: (message: string) =>
-      dispatch(StoreUIActionCreators.openSnackbar(message)),
-  })
+  {
+    openSnackbar: StoreUIActionCreators.openSnackbar,
+  }
 )(BudgetsAccountsCreate)

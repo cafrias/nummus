@@ -19,7 +19,7 @@ import { combineReducers } from "redux"
 import AccountCreate, { BudgetsAccountsCreateMutation } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
-import { AccountType } from "~/models/Account"
+import { AccountType, CreateAccountInput } from "~/models/Account"
 import { MockedProvider } from "react-apollo/test-utils"
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -46,9 +46,16 @@ describe("Account: create view", () => {
     // Setup
     //
     const budgetId = "1"
-    const input: AccountFormsCreateValues = {
+    const formValues: AccountFormsCreateValues = {
       name: "My account",
       type: AccountType.CreditCard,
+    }
+    const input: CreateAccountInput = {
+      budgetId,
+      // TODO: add initial balance to form
+      initialBalance: 0,
+      name: formValues.name,
+      type: formValues.type,
     }
 
     const wrapper = renderWithRedux(
@@ -61,10 +68,7 @@ describe("Account: create view", () => {
             request: {
               query: BudgetsAccountsCreateMutation.gql,
               variables: {
-                input: {
-                  budgetId,
-                  ...input,
-                },
+                input,
               },
             },
             result: {
@@ -89,7 +93,7 @@ describe("Account: create view", () => {
     //
     // Action
     //
-    submitForm(wrapper, input)
+    submitForm(wrapper, formValues)
 
     //
     // Assert
@@ -97,7 +101,7 @@ describe("Account: create view", () => {
     await wait(() => {
       // Shows message to the user
       expect(
-        wrapper.getByText(`Account '${input.name}' created successfully`)
+        wrapper.getByText(`Account '${formValues.name}' created successfully`)
       ).toBeVisible()
 
       // Redirects to create account

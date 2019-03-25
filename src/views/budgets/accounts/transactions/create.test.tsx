@@ -1,11 +1,9 @@
 import * as React from "react"
-import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
+import { cleanup, wait } from "react-testing-library"
 
 // Utils
 import "jest-dom/extend-expect"
-import renderWithRedux, {
-  RenderWithReduxResult,
-} from "~/utils/test/renderWithRedux"
+import renderWithRedux from "~/utils/test/renderWithRedux"
 
 // Router
 import { navigate } from "@reach/router"
@@ -16,21 +14,16 @@ const navigateMock = navigate as jest.Mock<typeof navigate>
 // Redux
 import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
-import { StoreTransactionThunks } from "~/store/transaction"
 
 // Components
-import TransactionCreate from "./create"
+import TransactionCreate, {
+  BudgetsAccountsTransactionsCreateInitQuery,
+  BudgetsAccountsTransactionsCreateMutation,
+} from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Create"
-import { Transaction } from "~/models/Transaction"
-import dataDebugSpendCategory from "~/data/debug/spendCategory"
+import { CreateTransactionInput } from "~/models/Transaction"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
-import StoreAccountReducer, { StoreAccountState } from "~/store/account"
-import StoreSpendCategoryReducer, {
-  StoreSpendCategoryState,
-} from "~/store/spendCategory"
-import dataDebugAccount from "~/data/debug/account"
-import { CreateTransactionInput } from "~/services/TransactionService"
 import { MockedProvider } from "react-apollo/test-utils"
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -40,13 +33,6 @@ const spendCategories = [
   {
     id: "1",
     name: "Electric",
-  },
-]
-
-const accounts = [
-  {
-    id: "1",
-    name: "Savings",
   },
 ]
 
@@ -78,15 +64,15 @@ describe("Transaction: create view", () => {
     const categoryId = "1"
 
     const formValues: TransactionFormsCreateValues = {
-      account: originAccount,
       amount: 800,
       incoming: false,
       category: categoryId,
     }
     const createInput: CreateTransactionInput = {
       amount: formValues.amount,
-      category: categoryId,
-      from: originAccount,
+      categoryId,
+      accountId: originAccount,
+      incoming: formValues.incoming,
     }
 
     const wrapper = renderWithRedux(
@@ -97,11 +83,11 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsAccountsTransactionsInitQuery.gql,
+              query: BudgetsAccountsTransactionsCreateInitQuery.gql,
             },
             result: {
               data: {
-                spendCategories: [{}],
+                spendCategories,
               },
             },
           },
@@ -117,14 +103,9 @@ describe("Transaction: create view", () => {
             },
             result: {
               data: {
-                createTransaction: [
-                  {
-                    id: "1",
-                  },
-                  {
-                    id: "2",
-                  },
-                ],
+                createTransaction: {
+                  id: "1",
+                },
               },
             },
           },
@@ -135,27 +116,20 @@ describe("Transaction: create view", () => {
         <UISnackbar />
       </MockedProvider>,
       {
-        initialState: {
-          spendCategory: dataDebugSpendCategory,
-          account: dataDebugAccount,
-        },
         reducer,
       }
     )
 
-    StoreTransactionThunks.create = jest.fn(() => async _ => newTransactions)
-
-    submitTransactionFormsCreate(wrapper, formValues)
+    await wait(() => {
+      submitTransactionFormsCreate(wrapper, formValues)
+    })
 
     await wait(() => {
-      // Calls thunk
-      expect(StoreTransactionThunks.create).toHaveBeenCalledWith(createInput)
-
       // Shows message to the user
       expect(wrapper.getByText(`Transaction saved`)).toBeVisible()
 
       // Redirects back to the budget
-      expect(navigateMock).toHaveBeenCalledWith("/budgets/1")
+      expect(navigateMock).toHaveBeenCalledWith(`/budgets/${budgetId}`)
     })
   })
 })
