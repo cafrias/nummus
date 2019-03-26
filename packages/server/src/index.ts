@@ -1,7 +1,11 @@
+import "reflect-metadata"
+import { createConnection, Connection } from "typeorm"
+
 import fs from "fs"
 import path from "path"
 
 import { ApolloServer } from "apollo-server"
+import resolverMap from "./resolvers"
 
 const typeDefs = fs
   .readFileSync(
@@ -10,8 +14,23 @@ const typeDefs = fs
   )
   .toString()
 
-const server = new ApolloServer({ typeDefs, mocks: true })
+export interface Context {
+  connection: Connection
+}
 
-server.listen().then(({ url }) => {
-  console.log(`Listening on ${url}`)
-})
+createConnection()
+  .then(connection => {
+    const context: Context = {
+      connection,
+    }
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers: resolverMap,
+      context,
+    })
+
+    server.listen().then(({ url }) => {
+      console.log(`Listening on ${url}`)
+    })
+  })
+  .catch(error => console.log(error))

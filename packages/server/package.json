@@ -4,18 +4,29 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "nodemon -e js -e ts -w src/ -x 'ts-node src/index.ts'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon -e js -e ts -w src/ -x 'ts-node -r tsconfig-paths/register src/index.ts'",
+    "db:sync": "ts-node node_modules/.bin/typeorm schema:sync",
+    "db:seed": "npx ts-node -r tsconfig-paths/register --project tsconfig.json src/db/seeders/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "author": "Carlos Frias <carlos.a.frias@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.4",
+    "@graphql-codegen/typescript": "1.0.4",
+    "@graphql-codegen/typescript-resolvers": "^1.0.4",
+    "@types/node": "^11.11.7",
     "node-ts": "^5.0.0",
     "nodemon": "^1.18.10",
-    "ts-node": "^8.0.3"
+    "ts-node": "^8.0.3",
+    "tsconfig-paths": "^3.8.0"
   },
   "dependencies": {
     "apollo-server": "^2.4.8",
-    "graphql": "^14.1.1"
+    "graphql": "^14.1.1",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^4.0.6",
+    "typeorm": "^0.2.16"
   }
 }
