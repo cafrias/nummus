@@ -1,6 +1,9 @@
 {
   "name": "nummus",
   "private": true,
+  "scripts": {
+    "build-schema": "lerna run --scope schema generate && lerna run --scope schema build"
+  },
   "devDependencies": {
     "@types/classnames": "^2.2.7",
     "@types/jest": "^24.0.11",
