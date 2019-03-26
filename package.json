@@ -2,6 +2,8 @@
   "name": "nummus",
   "private": true,
   "scripts": {
+    "test": "lerna exec -- npm run test",
+    "test:apps:web-client": "lerna exec --scope web-client -- npm run test:watch",
     "build-schema": "lerna run --scope schema generate && lerna run --scope schema build"
   },
   "devDependencies": {

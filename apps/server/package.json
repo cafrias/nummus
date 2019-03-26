@@ -7,7 +7,7 @@
     "start": "nodemon -e js -e ts -w src/ -x 'ts-node -r tsconfig-paths/register src/index.ts'",
     "db:sync": "ts-node node_modules/.bin/typeorm schema:sync",
     "db:seed": "npx ts-node -r tsconfig-paths/register --project tsconfig.json src/db/seeders/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": ""
   },
   "author": "Carlos Frias <carlos.a.frias@gmail.com>",
   "license": "ISC",

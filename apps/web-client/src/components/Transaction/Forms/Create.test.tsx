@@ -11,18 +11,24 @@ import {
 
 import "jest-dom/extend-expect"
 
-import TransactionFormsCreate, { TransactionFormsCreateValues } from "./Create"
+import TransactionFormsCreate, {
+  TransactionFormsCreateValues,
+  GroupedCategories,
+} from "./Create"
 import { IdName } from "~/types/IdLabel"
+import { SpendGroup } from "schema"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture
 // ---------------------------------------------------------------------------------------------------------------------
-const categories: IdName[] = [
-  {
-    id: "1",
-    name: "Rent/Mortgage",
-  },
-]
+const categories: GroupedCategories = {
+  [SpendGroup.Immediate_Obligations]: [
+    {
+      id: "1",
+      name: "Rent/Mortgage",
+    },
+  ],
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Hooks

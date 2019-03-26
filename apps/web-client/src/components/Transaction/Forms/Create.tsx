@@ -37,7 +37,7 @@ export interface TransactionFormsCreateProps {
   accountId: string
 }
 
-export type GroupedCategories = { [k in SpendGroup]: IdName[] }
+export type GroupedCategories = { [k: string]: IdName[] }
 
 const groupLabels = {
   [SpendGroup.Immediate_Obligations]: "Immediate Obligations",
@@ -164,7 +164,7 @@ function renderCategories(categories: GroupedCategories): React.ReactNode {
 
       if (groupCats.length) {
         result.push(
-          <optgroup label={groupLabels[group]}>
+          <optgroup key={group} label={groupLabels[group]}>
             {...groupCats.map(cat => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}

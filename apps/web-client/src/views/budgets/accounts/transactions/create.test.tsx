@@ -25,14 +25,16 @@ import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Cre
 import { CreateTransactionInput } from "~/types/Transaction"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
 import { MockedProvider } from "react-apollo/test-utils"
+import { SpendCategory, SpendGroup } from "schema"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data
 // ---------------------------------------------------------------------------------------------------------------------
-const spendCategories = [
+const spendCategories: SpendCategory[] = [
   {
     id: "1",
     name: "Electric",
+    group: SpendGroup.Immediate_Obligations,
   },
 ]
 
