@@ -3,7 +3,11 @@ module.exports = {
     includes: ["packages/web-client/src/**/*.{ts,tsx}"],
     service: {
       name: "nummus",
-      localSchemaFile: "schema/schema.graphql"
-    }
-  }
-};
+      localSchemaFile: "schema/schema.graphql",
+    },
+  },
+  service: {
+    name: "nummus",
+    localSchemaFile: "schema/schema.graphql",
+  },
+}
