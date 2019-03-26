@@ -3,10 +3,10 @@ import { createConnection, Connection } from "typeorm"
 
 import { readSchema } from "schema"
 
-import { ApolloServer } from "apollo-server"
+import { ApolloServer, gql } from "apollo-server"
 import resolverMap from "./resolvers"
 
-const typeDefs = readSchema()
+const typeDefs = gql(readSchema())
 
 export interface Context {
   connection: Connection
