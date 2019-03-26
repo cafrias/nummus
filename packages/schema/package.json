@@ -1,0 +1,22 @@
+{
+  "name": "schema",
+  "version": "1.0.0",
+  "description": "GraphQL Schema and typings for Nummus",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && cp src/schema.graphql dist/schema.graphql",
+    "generate": "graphql-codegen --config codegen.yml",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carlos Frias <carlos.a.frias@gmail.com>",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.0.4",
+    "@graphql-codegen/typescript-resolvers": "^1.0.4",
+    "@types/graphql": "^14.0.7",
+    "@types/node": "^11.11.8",
+    "graphql": "^14.1.1"
+  }
+}
