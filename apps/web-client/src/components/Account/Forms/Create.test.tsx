@@ -29,8 +29,9 @@ describe("Account/Forms/Create", () => {
     const values: AccountFormsCreateValues = {
       name: "My new account",
       type: AccountType.CreditCard,
+      initialBalance: 500.5,
     }
-    submitForm(wrapper, values)
+    submitAccountFormsCreate(wrapper, values)
 
     await wait(() => {
       expect(handleSubmit.mock.calls[0][0]).toEqual(values)
@@ -50,12 +51,18 @@ describe("Account/Forms/Create", () => {
 // ---------------------------------------------------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------
-function submitForm(wrapper: RenderResult, values: AccountFormsCreateValues) {
+export function submitAccountFormsCreate(
+  wrapper: RenderResult,
+  values: AccountFormsCreateValues
+) {
   fireEvent.change(wrapper.getByLabelText("Name"), {
     target: { value: values.name },
   })
   fireEvent.change(wrapper.getByLabelText("Type"), {
     target: { value: values.type },
+  })
+  fireEvent.change(wrapper.getByLabelText("Initial balance"), {
+    target: { value: values.initialBalance },
   })
 
   fireEvent.click(wrapper.getByTestId("account_create"))

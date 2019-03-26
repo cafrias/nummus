@@ -2,25 +2,13 @@
   "name": "nummus",
   "private": true,
   "scripts": {
+    "start": "lerna run start --stream",
     "test": "lerna exec -- npm run test",
     "test:apps:web-client": "lerna exec --scope web-client -- npm run test:watch",
     "build-schema": "lerna run --scope schema generate && lerna run --scope schema build"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.7",
-    "@types/jest": "^24.0.11",
-    "@types/lodash": "^4.14.123",
-    "@types/reach__router": "^1.2.3",
-    "@types/react": "^16.8.8",
-    "@types/react-dom": "^16.8.2",
-    "@types/react-redux": "^7.0.3",
-    "@types/uuid": "^3.4.4",
-    "jest": "^24.5.0",
-    "jest-dom": "^3.1.3",
     "lerna": "^3.13.1",
-    "parcel-bundler": "^1.12.2",
-    "react-testing-library": "^6.0.0",
-    "ts-jest": "^24.0.0",
     "typescript": "^3.3.3333"
   },
   "dependencies": {}

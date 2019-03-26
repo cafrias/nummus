@@ -35,5 +35,20 @@
     "redux": "^4.0.1",
     "uuid": "^3.3.2",
     "schema": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/classnames": "^2.2.7",
+    "@types/jest": "^24.0.11",
+    "@types/lodash": "^4.14.123",
+    "@types/reach__router": "^1.2.3",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.2",
+    "@types/react-redux": "^7.0.3",
+    "@types/uuid": "^3.4.4",
+    "parcel-bundler": "^1.12.2",
+    "react-testing-library": "^6.0.0",
+    "ts-jest": "^24.0.0",
+    "jest": "^24.5.0",
+    "jest-dom": "^3.1.3"
   }
 }

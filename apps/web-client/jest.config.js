@@ -1,10 +1,8 @@
-const base = require("../../jest.config.base.js")
-
 module.exports = {
-  ...base,
+  preset: "ts-jest",
+  roots: ["<rootDir>/src"],
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/src/$1",
   },
-  testMatch: [`<rootDir>/src/**/*.test.tsx`],
-  name: "web-client",
+  displayName: "web-client",
 }

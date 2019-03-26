@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cleanup, RenderResult, fireEvent, wait } from "react-testing-library"
+import { cleanup, wait } from "react-testing-library"
 
 // Utils
 import "jest-dom/extend-expect"
@@ -21,6 +21,7 @@ import UISnackbar from "~/components/UI/Snackbar"
 import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
 import { AccountType, CreateAccountInput } from "~/types/Account"
 import { MockedProvider } from "react-apollo/test-utils"
+import { submitAccountFormsCreate } from "~/components/Account/Forms/Create.test"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
@@ -49,11 +50,12 @@ describe("Account: create view", () => {
     const formValues: AccountFormsCreateValues = {
       name: "My account",
       type: AccountType.CreditCard,
+      initialBalance: 550.5,
     }
     const input: CreateAccountInput = {
       budgetId,
       // TODO: add initial balance to form
-      initialBalance: 0,
+      initialBalance: formValues.initialBalance,
       name: formValues.name,
       type: formValues.type,
     }
@@ -95,7 +97,7 @@ describe("Account: create view", () => {
     //
     // Action
     //
-    submitForm(wrapper, formValues)
+    submitAccountFormsCreate(wrapper, formValues)
 
     //
     // Assert
@@ -111,17 +113,3 @@ describe("Account: create view", () => {
     })
   })
 })
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------------------------------------------------
-function submitForm(wrapper: RenderResult, input: AccountFormsCreateValues) {
-  fireEvent.change(wrapper.getByLabelText("Name"), {
-    target: { value: input.name },
-  })
-  fireEvent.change(wrapper.getByLabelText("Type"), {
-    target: { value: input.type },
-  })
-
-  fireEvent.click(wrapper.getByTestId("account_create"))
-}

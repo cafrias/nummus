@@ -14,6 +14,7 @@ import { CreateFormProps } from "~/components/UI/Forms/Create"
 export interface AccountFormsCreateValues {
   name: string
   type: AccountType
+  initialBalance: number
 }
 
 export interface AccountFormsCreateProps {}
@@ -29,6 +30,7 @@ const AccountFormsCreate: React.SFC<
       initialValues={{
         name: "",
         type: AccountType.Bank,
+        initialBalance: 0,
       }}
       onSubmit={onSubmit}
       validate={values => {
@@ -75,6 +77,16 @@ const AccountFormsCreate: React.SFC<
                         {label}
                       </option>
                     )),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <UIField
+                  name="initialBalance"
+                  TextFieldProps={{
+                    id: "initialBalance",
+                    label: "Initial balance",
+                    type: "number",
                   }}
                 />
               </Grid>

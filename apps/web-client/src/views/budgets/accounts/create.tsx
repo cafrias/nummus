@@ -20,7 +20,7 @@ const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
             await createAccount({
               variables: {
                 input: {
-                  initialBalance: 0,
+                  initialBalance: values.initialBalance,
                   budgetId: props.budgetId,
                   name: values.name,
                   type: values.type,
