@@ -25,7 +25,7 @@ import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Cre
 import { CreateTransactionInput } from "~/types/Transaction"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
 import { MockedProvider } from "react-apollo/test-utils"
-import { SpendCategory, SpendGroup } from "schema"
+import { SpendCategory, SpendGroup } from "@nummus/schema"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data

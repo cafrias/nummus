@@ -7,7 +7,7 @@ import {
 } from "typeorm"
 import { Budget } from "./Budget"
 import { Record } from "./Record"
-import { AccountType } from "schema"
+import { AccountType } from "@nummus/schema"
 
 @Entity()
 export class Account {

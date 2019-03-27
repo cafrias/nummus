@@ -16,7 +16,7 @@ import TransactionFormsCreate, {
   GroupedCategories,
 } from "./Create"
 import { IdName } from "~/types/IdLabel"
-import { SpendGroup } from "schema"
+import { SpendGroup } from "@nummus/schema"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture

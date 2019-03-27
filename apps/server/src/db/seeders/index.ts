@@ -1,6 +1,6 @@
 import { createConnection } from "typeorm"
 import { SpendCategory } from "~/entity/SpendCategory"
-import { SpendGroup } from "schema"
+import { SpendGroup } from "@nummus/schema"
 
 function exec() {
   createConnection()

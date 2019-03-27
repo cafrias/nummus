@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
-import { SpendGroup } from "schema"
+import { SpendGroup } from "@nummus/schema"
 
 @Entity()
 export class SpendCategory {

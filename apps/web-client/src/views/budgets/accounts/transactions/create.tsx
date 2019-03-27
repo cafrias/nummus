@@ -9,7 +9,7 @@ import { navigate } from "@reach/router"
 import { Query, Mutation } from "react-apollo"
 import gql from "graphql-tag"
 import { CreateTransactionInput } from "~/types/Transaction"
-import { SpendGroup, SpendCategory } from "schema"
+import { SpendGroup, SpendCategory } from "@nummus/schema"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component

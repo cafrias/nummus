@@ -1,5 +1,5 @@
 {
-  "name": "schema",
+  "name": "@nummus/schema",
   "version": "1.0.0",
   "description": "GraphQL Schema and typings for Nummus",
   "main": "dist/index.js",

@@ -21,7 +21,7 @@ import RemoveIcon from "@material-ui/icons/Remove"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
 import { IdName } from "~/types/IdLabel"
-import { SpendGroup } from "schema"
+import { SpendGroup } from "@nummus/schema"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types

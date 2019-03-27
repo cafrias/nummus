@@ -1,4 +1,4 @@
-import { QueryResolvers } from "schema"
+import { QueryResolvers } from "@nummus/schema"
 import { Context } from ".."
 import { SpendCategory } from "~/entity/SpendCategory"
 

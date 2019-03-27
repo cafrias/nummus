@@ -1,7 +1,7 @@
 import "reflect-metadata"
 import { createConnection, Connection } from "typeorm"
 
-import { readSchema } from "schema"
+import { readSchema } from "@nummus/schema"
 
 import { ApolloServer, gql } from "apollo-server"
 import resolverMap from "./resolvers"
