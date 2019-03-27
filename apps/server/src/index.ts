@@ -1,10 +1,11 @@
 import "reflect-metadata"
-import { createConnection, Connection } from "typeorm"
+import { Connection } from "typeorm"
 
 import { readSchema } from "@nummus/schema"
 
 import { ApolloServer, gql } from "apollo-server"
 import resolverMap from "./resolvers"
+import { initDB } from "./db/init"
 
 const typeDefs = gql(readSchema())
 
@@ -12,7 +13,7 @@ export interface Context {
   connection: Connection
 }
 
-createConnection()
+initDB()
   .then(connection => {
     const context: Context = {
       connection,
