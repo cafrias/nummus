@@ -1,49 +1,10 @@
 import * as React from "react"
 
-import {
-  render,
-  cleanup,
-  fireEvent,
-  RenderResult,
-  wait,
-} from "react-testing-library"
+import { render, fireEvent, RenderResult, wait } from "react-testing-library"
 
 import "jest-dom/extend-expect"
 
-import RecordFormsCreate, { RecordFormsCreateValues } from "./Create"
-import { IdName } from "~/types/IdLabel"
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Fixture
-// ---------------------------------------------------------------------------------------------------------------------
-const accounts: IdName[] = [
-  {
-    id: "1",
-    name: "Bank",
-  },
-  {
-    id: "2",
-    name: "Credit card",
-  },
-]
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Hooks
-// ---------------------------------------------------------------------------------------------------------------------
-beforeEach(cleanup)
-
-// ---------------------------------------------------------------------------------------------------------------------
-// Test suite
-// ---------------------------------------------------------------------------------------------------------------------
-describe("Record/Forms/Create", () => {
-  recordFormTestCases(handleSubmit => (
-    <RecordFormsCreate
-      accounts={accounts}
-      submitTestId="record_create"
-      onSubmit={handleSubmit}
-    />
-  ))
-})
+import { RecordFormsCreateValues } from "./Create"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Test cases
@@ -54,7 +15,7 @@ export function recordFormTestCases(
   values: object = {},
   validation = (wrapper: RenderResult) => {}
 ) {
-  describe("base functionality", () => {
+  describe("create record form functionality", () => {
     let wrapper: RenderResult
     const handleSubmit = jest.fn()
 
@@ -66,7 +27,6 @@ export function recordFormTestCases(
     it("submits when valid", async () => {
       const formValues = {
         amount: 1000,
-        incoming: false,
         account: "1",
         ...values,
       }
@@ -111,10 +71,6 @@ export function fillRecordFormsCreate(
   wrapper: RenderResult,
   values: RecordFormsCreateValues
 ) {
-  fireEvent.change(wrapper.getByLabelText("Incoming"), {
-    target: { value: values.incoming },
-  })
-
   fireEvent.change(wrapper.getByLabelText("Amount"), {
     target: { value: values.amount },
   })

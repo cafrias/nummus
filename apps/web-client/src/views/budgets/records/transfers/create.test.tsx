@@ -70,7 +70,6 @@ describe("Transfer: create view", () => {
 
     const formValues: TransferFormsCreateValues = {
       amount: 800,
-      incoming: false,
       destination: destinationId,
       account: "1",
     }
@@ -78,7 +77,6 @@ describe("Transfer: create view", () => {
       amount: formValues.amount,
       destination: destinationId,
       accountId: originAccount,
-      incoming: formValues.incoming,
     }
 
     const wrapper = renderWithRedux(

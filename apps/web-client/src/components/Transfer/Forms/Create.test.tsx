@@ -15,7 +15,7 @@ import { IdName } from "~/types/IdLabel"
 import {
   recordFormTestCases,
   fillRecordFormsCreate,
-} from "~/components/Record/Forms/Create.test"
+} from "~/components/Record/Forms/CreateTestHelpers"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture

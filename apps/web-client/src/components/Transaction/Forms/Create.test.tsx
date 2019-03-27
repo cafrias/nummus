@@ -12,7 +12,7 @@ import { SpendGroup } from "@nummus/schema"
 import {
   recordFormTestCases,
   fillRecordFormsCreate,
-} from "~/components/Record/Forms/Create.test"
+} from "~/components/Record/Forms/CreateTestHelpers"
 import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -53,6 +53,7 @@ describe("Transaction/Forms/Create", () => {
     ),
     submitTransactionFormsCreate,
     {
+      incoming: false,
       category: "1",
     },
     wrapper => {

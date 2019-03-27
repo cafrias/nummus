@@ -40,7 +40,6 @@ const BudgetsRecordsTransfersCreate: React.SFC<
                         accountId: props.accountId,
                         amount: values.amount,
                         destination: values.destination,
-                        incoming: values.incoming,
                       },
                     },
                   })
