@@ -4,11 +4,8 @@ import { cleanup, fireEvent, RenderResult } from "react-testing-library"
 
 import "jest-dom/extend-expect"
 
-import TransactionFormsCreate, {
-  TransactionFormsCreateValues,
-  GroupedCategories,
-} from "./Create"
-import { SpendGroup } from "@nummus/schema"
+import TransferFormsCreate, { TransferFormsCreateValues } from "./Create"
+import { IdName } from "~/types/IdLabel"
 import {
   recordFormTestCases,
   fillRecordFormsCreate,
@@ -17,14 +14,12 @@ import {
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture
 // ---------------------------------------------------------------------------------------------------------------------
-const categories: GroupedCategories = {
-  [SpendGroup.ImmediateObligations]: [
-    {
-      id: "1",
-      name: "Rent/Mortgage",
-    },
-  ],
-}
+const accounts: IdName[] = [
+  {
+    id: "2",
+    name: "Credit Card",
+  },
+]
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Hooks
@@ -34,21 +29,21 @@ beforeEach(cleanup)
 // ---------------------------------------------------------------------------------------------------------------------
 // Test suite
 // ---------------------------------------------------------------------------------------------------------------------
-describe("Transaction/Forms/Create", () => {
+describe("Transfer/Forms/Create", () => {
   recordFormTestCases(
     handleSubmit => (
-      <TransactionFormsCreate
+      <TransferFormsCreate
         accountId="1"
-        categories={categories}
+        accounts={accounts}
         onSubmit={handleSubmit}
       />
     ),
-    submitTransactionFormsCreate,
+    submitTransferFormsCreate,
     {
-      category: "1",
+      destination: "2",
     },
     wrapper => {
-      expect(wrapper.getByText("Select a category")).toBeVisible()
+      expect(wrapper.getByText("Select a destination account")).toBeVisible()
     }
   )
 })
@@ -56,17 +51,17 @@ describe("Transaction/Forms/Create", () => {
 // ---------------------------------------------------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------
-export function submitTransactionFormsCreate(
+export function submitTransferFormsCreate(
   wrapper: RenderResult,
-  values?: TransactionFormsCreateValues
+  values?: TransferFormsCreateValues
 ) {
   if (values) {
     fillRecordFormsCreate(wrapper, values)
 
-    fireEvent.change(wrapper.getByLabelText("Category"), {
-      target: { value: values.category },
+    fireEvent.change(wrapper.getByLabelText("Destination account"), {
+      target: { value: values.destination },
     })
   }
 
-  fireEvent.click(wrapper.getByTestId("transaction_create"))
+  fireEvent.click(wrapper.getByTestId("transfer_create"))
 }

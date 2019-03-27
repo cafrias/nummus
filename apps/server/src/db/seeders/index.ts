@@ -8,11 +8,11 @@ function exec() {
       const categories = [
         new SpendCategory({
           name: "Electricity",
-          group: SpendGroup.Immediate_Obligations,
+          group: SpendGroup.ImmediateObligations,
         }),
         new SpendCategory({
           name: "Internet",
-          group: SpendGroup.Immediate_Obligations,
+          group: SpendGroup.ImmediateObligations,
         }),
       ]
 
