@@ -1,6 +1,12 @@
 import * as React from "react"
 
-import { cleanup, fireEvent, RenderResult } from "react-testing-library"
+import {
+  cleanup,
+  fireEvent,
+  RenderResult,
+  render,
+  wait,
+} from "react-testing-library"
 
 import "jest-dom/extend-expect"
 
@@ -46,6 +52,33 @@ describe("Transfer/Forms/Create", () => {
       expect(wrapper.getByText("Select a destination account")).toBeVisible()
     }
   )
+
+  describe("transfer validation", () => {
+    it("doesn't allow transfers to same account", async () => {
+      const handleSubmit = jest.fn()
+      const wrapper = render(
+        <TransferFormsCreate accounts={accounts} onSubmit={handleSubmit} />
+      )
+
+      fireEvent.change(wrapper.getByLabelText("Origin account"), {
+        target: { value: "1" },
+      })
+      fireEvent.change(wrapper.getByLabelText("Destination account"), {
+        target: { value: "1" },
+      })
+      fireEvent.click(wrapper.getByTestId("transfer_create"))
+
+      await wait(() => {
+        expect(handleSubmit).not.toHaveBeenCalled()
+        expect(
+          wrapper.getByText("Can't be the same as destination account")
+        ).toBeVisible()
+        expect(
+          wrapper.getByText("Can't be the same as origin account")
+        ).toBeVisible()
+      })
+    })
+  })
 })
 
 // ---------------------------------------------------------------------------------------------------------------------

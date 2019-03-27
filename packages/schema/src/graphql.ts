@@ -51,6 +51,18 @@ export type CreateTransactionInput = {
   incoming: Scalars["Boolean"]
 }
 
+export type CreateTransferInput = {
+  accountId: Scalars["ID"]
+  amount: Scalars["Int"]
+  incoming: Scalars["Boolean"]
+  destination: Scalars["ID"]
+}
+
+export type CreateTransferOutput = {
+  origin: Transfer
+  destination: Transfer
+}
+
 export type Currency = {
   id: Scalars["ID"]
   name: Scalars["String"]
@@ -60,6 +72,7 @@ export type Mutation = {
   createBudget: Budget
   createAccount: Account
   createTransaction: Transaction
+  createTransfer: CreateTransferOutput
 }
 
 export type MutationCreateBudgetArgs = {
@@ -72,6 +85,10 @@ export type MutationCreateAccountArgs = {
 
 export type MutationCreateTransactionArgs = {
   input?: Maybe<CreateTransactionInput>
+}
+
+export type MutationCreateTransferArgs = {
+  input?: Maybe<CreateTransferInput>
 }
 
 export type Query = {
@@ -213,6 +230,14 @@ export type BudgetResolvers<Context = any, ParentType = Budget> = {
   accounts?: Resolver<Array<Account>, ParentType, Context>
 }
 
+export type CreateTransferOutputResolvers<
+  Context = any,
+  ParentType = CreateTransferOutput
+> = {
+  origin?: Resolver<Transfer, ParentType, Context>
+  destination?: Resolver<Transfer, ParentType, Context>
+}
+
 export type CurrencyResolvers<Context = any, ParentType = Currency> = {
   id?: Resolver<Scalars["ID"], ParentType, Context>
   name?: Resolver<Scalars["String"], ParentType, Context>
@@ -231,6 +256,12 @@ export type MutationResolvers<Context = any, ParentType = Mutation> = {
     ParentType,
     Context,
     MutationCreateTransactionArgs
+  >
+  createTransfer?: Resolver<
+    CreateTransferOutput,
+    ParentType,
+    Context,
+    MutationCreateTransferArgs
   >
 }
 
@@ -281,6 +312,7 @@ export type UserResolvers<Context = any, ParentType = User> = {
 export type Resolvers<Context = any> = {
   Account?: AccountResolvers<Context>
   Budget?: BudgetResolvers<Context>
+  CreateTransferOutput?: CreateTransferOutputResolvers<Context>
   Currency?: CurrencyResolvers<Context>
   Mutation?: MutationResolvers<Context>
   Query?: QueryResolvers<Context>

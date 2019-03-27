@@ -48,20 +48,22 @@ const TransactionFormsCreate: React.SFC<
       }}
       onSubmit={props.onSubmit}
     >
-      <Grid item xs={12} md={6}>
-        <UIField
-          name="category"
-          TextFieldProps={{
-            id: "category",
-            label: "Category",
-            select: true,
-            children: [
-              <option key={0} value="" />,
-              renderCategories(props.categories),
-            ],
-          }}
-        />
-      </Grid>
+      {form => (
+        <Grid item xs={12} md={6}>
+          <UIField
+            name="category"
+            TextFieldProps={{
+              id: "category",
+              label: "Category",
+              select: true,
+              children: [
+                <option key={0} value="" />,
+                renderCategories(props.categories),
+              ],
+            }}
+          />
+        </Grid>
+      )}
     </RecordFormsCreate>
   )
 }

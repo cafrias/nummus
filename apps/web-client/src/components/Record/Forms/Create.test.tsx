@@ -54,51 +54,53 @@ export function recordFormTestCases(
   values: object = {},
   validation = (wrapper: RenderResult) => {}
 ) {
-  let wrapper: RenderResult
-  const handleSubmit = jest.fn()
+  describe("base functionality", () => {
+    let wrapper: RenderResult
+    const handleSubmit = jest.fn()
 
-  beforeEach(() => {
-    handleSubmit.mockClear()
-    wrapper = render(renderFunction(handleSubmit))
-  })
-
-  it("submits when valid", async () => {
-    const formValues = {
-      amount: 1000,
-      incoming: false,
-      account: "1",
-      ...values,
-    }
-
-    submitForm(wrapper, formValues)
-
-    await wait(() => {
-      expect(handleSubmit).toHaveBeenCalled()
-      expect(handleSubmit.mock.calls[0][0]).toEqual(formValues)
+    beforeEach(() => {
+      handleSubmit.mockClear()
+      wrapper = render(renderFunction(handleSubmit))
     })
-  })
 
-  it("validates data", async () => {
-    const amounts = [0, -100]
+    it("submits when valid", async () => {
+      const formValues = {
+        amount: 1000,
+        incoming: false,
+        account: "1",
+        ...values,
+      }
 
-    for (const amount of amounts) {
-      fireEvent.change(wrapper.getByLabelText("Amount"), {
-        target: { value: amount },
-      })
-
-      submitForm(wrapper)
+      submitForm(wrapper, formValues)
 
       await wait(() => {
-        expect(handleSubmit).not.toHaveBeenCalled()
-        expect(wrapper.getByText("Should be greater than 0")).toBeVisible()
+        expect(handleSubmit).toHaveBeenCalled()
+        expect(handleSubmit.mock.calls[0][0]).toEqual(formValues)
       })
-    }
+    })
 
-    expect(handleSubmit).not.toHaveBeenCalled()
+    it("validates data", async () => {
+      const amounts = [0, -100]
 
-    expect(wrapper.getByText("Should select an origin account")).toBeVisible()
+      for (const amount of amounts) {
+        fireEvent.change(wrapper.getByLabelText("Amount"), {
+          target: { value: amount },
+        })
 
-    validation(wrapper)
+        submitForm(wrapper)
+
+        await wait(() => {
+          expect(handleSubmit).not.toHaveBeenCalled()
+          expect(wrapper.getByText("Should be greater than 0")).toBeVisible()
+        })
+      }
+
+      expect(handleSubmit).not.toHaveBeenCalled()
+
+      expect(wrapper.getByText("Should select an origin account")).toBeVisible()
+
+      validation(wrapper)
+    })
   })
 }
 

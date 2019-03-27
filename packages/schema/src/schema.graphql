@@ -14,6 +14,7 @@ type Mutation {
   createAccount(input: CreateAccountInput): Account!
 
   createTransaction(input: CreateTransactionInput): Transaction!
+  createTransfer(input: CreateTransferInput): CreateTransferOutput!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -122,6 +123,17 @@ type Transfer implements Record {
   incoming: Boolean!
 
   pair: Transfer!
+}
+
+input CreateTransferInput {
+  accountId: ID!
+  amount: Int!
+  destination: ID!
+}
+
+type CreateTransferOutput {
+  origin: Transfer!
+  destination: Transfer!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------

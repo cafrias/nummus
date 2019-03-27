@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { FormikErrors } from "formik"
+import { FormikErrors, FormikProps } from "formik"
 
 import Grid from "@material-ui/core/Grid"
 import UIField from "~/components/UI/Field"
@@ -35,30 +35,44 @@ const TransferFormsCreate: React.SFC<
       initialValues={{ destination: "" }}
       validate={(values: TransferFormsCreateValues) => {
         const errors: FormikErrors<TransferFormsCreateValues> = {}
-        if (!values.destination)
+
+        if (!values.destination) {
           errors.destination = "Select a destination account"
+        }
+
+        if (values.account && values.account === values.destination) {
+          errors.account = "Can't be the same as destination account"
+          errors.destination = "Can't be the same as origin account"
+        }
+
         return errors
       }}
       onSubmit={props.onSubmit}
     >
-      <Grid item xs={12} md={6}>
-        <UIField
-          name="destination"
-          TextFieldProps={{
-            id: "destination",
-            label: "Destination account",
-            select: true,
-            children: [
-              <option key={0} value="" />,
-              ...props.accounts.map(account => (
-                <option key={account.id} value={account.id}>
-                  {account.name}
-                </option>
-              )),
-            ],
-          }}
-        />
-      </Grid>
+      {(form: FormikProps<TransferFormsCreateValues>) => (
+        <Grid item xs={12} md={6}>
+          <UIField
+            name="destination"
+            TextFieldProps={{
+              id: "destination",
+              label: "Destination account",
+              select: true,
+              children: [
+                <option key={0} value="" />,
+                ...props.accounts.map(account => (
+                  <option
+                    disabled={form.values.account === account.id}
+                    key={account.id}
+                    value={account.id}
+                  >
+                    {account.name}
+                  </option>
+                )),
+              ],
+            }}
+          />
+        </Grid>
+      )}
     </RecordFormsCreate>
   )
 }

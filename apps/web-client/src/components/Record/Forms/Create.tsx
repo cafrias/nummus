@@ -1,6 +1,13 @@
 import * as React from "react"
 
-import { Form, Formik, FormikErrors, Field, FieldProps } from "formik"
+import {
+  Form,
+  Formik,
+  FormikErrors,
+  Field,
+  FieldProps,
+  FormikProps,
+} from "formik"
 
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
@@ -38,6 +45,7 @@ export interface RecordFormsCreateProps {
   validate?: (
     v: RecordFormsCreateValues
   ) => FormikErrors<RecordFormsCreateValues>
+  children?: (form: FormikProps<RecordFormsCreateValues>) => React.ReactElement
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -137,7 +145,7 @@ const RecordFormsCreate: React.SFC<
                   }}
                 />
               </Grid>
-              {props.children}
+              {props.children && props.children(form)}
               <Grid item xs={12} md={4}>
                 <Button
                   color="primary"

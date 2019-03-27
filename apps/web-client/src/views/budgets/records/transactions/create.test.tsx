@@ -17,8 +17,8 @@ import { combineReducers } from "redux"
 
 // Components
 import TransactionCreate, {
-  BudgetsRecordsCreateInitQuery,
-  BudgetsRecordsCreateMutation,
+  BudgetsRecordsTransactionsCreateInitQuery,
+  BudgetsRecordsTransactionsCreateMutation,
 } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Create"
@@ -98,7 +98,7 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsRecordsCreateInitQuery.gql,
+              query: BudgetsRecordsTransactionsCreateInitQuery.gql,
               variables: {
                 budgetId,
               },
@@ -115,7 +115,7 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsRecordsCreateMutation.gql,
+              query: BudgetsRecordsTransactionsCreateMutation.gql,
               variables: {
                 input: createInput,
               },
