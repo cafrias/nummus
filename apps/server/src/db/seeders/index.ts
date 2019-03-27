@@ -1,10 +1,19 @@
-import { createConnection } from "typeorm"
 import { SpendCategory } from "~/entity/SpendCategory"
-import { SpendGroup } from "@nummus/schema"
+import { SpendGroup, AccountType } from "@nummus/schema"
+import { Budget } from "~/entity/Budget"
+import { Currency } from "~/entity/Currency"
+import { User } from "~/entity/User"
+import { initDB } from "../init"
+import { Account } from "~/entity/Account"
 
 function exec() {
-  createConnection()
+  initDB()
     .then(connection => {
+      const toSave = []
+
+      //
+      // Categories
+      //
       const categories = [
         new SpendCategory({
           name: "Electricity",
@@ -15,8 +24,53 @@ function exec() {
           group: SpendGroup.ImmediateObligations,
         }),
       ]
+      toSave.push(...categories)
 
-      connection.manager.save(categories)
+      //
+      // User
+      //
+      const user = new User()
+      toSave.push(user)
+
+      //
+      // Currency
+      //
+      const USDollar = new Currency({
+        id: "USD",
+        name: "US Dollar",
+      })
+      toSave.push(USDollar)
+
+      //
+      // Budget
+      //
+      const budget = new Budget({
+        currency: USDollar,
+        name: "My budget",
+        user,
+      })
+      toSave.push(budget)
+
+      //
+      // Account
+      //
+      const accounts = {
+        bank: new Account({
+          budget,
+          initialBalance: 0,
+          name: "My bank account",
+          type: AccountType.Bank,
+        }),
+        creditCard: new Account({
+          budget,
+          initialBalance: -500,
+          name: "My credit card",
+          type: AccountType.CreditCard,
+        }),
+      }
+      toSave.push(...Object.values(accounts))
+
+      connection.manager.save(toSave)
     })
     .catch(err => console.error(err))
 }

@@ -1,11 +1,20 @@
 import { QueryResolvers } from "@nummus/schema"
 import { Context } from ".."
 import { SpendCategory } from "~/entity/SpendCategory"
+import { Account } from "~/entity/Account"
 
 const Query: QueryResolvers<Context> = {
-  async spendCategories(obj, args, ctx) {
-    const result = await ctx.connection.manager.find(SpendCategory)
-    return result
+  spendCategories(obj, args, ctx) {
+    return ctx.connection.manager.find(SpendCategory)
+  },
+  accounts(obj, args, ctx) {
+    const repo = ctx.connection.getRepository(Account)
+
+    return repo.find({
+      where: {
+        budget: { id: args.budgetId },
+      },
+    })
   },
 }
 

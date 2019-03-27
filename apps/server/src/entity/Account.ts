@@ -28,4 +28,14 @@ export class Account {
 
   @OneToMany(type => Record, record => record.account)
   records: Record[]
+
+  constructor(input?: Partial<Account>) {
+    if (input) {
+      for (const key in input) {
+        if (input.hasOwnProperty(key)) {
+          this[key] = input[key]
+        }
+      }
+    }
+  }
 }
