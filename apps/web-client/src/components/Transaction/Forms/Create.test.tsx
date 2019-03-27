@@ -13,6 +13,7 @@ import {
   recordFormTestCases,
   fillRecordFormsCreate,
 } from "~/components/Record/Forms/Create.test"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Fixture
@@ -26,6 +27,13 @@ const categories: GroupedCategories = {
   ],
 }
 
+const accounts: IdName[] = [
+  {
+    id: "1",
+    name: "Bank",
+  },
+]
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Hooks
 // ---------------------------------------------------------------------------------------------------------------------
@@ -38,7 +46,7 @@ describe("Transaction/Forms/Create", () => {
   recordFormTestCases(
     handleSubmit => (
       <TransactionFormsCreate
-        accountId="1"
+        accounts={accounts}
         categories={categories}
         onSubmit={handleSubmit}
       />

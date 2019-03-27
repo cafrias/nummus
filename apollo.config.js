@@ -1,6 +1,6 @@
 module.exports = {
   client: {
-    includes: ["packages/web-client/src/**/*.{ts,tsx}"],
+    includes: ["apps/web-client/src/**/*.{ts,tsx}"],
     service: {
       name: "nummus",
       localSchemaFile: "packages/schema/src/schema.graphql",

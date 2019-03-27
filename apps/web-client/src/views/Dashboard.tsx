@@ -61,9 +61,9 @@ const Dashboard: React.SFC<DashboardProps> = () => {
           fullWidth
           variant="text"
           component={RouterLink}
-          {...{ to: "/budgets/1/accounts/1/transactions/create" }}
+          {...{ to: "/budgets/1/records/create" }}
         >
-          Create transaction
+          Create record
         </Button>
       </Grid>
     </Grid>

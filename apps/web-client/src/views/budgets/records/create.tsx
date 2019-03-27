@@ -10,16 +10,18 @@ import { Query, Mutation } from "react-apollo"
 import gql from "graphql-tag"
 import { CreateTransactionInput } from "~/types/Transaction"
 import { SpendGroup, SpendCategory } from "@nummus/schema"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const BudgetsAccountsTransactionsCreate: React.SFC<
-  BudgetsAccountsTransactionsCreateProps
-> = props => {
+const BudgetsRecordsCreate: React.SFC<BudgetsRecordsCreateProps> = props => {
   return (
-    <BudgetsAccountsTransactionsCreateInitQuery
-      query={BudgetsAccountsTransactionsCreateInitQuery.gql}
+    <BudgetsRecordsCreateInitQuery
+      variables={{
+        budgetId: props.budgetId,
+      }}
+      query={BudgetsRecordsCreateInitQuery.gql}
     >
       {res => {
         if (res.loading) return "Loading ..."
@@ -29,12 +31,12 @@ const BudgetsAccountsTransactionsCreate: React.SFC<
         const groupedCategories = groupCategories(res.data.spendCategories)
 
         return (
-          <BudgetsAccountsTransactionsCreateMutation
-            mutation={BudgetsAccountsTransactionsCreateMutation.gql}
+          <BudgetsRecordsCreateMutation
+            mutation={BudgetsRecordsCreateMutation.gql}
           >
             {createTransaction => (
               <TransactionFormsCreate
-                accountId={props.accountId}
+                accounts={res.data.accounts}
                 categories={groupedCategories}
                 onSubmit={async values => {
                   await createTransaction({
@@ -52,10 +54,10 @@ const BudgetsAccountsTransactionsCreate: React.SFC<
                 }}
               />
             )}
-          </BudgetsAccountsTransactionsCreateMutation>
+          </BudgetsRecordsCreateMutation>
         )
       }}
-    </BudgetsAccountsTransactionsCreateInitQuery>
+    </BudgetsRecordsCreateInitQuery>
   )
 }
 
@@ -78,20 +80,25 @@ function groupCategories(categories: SpendCategory[]) {
 // ---------------------------------------------------------------------------------------------------------------------
 // Queries
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetsAccountsTransactionsCreateInitQuery extends Query<
+export class BudgetsRecordsCreateInitQuery extends Query<
   {
     spendCategories: SpendCategory[]
+    accounts: IdName[]
   },
   {
     budgetId: string
   }
 > {
   static gql = gql`
-    query BudgetsAccountsTransactionsCreateInit {
+    query BudgetsRecordsCreateInit($budgetId: ID!) {
       spendCategories {
         id
         name
         group
+      }
+      accounts(budgetId: $budgetId) {
+        id
+        name
       }
     }
   `
@@ -100,7 +107,7 @@ export class BudgetsAccountsTransactionsCreateInitQuery extends Query<
 // ---------------------------------------------------------------------------------------------------------------------
 // Mutations
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetsAccountsTransactionsCreateMutation extends Mutation<
+export class BudgetsRecordsCreateMutation extends Mutation<
   {
     createTransaction: { id: string }
   },
@@ -120,9 +127,7 @@ export class BudgetsAccountsTransactionsCreateMutation extends Mutation<
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
-export interface BudgetsAccountsTransactionsCreateProps
-  extends DispatchProps,
-    OwnProps {}
+export interface BudgetsRecordsCreateProps extends DispatchProps, OwnProps {}
 
 interface DispatchProps {
   openSnackbar: (message: string) => void
@@ -139,4 +144,4 @@ export default connect<{}, DispatchProps, OwnProps, StoreState>(
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,
   }
-)(BudgetsAccountsTransactionsCreate)
+)(BudgetsRecordsCreate)

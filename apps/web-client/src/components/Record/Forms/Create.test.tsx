@@ -11,6 +11,21 @@ import {
 import "jest-dom/extend-expect"
 
 import RecordFormsCreate, { RecordFormsCreateValues } from "./Create"
+import { IdName } from "~/types/IdLabel"
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Fixture
+// ---------------------------------------------------------------------------------------------------------------------
+const accounts: IdName[] = [
+  {
+    id: "1",
+    name: "Bank",
+  },
+  {
+    id: "2",
+    name: "Credit card",
+  },
+]
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Hooks
@@ -23,7 +38,7 @@ beforeEach(cleanup)
 describe("Record/Forms/Create", () => {
   recordFormTestCases(handleSubmit => (
     <RecordFormsCreate
-      accountId="1"
+      accounts={accounts}
       submitTestId="record_create"
       onSubmit={handleSubmit}
     />
@@ -51,6 +66,7 @@ export function recordFormTestCases(
     const formValues = {
       amount: 1000,
       incoming: false,
+      account: "1",
       ...values,
     }
 
@@ -80,6 +96,8 @@ export function recordFormTestCases(
 
     expect(handleSubmit).not.toHaveBeenCalled()
 
+    expect(wrapper.getByText("Should select an origin account")).toBeVisible()
+
     validation(wrapper)
   })
 }
@@ -97,6 +115,10 @@ export function fillRecordFormsCreate(
 
   fireEvent.change(wrapper.getByLabelText("Amount"), {
     target: { value: values.amount },
+  })
+
+  fireEvent.change(wrapper.getByLabelText("Origin account"), {
+    target: { value: values.account },
   })
 }
 

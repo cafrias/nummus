@@ -20,6 +20,7 @@ import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from "@material-ui/icons/Remove"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -27,10 +28,11 @@ import { makeStyles, createStyles } from "@material-ui/styles"
 export interface RecordFormsCreateValues {
   amount: number
   incoming: boolean
+  account: string
 }
 
 export interface RecordFormsCreateProps {
-  accountId: string
+  accounts: IdName[]
   submitTestId: string
   initialValues?: object
   validate?: (
@@ -65,11 +67,13 @@ const RecordFormsCreate: React.SFC<
       initialValues={{
         amount: 0,
         incoming: false,
+        account: "",
         ...props.initialValues,
       }}
       onSubmit={props.onSubmit}
       validate={values => {
         const errors: FormikErrors<RecordFormsCreateValues> = {}
+        if (!values.account) errors.account = "Should select an origin account"
         if (values.amount <= 0) errors.amount = "Should be greater than 0"
         return Object.assign(
           errors,
@@ -82,6 +86,24 @@ const RecordFormsCreate: React.SFC<
         return (
           <Form>
             <Grid container justify="flex-end" spacing={16}>
+              <Grid item xs={12} md={6}>
+                <UIField
+                  name="account"
+                  TextFieldProps={{
+                    id: "account",
+                    label: "Origin account",
+                    select: true,
+                    children: [
+                      <option key={0} value="" />,
+                      ...props.accounts.map(account => (
+                        <option key={account.id} value={account.id}>
+                          {account.name}
+                        </option>
+                      )),
+                    ],
+                  }}
+                />
+              </Grid>
               <Grid item xs={12} md={6}>
                 <Field name="incoming">
                   {({ field }: FieldProps) => (

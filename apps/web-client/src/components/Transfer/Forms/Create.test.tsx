@@ -16,6 +16,10 @@ import {
 // ---------------------------------------------------------------------------------------------------------------------
 const accounts: IdName[] = [
   {
+    id: "1",
+    name: "Bank",
+  },
+  {
     id: "2",
     name: "Credit Card",
   },
@@ -32,11 +36,7 @@ beforeEach(cleanup)
 describe("Transfer/Forms/Create", () => {
   recordFormTestCases(
     handleSubmit => (
-      <TransferFormsCreate
-        accountId="1"
-        accounts={accounts}
-        onSubmit={handleSubmit}
-      />
+      <TransferFormsCreate accounts={accounts} onSubmit={handleSubmit} />
     ),
     submitTransferFormsCreate,
     {

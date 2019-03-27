@@ -20,7 +20,7 @@ export interface TransactionFormsCreateValues extends RecordFormsCreateValues {
 
 export interface TransactionFormsCreateProps {
   categories: GroupedCategories
-  accountId: string
+  accounts: IdName[]
 }
 
 export type GroupedCategories = { [k: string]: IdName[] }
@@ -38,7 +38,7 @@ const TransactionFormsCreate: React.SFC<
 > = props => {
   return (
     <RecordFormsCreate
-      accountId={props.accountId}
+      accounts={props.accounts}
       submitTestId="transaction_create"
       initialValues={{ category: "" }}
       validate={(values: TransactionFormsCreateValues) => {

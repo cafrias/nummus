@@ -20,7 +20,6 @@ export interface TransferFormsCreateValues extends RecordFormsCreateValues {
 
 export interface TransferFormsCreateProps {
   accounts: IdName[]
-  accountId: string
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -31,7 +30,7 @@ const TransferFormsCreate: React.SFC<
 > = props => {
   return (
     <RecordFormsCreate
-      accountId={props.accountId}
+      accounts={props.accounts}
       submitTestId="transfer_create"
       initialValues={{ destination: "" }}
       validate={(values: TransferFormsCreateValues) => {

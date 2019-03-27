@@ -17,8 +17,8 @@ import { combineReducers } from "redux"
 
 // Components
 import TransactionCreate, {
-  BudgetsAccountsTransactionsCreateInitQuery,
-  BudgetsAccountsTransactionsCreateMutation,
+  BudgetsRecordsCreateInitQuery,
+  BudgetsRecordsCreateMutation,
 } from "./create"
 import UISnackbar from "~/components/UI/Snackbar"
 import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Create"
@@ -26,6 +26,7 @@ import { CreateTransactionInput } from "~/types/Transaction"
 import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
 import { MockedProvider } from "react-apollo/test-utils"
 import { SpendCategory, SpendGroup } from "@nummus/schema"
+import { IdName } from "~/types/IdLabel"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data
@@ -35,6 +36,17 @@ const spendCategories: SpendCategory[] = [
     id: "1",
     name: "Electric",
     group: SpendGroup.ImmediateObligations,
+  },
+]
+
+const accounts: IdName[] = [
+  {
+    id: "1",
+    name: "Bank",
+  },
+  {
+    id: "2",
+    name: "Credit card",
   },
 ]
 
@@ -69,6 +81,7 @@ describe("Transaction: create view", () => {
       amount: 800,
       incoming: false,
       category: categoryId,
+      account: "1",
     }
     const createInput: CreateTransactionInput = {
       amount: formValues.amount,
@@ -85,11 +98,15 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsAccountsTransactionsCreateInitQuery.gql,
+              query: BudgetsRecordsCreateInitQuery.gql,
+              variables: {
+                budgetId,
+              },
             },
             result: {
               data: {
                 spendCategories,
+                accounts,
               },
             },
           },
@@ -98,7 +115,7 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsAccountsTransactionsCreateMutation.gql,
+              query: BudgetsRecordsCreateMutation.gql,
               variables: {
                 input: createInput,
               },
