@@ -20,7 +20,7 @@ export type Account = {
 export enum AccountType {
   Bank = "BANK",
   Cash = "CASH",
-  Credit_Card = "CREDIT_CARD",
+  CreditCard = "CREDIT_CARD",
 }
 
 export type Budget = {
@@ -103,8 +103,8 @@ export type SpendCategory = {
 }
 
 export enum SpendGroup {
-  Immediate_Obligations = "IMMEDIATE_OBLIGATIONS",
-  True_Expenses = "TRUE_EXPENSES",
+  ImmediateObligations = "IMMEDIATE_OBLIGATIONS",
+  TrueExpenses = "TRUE_EXPENSES",
 }
 
 export type Transaction = Record & {

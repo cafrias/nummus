@@ -34,7 +34,7 @@ const spendCategories: SpendCategory[] = [
   {
     id: "1",
     name: "Electric",
-    group: SpendGroup.Immediate_Obligations,
+    group: SpendGroup.ImmediateObligations,
   },
 ]
 

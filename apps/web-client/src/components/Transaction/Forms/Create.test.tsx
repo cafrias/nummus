@@ -22,7 +22,7 @@ import { SpendGroup } from "@nummus/schema"
 // Fixture
 // ---------------------------------------------------------------------------------------------------------------------
 const categories: GroupedCategories = {
-  [SpendGroup.Immediate_Obligations]: [
+  [SpendGroup.ImmediateObligations]: [
     {
       id: "1",
       name: "Rent/Mortgage",

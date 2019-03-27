@@ -69,8 +69,8 @@ function groupCategories(categories: SpendCategory[]) {
       return res
     },
     {
-      [SpendGroup.Immediate_Obligations]: [],
-      [SpendGroup.True_Expenses]: [],
+      [SpendGroup.ImmediateObligations]: [],
+      [SpendGroup.TrueExpenses]: [],
     }
   )
 }

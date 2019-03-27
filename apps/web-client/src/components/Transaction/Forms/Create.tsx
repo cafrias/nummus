@@ -40,8 +40,8 @@ export interface TransactionFormsCreateProps {
 export type GroupedCategories = { [k: string]: IdName[] }
 
 const groupLabels = {
-  [SpendGroup.Immediate_Obligations]: "Immediate Obligations",
-  [SpendGroup.True_Expenses]: "True Expenses",
+  [SpendGroup.ImmediateObligations]: "Immediate Obligations",
+  [SpendGroup.TrueExpenses]: "True Expenses",
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

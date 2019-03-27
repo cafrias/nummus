@@ -4,8 +4,8 @@
   "scripts": {
     "start": "lerna run start --stream",
     "test": "lerna exec -- npm run test",
-    "test:apps:web-client": "lerna exec --scope web-client -- npm run test:watch",
-    "build-schema": "lerna run --scope schema generate && lerna run --scope schema build"
+    "test:apps:web-client": "lerna exec --scope @nummus/web-client -- npm run test:watch",
+    "build-schema": "lerna run --scope @nummus/schema generate && lerna run --scope @nummus/schema build"
   },
   "devDependencies": {
     "lerna": "^3.13.1",
