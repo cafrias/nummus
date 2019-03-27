@@ -36,7 +36,7 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = props => {
                           name: values.name,
                           currencyCode: values.currency,
                           // TODO: use currently logged-in user
-                          userId: "1",
+                          userId: res.data.me.id,
                         },
                       },
                     })
@@ -79,12 +79,17 @@ interface OwnProps {
 // ---------------------------------------------------------------------------------------------------------------------
 export class BudgetCreateInitQuery extends Query<{
   currencies: IdName[]
+  me: { id: string }
 }> {
   static gql = gql`
     query BudgetCreateInit {
       currencies {
         id
         name
+      }
+
+      me {
+        id
       }
     }
   `

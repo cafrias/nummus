@@ -6,6 +6,8 @@ type Query {
   spendCategories: [SpendCategory!]!
 
   currencies: [Currency!]!
+
+  me: User!
 }
 
 type Mutation {

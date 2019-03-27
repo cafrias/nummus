@@ -79,7 +79,7 @@ describe("Budget create view", () => {
               query: BudgetCreateInitQuery.gql,
             },
             result: {
-              data: { currencies },
+              data: { currencies, me: { id: userId } },
             },
           },
           //

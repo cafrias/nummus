@@ -95,6 +95,7 @@ export type Query = {
   budgets: Array<Budget>
   spendCategories: Array<SpendCategory>
   currencies: Array<Currency>
+  me: User
 }
 
 export type QueryAccountsArgs = {
@@ -269,6 +270,7 @@ export type QueryResolvers<Context = any, ParentType = Query> = {
   budgets?: Resolver<Array<Budget>, ParentType, Context, QueryBudgetsArgs>
   spendCategories?: Resolver<Array<SpendCategory>, ParentType, Context>
   currencies?: Resolver<Array<Currency>, ParentType, Context>
+  me?: Resolver<User, ParentType, Context>
 }
 
 export type RecordResolvers<Context = any, ParentType = Record> = {
