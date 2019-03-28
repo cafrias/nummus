@@ -43,13 +43,13 @@ const BudgetsRecordsCreate: React.SFC<ViewProps> = props => {
       >
         <BottomNavigationAction
           component={Link}
-          {...{ to: "" }}
+          {...{ to: "transaction" }}
           label="Transaction"
           icon={<MoneyIcon />}
         />
         <BottomNavigationAction
           component={Link}
-          {...{ to: "transfers" }}
+          {...{ to: "transfer" }}
           label="Transfer"
           icon={<ImportExportIcon />}
         />

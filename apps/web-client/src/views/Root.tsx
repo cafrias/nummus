@@ -18,6 +18,7 @@ import BudgetsRecords from "./budgets/records"
 import BudgetsRecordsCreate from "./budgets/records/create"
 import BudgetsRecordsCreateTransaction from "./budgets/records/create/transaction"
 import BudgetsRecordsCreateTransfer from "./budgets/records/create/transfer"
+import BudgetsShow from "./budgets/show"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Styles
@@ -54,13 +55,13 @@ const Root: React.SFC<RootProps> = props => {
 
           <Budgets path="/budgets">
             <BudgetsCreate path="/create" />
-            {/* <BudgetViews.show path="/:budgetId" /> */}
+            <BudgetsShow path="/:budgetId" />
             <BudgetsAccountsCreate path="/:budgetId/accounts/create" />
-            <BudgetsRecords path="/:budgetId/records/create">
+            <BudgetsRecords path="/:budgetId/records">
               <BudgetsRecordsCreate path="/create">
                 <BudgetsRecordsCreateTransaction path="/" />
-                <BudgetsRecordsCreateTransaction path="/transactions" />
-                <BudgetsRecordsCreateTransfer path="/transfers" />
+                <BudgetsRecordsCreateTransaction path="/transaction" />
+                <BudgetsRecordsCreateTransfer path="/transfer" />
               </BudgetsRecordsCreate>
             </BudgetsRecords>
           </Budgets>
