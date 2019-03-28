@@ -4,6 +4,8 @@ import { User } from "~/entity/User"
 import { Currency } from "~/entity/Currency"
 import { Budget } from "~/entity/Budget"
 import { Account } from "~/entity/Account"
+import { SpendCategory } from "~/entity/SpendCategory"
+import { Transaction } from "~/entity/Transaction"
 
 const Mutation: MutationResolvers<Context> = {
   async createAccount(_, { input }, { connection }) {
@@ -34,6 +36,22 @@ const Mutation: MutationResolvers<Context> = {
         user,
         currency,
         name: input.name,
+      })
+    )
+  },
+
+  async createTransaction(_, { input }, { connection }) {
+    const [account, category] = await Promise.all([
+      connection.getRepository(Account).findOneOrFail(input.accountId),
+      connection.getRepository(SpendCategory).findOneOrFail(input.categoryId),
+    ])
+
+    return connection.getRepository(Transaction).save(
+      new Transaction({
+        account,
+        category,
+        amount: input.amount,
+        incoming: input.incoming,
       })
     )
   },

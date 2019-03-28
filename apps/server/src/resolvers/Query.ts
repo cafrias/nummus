@@ -6,14 +6,16 @@ import { Currency } from "~/entity/Currency"
 import { User } from "~/entity/User"
 
 const Query: QueryResolvers<Context> = {
-  accounts(obj, args, ctx) {
+  async accounts(obj, args, ctx) {
     const repo = ctx.connection.getRepository(Account)
 
-    return repo.find({
+    const accounts = await repo.find({
       where: {
         budget: { id: args.budgetId },
       },
     })
+
+    return accounts
   },
 
   currencies(_, __, { connection }) {

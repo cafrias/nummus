@@ -74,19 +74,19 @@ describe("Transaction: create view", () => {
     // Fixture
     //
     const budgetId = "1"
-    const originAccount = "2"
+    const accountId = "2"
     const categoryId = "1"
 
     const formValues: TransactionFormsCreateValues = {
       amount: 800,
       incoming: false,
       category: categoryId,
-      account: "1",
+      account: accountId,
     }
     const createInput: CreateTransactionInput = {
       amount: formValues.amount,
       categoryId,
-      accountId: originAccount,
+      accountId: accountId,
       incoming: formValues.incoming,
     }
 
@@ -132,7 +132,7 @@ describe("Transaction: create view", () => {
         addTypename={false}
       >
         <>
-          <TransactionCreate budgetId={budgetId} accountId={originAccount} />
+          <TransactionCreate budgetId={budgetId} />
           <UISnackbar />
         </>
       </MockedProvider>,

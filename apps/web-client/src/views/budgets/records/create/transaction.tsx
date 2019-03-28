@@ -44,7 +44,7 @@ const BudgetsRecordsCreateTransaction: React.SFC<
                   await createTransaction({
                     variables: {
                       input: {
-                        accountId: props.accountId,
+                        accountId: values.account,
                         amount: values.amount,
                         categoryId: values.category,
                         incoming: values.incoming,
@@ -139,7 +139,6 @@ interface DispatchProps {
 
 interface OwnProps {
   path?: string
-  accountId?: string
   budgetId?: string
 }
 
