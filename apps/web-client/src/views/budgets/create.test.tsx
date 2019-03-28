@@ -130,9 +130,7 @@ describe("Budget create view", () => {
     await wait(
       () => {
         // Shows message to the user
-        expect(
-          wrapper.getByText(`Budget '${input.name}' created successfully`)
-        ).toBeVisible()
+        expect(wrapper.getByText("Budget created")).toBeVisible()
 
         // Redirects to create account
         expect(navigateMock).toHaveBeenCalledWith("/budgets/1/accounts/create")

@@ -43,9 +43,7 @@ const BudgetCreate: React.SFC<BudgetCreateProps> = props => {
                     // TODO: handle void case
                     if (!result) return
 
-                    props.openSnackbar(
-                      `Budget '${values.name}' created successfully`
-                    )
+                    props.openSnackbar("Budget created")
 
                     navigate(
                       `/budgets/${result.data.createBudget.id}/accounts/create`

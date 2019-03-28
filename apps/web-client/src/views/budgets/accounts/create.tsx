@@ -27,7 +27,7 @@ const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
                 },
               },
             })
-            props.openSnackbar(`Account '${values.name}' created successfully`)
+            props.openSnackbar("Account created")
             navigate(`/budgets/${props.budgetId}`)
           }}
         />

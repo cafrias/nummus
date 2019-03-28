@@ -104,9 +104,7 @@ describe("Account: create view", () => {
     //
     await wait(() => {
       // Shows message to the user
-      expect(
-        wrapper.getByText(`Account '${formValues.name}' created successfully`)
-      ).toBeVisible()
+      expect(wrapper.getByText("Account created")).toBeVisible()
 
       // Redirects to create account
       expect(navigateMock).toHaveBeenCalledWith("/budgets/1")
