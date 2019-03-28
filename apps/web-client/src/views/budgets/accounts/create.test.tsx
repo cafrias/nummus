@@ -21,7 +21,8 @@ import UISnackbar from "~/components/UI/Snackbar"
 import { AccountFormsCreateValues } from "~/components/Account/Forms/Create"
 import { AccountType, CreateAccountInput } from "~/types/Account"
 import { MockedProvider } from "react-apollo/test-utils"
-import { submitAccountFormsCreate } from "~/components/Account/Forms/Create.test"
+import { fillAndSubmitAccountFormsCreate } from "~/components/Account/Forms/Create.test"
+import { marshalMoney } from "~/utils/moneyMarshaler"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux setup
@@ -54,8 +55,8 @@ describe("Account: create view", () => {
     }
     const input: CreateAccountInput = {
       budgetId,
-      // TODO: add initial balance to form
-      initialBalance: formValues.initialBalance,
+      // Already parsed initial balance
+      initialBalance: marshalMoney(formValues.initialBalance),
       name: formValues.name,
       type: formValues.type,
     }
@@ -97,7 +98,7 @@ describe("Account: create view", () => {
     //
     // Action
     //
-    submitAccountFormsCreate(wrapper, formValues)
+    fillAndSubmitAccountFormsCreate(wrapper, formValues)
 
     //
     // Assert

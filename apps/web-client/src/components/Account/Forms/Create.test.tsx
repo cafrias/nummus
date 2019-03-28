@@ -6,7 +6,6 @@ import {
   fireEvent,
   RenderResult,
   wait,
-  act,
 } from "react-testing-library"
 
 import "jest-dom/extend-expect"
@@ -31,19 +30,33 @@ describe("Account/Forms/Create", () => {
       type: AccountType.CreditCard,
       initialBalance: 500.5,
     }
-    submitAccountFormsCreate(wrapper, values)
+    fillAndSubmitAccountFormsCreate(wrapper, values)
 
     await wait(() => {
       expect(handleSubmit.mock.calls[0][0]).toEqual(values)
     })
   })
 
-  it("validates data", async () => {
-    fireEvent.click(wrapper.getByTestId("account_create"))
+  it("validates required data", async () => {
+    submitAccountFormsCreate(wrapper)
 
     await wait(() => {
       expect(handleSubmit).not.toHaveBeenCalled()
       expect(wrapper.getByText("Add a name to your account")).toBeVisible()
+    })
+  })
+
+  it("validates `name` length", async () => {
+    fillAndSubmitAccountFormsCreate(wrapper, {
+      initialBalance: 100,
+      type: AccountType.Bank,
+      name: "a".repeat(100),
+    })
+
+    await wait(() => {
+      expect(
+        wrapper.getByText("Should be less than 50 characters long")
+      ).toBeVisible()
     })
   })
 })
@@ -51,7 +64,19 @@ describe("Account/Forms/Create", () => {
 // ---------------------------------------------------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------
-export function submitAccountFormsCreate(
+export function fillAndSubmitAccountFormsCreate(
+  wrapper: RenderResult,
+  values: AccountFormsCreateValues
+) {
+  fillAccountFormsCreate(wrapper, values)
+  submitAccountFormsCreate(wrapper)
+}
+
+function submitAccountFormsCreate(wrapper: RenderResult) {
+  fireEvent.click(wrapper.getByTestId("account_create"))
+}
+
+function fillAccountFormsCreate(
   wrapper: RenderResult,
   values: AccountFormsCreateValues
 ) {
@@ -64,6 +89,4 @@ export function submitAccountFormsCreate(
   fireEvent.change(wrapper.getByLabelText("Initial balance"), {
     target: { value: values.initialBalance },
   })
-
-  fireEvent.click(wrapper.getByTestId("account_create"))
 }

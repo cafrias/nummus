@@ -7,6 +7,7 @@ import { navigate } from "@reach/router"
 import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
 import { CreateAccountInput } from "~/types/Account"
+import { marshalMoney } from "~/utils/moneyMarshaler"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -20,7 +21,7 @@ const BudgetsAccountsCreate: React.SFC<BudgetsAccountsCreateProps> = props => {
             await createAccount({
               variables: {
                 input: {
-                  initialBalance: values.initialBalance,
+                  initialBalance: marshalMoney(values.initialBalance),
                   budgetId: props.budgetId,
                   name: values.name,
                   type: values.type,

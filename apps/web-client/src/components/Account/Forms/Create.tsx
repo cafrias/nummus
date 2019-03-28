@@ -36,6 +36,11 @@ const AccountFormsCreate: React.SFC<
       validate={values => {
         const errors: FormikErrors<AccountFormsCreateValues> = {}
         if (!values.name) errors.name = "Add a name to your account"
+        if (values.name.length > 50)
+          errors.name = "Should be less than 50 characters long"
+        if (isNaN(values.initialBalance)) {
+          errors.initialBalance = "Should be numeric"
+        }
         return errors
       }}
     >
@@ -49,6 +54,7 @@ const AccountFormsCreate: React.SFC<
                   TextFieldProps={{
                     id: "name",
                     label: "Name",
+                    maxLength: 50,
                   }}
                 />
               </Grid>
