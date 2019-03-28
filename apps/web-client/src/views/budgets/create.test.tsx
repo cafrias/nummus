@@ -19,7 +19,7 @@ import StoreUIReducer, { StoreUIState } from "~/store/ui"
 import { combineReducers } from "redux"
 
 // Components
-import BudgetCreate, {
+import BudgetsCreate, {
   BudgetCreateInitQuery,
   BudgetCreateMutation,
 } from "./create"
@@ -108,7 +108,7 @@ describe("Budget create view", () => {
         addTypename={false}
       >
         <>
-          <BudgetCreate />
+          <BudgetsCreate />
           <UISnackbar />
         </>
       </MockedProvider>,

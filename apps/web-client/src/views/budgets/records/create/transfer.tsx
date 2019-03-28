@@ -12,23 +12,23 @@ import TransferFormsCreate from "~/components/Transfer/Forms/Create"
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const BudgetsRecordsTransfersCreate: React.SFC<
-  BudgetsRecordsTransfersCreateProps
+const BudgetsRecordsCreateTransfer: React.SFC<
+  BudgetsRecordsCreateTransferProps
 > = props => {
   return (
-    <BudgetsRecordsTransfersCreateInitQuery
+    <BudgetsRecordsCreateTransferInitQuery
       variables={{
         budgetId: props.budgetId,
       }}
-      query={BudgetsRecordsTransfersCreateInitQuery.gql}
+      query={BudgetsRecordsCreateTransferInitQuery.gql}
     >
       {res => {
         if (res.loading) return "Loading ..."
         if (res.error) return "Error"
 
         return (
-          <BudgetsRecordsTransfersCreateMutation
-            mutation={BudgetsRecordsTransfersCreateMutation.gql}
+          <BudgetsRecordsCreateTransferMutation
+            mutation={BudgetsRecordsCreateTransferMutation.gql}
           >
             {createTransfer => (
               <TransferFormsCreate
@@ -48,17 +48,17 @@ const BudgetsRecordsTransfersCreate: React.SFC<
                 }}
               />
             )}
-          </BudgetsRecordsTransfersCreateMutation>
+          </BudgetsRecordsCreateTransferMutation>
         )
       }}
-    </BudgetsRecordsTransfersCreateInitQuery>
+    </BudgetsRecordsCreateTransferInitQuery>
   )
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Queries
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetsRecordsTransfersCreateInitQuery extends Query<
+export class BudgetsRecordsCreateTransferInitQuery extends Query<
   {
     spendCategories: SpendCategory[]
     accounts: IdName[]
@@ -80,7 +80,7 @@ export class BudgetsRecordsTransfersCreateInitQuery extends Query<
 // ---------------------------------------------------------------------------------------------------------------------
 // Mutations
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetsRecordsTransfersCreateMutation extends Mutation<
+export class BudgetsRecordsCreateTransferMutation extends Mutation<
   {
     createTransfer: { id: string }
   },
@@ -105,7 +105,7 @@ export class BudgetsRecordsTransfersCreateMutation extends Mutation<
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
-export interface BudgetsRecordsTransfersCreateProps
+export interface BudgetsRecordsCreateTransferProps
   extends DispatchProps,
     OwnProps {}
 
@@ -124,4 +124,4 @@ export default connect<{}, DispatchProps, OwnProps, StoreState>(
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,
   }
-)(BudgetsRecordsTransfersCreate)
+)(BudgetsRecordsCreateTransfer)

@@ -9,6 +9,11 @@ import ImportExportIcon from "@material-ui/icons/ImportExport"
 import MoneyIcon from "@material-ui/icons/Money"
 import { Link } from "@reach/router"
 
+import { ViewProps } from "~/views/Root"
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------------------------------------------------
 const useStyles = makeStyles(theme =>
   createStyles({
     bottomNavigation: {
@@ -20,11 +25,10 @@ const useStyles = makeStyles(theme =>
   })
 )
 
-export interface BudgetsRecordsCreateProps {
-  path?: string
-}
-
-const BudgetsRecordsCreate: React.SFC<BudgetsRecordsCreateProps> = props => {
+// ---------------------------------------------------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------------------------------------------------
+const BudgetsRecordsCreate: React.SFC<ViewProps> = props => {
   const [tab, setTab] = React.useState(0)
   const classes = useStyles()
 

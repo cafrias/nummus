@@ -1,25 +1,12 @@
-import Create from "./create"
+import * as React from "react"
 
-import AccountsCreate from "./accounts/create"
+import { ViewProps } from "../Root"
 
-import RecordsCreate from "./records/create"
-import TransactionsCreate from "./records/transactions/create"
-import TransfersCreate from "./records/transfers/create"
-
-const BudgetViews = {
-  Create,
-  accounts: {
-    create: AccountsCreate,
-  },
-  records: {
-    create: RecordsCreate,
-    transactions: {
-      create: TransactionsCreate,
-    },
-    transfers: {
-      create: TransfersCreate,
-    },
-  },
+// ---------------------------------------------------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------------------------------------------------
+const Budgets: React.SFC<ViewProps> = props => {
+  return <>{props.children}</>
 }
 
-export default BudgetViews
+export default Budgets

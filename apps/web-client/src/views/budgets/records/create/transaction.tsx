@@ -15,15 +15,15 @@ import { IdName } from "~/types/IdLabel"
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const BudgetsRecordsTransactionsCreate: React.SFC<
-  BudgetsRecordsTransactionsCreateProps
+const BudgetsRecordsCreateTransaction: React.SFC<
+  BudgetsRecordsCreateTransactionProps
 > = props => {
   return (
-    <BudgetsRecordsTransactionsCreateInitQuery
+    <BudgetsRecordsCreateTransactionInitQuery
       variables={{
         budgetId: props.budgetId,
       }}
-      query={BudgetsRecordsTransactionsCreateInitQuery.gql}
+      query={BudgetsRecordsCreateTransactionInitQuery.gql}
     >
       {res => {
         if (res.loading) return "Loading ..."
@@ -33,8 +33,8 @@ const BudgetsRecordsTransactionsCreate: React.SFC<
         const groupedCategories = groupCategories(res.data.spendCategories)
 
         return (
-          <BudgetsRecordsTransactionsCreateMutation
-            mutation={BudgetsRecordsTransactionsCreateMutation.gql}
+          <BudgetsRecordsCreateTransactionMutation
+            mutation={BudgetsRecordsCreateTransactionMutation.gql}
           >
             {createTransaction => (
               <TransactionFormsCreate
@@ -56,10 +56,10 @@ const BudgetsRecordsTransactionsCreate: React.SFC<
                 }}
               />
             )}
-          </BudgetsRecordsTransactionsCreateMutation>
+          </BudgetsRecordsCreateTransactionMutation>
         )
       }}
-    </BudgetsRecordsTransactionsCreateInitQuery>
+    </BudgetsRecordsCreateTransactionInitQuery>
   )
 }
 
@@ -82,7 +82,7 @@ function groupCategories(categories: SpendCategory[]) {
 // ---------------------------------------------------------------------------------------------------------------------
 // Queries
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetsRecordsTransactionsCreateInitQuery extends Query<
+export class BudgetsRecordsCreateTransactionInitQuery extends Query<
   {
     spendCategories: SpendCategory[]
     accounts: IdName[]
@@ -92,7 +92,7 @@ export class BudgetsRecordsTransactionsCreateInitQuery extends Query<
   }
 > {
   static gql = gql`
-    query BudgetsRecordsTransactionsCreateInit($budgetId: ID!) {
+    query BudgetsRecordsCreateTransactionInit($budgetId: ID!) {
       spendCategories {
         id
         name
@@ -109,7 +109,7 @@ export class BudgetsRecordsTransactionsCreateInitQuery extends Query<
 // ---------------------------------------------------------------------------------------------------------------------
 // Mutations
 // ---------------------------------------------------------------------------------------------------------------------
-export class BudgetsRecordsTransactionsCreateMutation extends Mutation<
+export class BudgetsRecordsCreateTransactionMutation extends Mutation<
   {
     createTransaction: { id: string }
   },
@@ -129,7 +129,7 @@ export class BudgetsRecordsTransactionsCreateMutation extends Mutation<
 // ---------------------------------------------------------------------------------------------------------------------
 // Redux Connection
 // ---------------------------------------------------------------------------------------------------------------------
-export interface BudgetsRecordsTransactionsCreateProps
+export interface BudgetsRecordsCreateTransactionProps
   extends DispatchProps,
     OwnProps {}
 
@@ -148,4 +148,4 @@ export default connect<{}, DispatchProps, OwnProps, StoreState>(
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,
   }
-)(BudgetsRecordsTransactionsCreate)
+)(BudgetsRecordsCreateTransaction)

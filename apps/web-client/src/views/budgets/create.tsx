@@ -14,7 +14,7 @@ import { IdName } from "~/types/IdLabel"
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------------------------------------------------
-const BudgetCreate: React.SFC<BudgetCreateProps> = props => {
+const BudgetsCreate: React.SFC<BudgetCreateProps> = props => {
   return (
     <BudgetCreateInitQuery query={BudgetCreateInitQuery.gql}>
       {res => {
@@ -116,4 +116,4 @@ export default connect<{}, DispatchProps, OwnProps, StoreState>(
   {
     openSnackbar: StoreUIActionCreators.openSnackbar,
   }
-)(BudgetCreate)
+)(BudgetsCreate)

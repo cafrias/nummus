@@ -17,28 +17,19 @@ import { combineReducers } from "redux"
 
 // Components
 import TransactionCreate, {
-  BudgetsRecordsTransactionsCreateInitQuery,
-  BudgetsRecordsTransactionsCreateMutation,
-} from "./create"
+  BudgetsRecordsCreateTransferInitQuery,
+  BudgetsRecordsCreateTransferMutation,
+} from "./transfer"
 import UISnackbar from "~/components/UI/Snackbar"
-import { TransactionFormsCreateValues } from "~/components/Transaction/Forms/Create"
-import { CreateTransactionInput } from "~/types/Transaction"
-import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Create.test"
 import { MockedProvider } from "react-apollo/test-utils"
-import { SpendCategory, SpendGroup } from "@nummus/schema"
+import { CreateTransferInput } from "@nummus/schema"
 import { IdName } from "~/types/IdLabel"
+import { TransferFormsCreateValues } from "~/components/Transfer/Forms/Create"
+import { submitTransferFormsCreate } from "~/components/Transfer/Forms/Create.test"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data
 // ---------------------------------------------------------------------------------------------------------------------
-const spendCategories: SpendCategory[] = [
-  {
-    id: "1",
-    name: "Electric",
-    group: SpendGroup.ImmediateObligations,
-  },
-]
-
 const accounts: IdName[] = [
   {
     id: "1",
@@ -68,26 +59,24 @@ afterEach(cleanup)
 // ---------------------------------------------------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------------------------------------------------
-describe("Transaction: create view", () => {
-  it("creates new transaction", async () => {
+describe("Transfer: create view", () => {
+  it("creates new transfer", async () => {
     //
     // Fixture
     //
     const budgetId = "1"
-    const originAccount = "2"
-    const categoryId = "1"
+    const originAccount = "1"
+    const destinationId = "2"
 
-    const formValues: TransactionFormsCreateValues = {
+    const formValues: TransferFormsCreateValues = {
       amount: 800,
-      incoming: false,
-      category: categoryId,
+      destination: destinationId,
       account: "1",
     }
-    const createInput: CreateTransactionInput = {
+    const createInput: CreateTransferInput = {
       amount: formValues.amount,
-      categoryId,
+      destination: destinationId,
       accountId: originAccount,
-      incoming: formValues.incoming,
     }
 
     const wrapper = renderWithRedux(
@@ -98,14 +87,13 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsRecordsTransactionsCreateInitQuery.gql,
+              query: BudgetsRecordsCreateTransferInitQuery.gql,
               variables: {
                 budgetId,
               },
             },
             result: {
               data: {
-                spendCategories,
                 accounts,
               },
             },
@@ -115,15 +103,20 @@ describe("Transaction: create view", () => {
           //
           {
             request: {
-              query: BudgetsRecordsTransactionsCreateMutation.gql,
+              query: BudgetsRecordsCreateTransferMutation.gql,
               variables: {
                 input: createInput,
               },
             },
             result: {
               data: {
-                createTransaction: {
-                  id: "1",
+                createTransfer: {
+                  origin: {
+                    id: "1",
+                  },
+                  destination: {
+                    id: "2",
+                  },
                 },
               },
             },
@@ -142,12 +135,12 @@ describe("Transaction: create view", () => {
     )
 
     await wait(() => {
-      submitTransactionFormsCreate(wrapper, formValues)
+      submitTransferFormsCreate(wrapper, formValues)
     })
 
     await wait(() => {
       // Shows message to the user
-      expect(wrapper.getByText(`Transaction saved`)).toBeVisible()
+      expect(wrapper.getByText(`Transfer saved`)).toBeVisible()
 
       // Redirects back to the budget
       expect(navigateMock).toHaveBeenCalledWith(`/budgets/${budgetId}`)
