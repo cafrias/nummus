@@ -37,7 +37,7 @@ const BudgetsRecordsCreateTransfer: React.SFC<
                   await createTransfer({
                     variables: {
                       input: {
-                        accountId: props.accountId,
+                        origin: values.account,
                         amount: values.amount,
                         destination: values.destination,
                       },
@@ -115,7 +115,6 @@ interface DispatchProps {
 
 interface OwnProps {
   path?: string
-  accountId?: string
   budgetId?: string
 }
 

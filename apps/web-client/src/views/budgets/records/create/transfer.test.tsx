@@ -76,7 +76,7 @@ describe("Transfer: create view", () => {
     const createInput: CreateTransferInput = {
       amount: formValues.amount,
       destination: destinationId,
-      accountId: originAccount,
+      origin: originAccount,
     }
 
     const wrapper = renderWithRedux(
@@ -125,7 +125,7 @@ describe("Transfer: create view", () => {
         addTypename={false}
       >
         <>
-          <TransactionCreate budgetId={budgetId} accountId={originAccount} />
+          <TransactionCreate budgetId={budgetId} />
           <UISnackbar />
         </>
       </MockedProvider>,

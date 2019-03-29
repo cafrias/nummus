@@ -136,9 +136,9 @@ type Transfer implements Record {
 }
 
 input CreateTransferInput {
-  accountId: ID!
   amount: Int!
   destination: ID!
+  origin: ID!
 }
 
 type CreateTransferOutput {

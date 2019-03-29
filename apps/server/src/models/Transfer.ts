@@ -12,6 +12,15 @@ export class Transfer extends Record {
   @OneToOne(type => Transfer)
   @JoinColumn()
   pair: Transfer
+
+  constructor(input?: Partial<Transfer>) {
+    super()
+    for (const key in input) {
+      if (input.hasOwnProperty(key)) {
+        this[key] = input[key]
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------

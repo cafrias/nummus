@@ -6,6 +6,8 @@ import { Budget } from "~/models/Budget"
 import { Account } from "~/models/Account"
 import { SpendCategory } from "~/models/SpendCategory"
 import { Transaction } from "~/models/Transaction"
+import { Record } from "~/models/Record"
+import { Transfer } from "~/models/Transfer"
 
 const Mutation: MutationResolvers<Context> = {
   async createAccount(_, { input }, { orm }) {
@@ -52,6 +54,44 @@ const Mutation: MutationResolvers<Context> = {
         incoming: input.incoming,
       })
     )
+  },
+
+  async createTransfer(_, { input }, { orm }) {
+    // TODO: validate origin and destination are different
+    const [origin, destination] = await Promise.all([
+      orm.getRepository(Account).findOneOrFail(input.origin),
+      orm.getRepository(Account).findOneOrFail(input.destination),
+    ])
+
+    const [originTransfer, destinationTransfer] = await orm.transaction(
+      async entityManager => {
+        const outgoing = await entityManager.save(
+          new Transfer({
+            account: origin,
+            amount: input.amount,
+            incoming: false,
+          })
+        )
+
+        const incoming = new Transfer({
+          account: destination,
+          amount: input.amount,
+          incoming: true,
+          pair: outgoing,
+        })
+
+        outgoing.pair = incoming
+
+        return entityManager.save([outgoing, incoming])
+      }
+    )
+    console.log("origin: ", originTransfer.id)
+    console.log("destination: ", destinationTransfer.id)
+
+    return {
+      origin: originTransfer,
+      destination: destinationTransfer,
+    }
   },
 }
 

@@ -52,9 +52,9 @@ export type CreateTransactionInput = {
 }
 
 export type CreateTransferInput = {
-  accountId: Scalars["ID"]
   amount: Scalars["Int"]
   destination: Scalars["ID"]
+  origin: Scalars["ID"]
 }
 
 export type CreateTransferOutput = {
