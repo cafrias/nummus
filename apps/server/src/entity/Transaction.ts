@@ -1,8 +1,8 @@
-import { Entity, ManyToOne } from "typeorm"
+import { ManyToOne, ChildEntity } from "typeorm"
 import { Record } from "./Record"
 import { SpendCategory } from "./SpendCategory"
 
-@Entity()
+@ChildEntity()
 export class Transaction extends Record {
   @ManyToOne(type => SpendCategory)
   category: SpendCategory

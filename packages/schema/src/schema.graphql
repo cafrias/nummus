@@ -77,9 +77,15 @@ input CreateBudgetInput {
 # ----------------------------------------------------------------------------------------------------------------------
 interface Record {
   id: ID!
+  type: RecordType!
   account: Account!
   amount: Int!
   incoming: Boolean!
+}
+
+enum RecordType {
+  Transfer
+  Transaction
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -102,6 +108,7 @@ enum SpendGroup {
 type Transaction implements Record {
   id: ID!
   account: Account!
+  type: RecordType!
   amount: Int!
   incoming: Boolean!
 
@@ -121,6 +128,7 @@ input CreateTransactionInput {
 type Transfer implements Record {
   id: ID!
   account: Account!
+  type: RecordType!
   amount: Int!
   incoming: Boolean!
 

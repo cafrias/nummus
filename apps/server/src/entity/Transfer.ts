@@ -1,7 +1,7 @@
-import { Entity, OneToOne, JoinColumn } from "typeorm"
+import { OneToOne, JoinColumn, ChildEntity } from "typeorm"
 import { Record } from "./Record"
 
-@Entity()
+@ChildEntity()
 export class Transfer extends Record {
   @OneToOne(type => Transfer)
   @JoinColumn()

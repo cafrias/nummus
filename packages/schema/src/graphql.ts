@@ -108,9 +108,15 @@ export type QueryBudgetsArgs = {
 
 export type Record = {
   id: Scalars["ID"]
+  type: RecordType
   account: Account
   amount: Scalars["Int"]
   incoming: Scalars["Boolean"]
+}
+
+export enum RecordType {
+  Transfer = "Transfer",
+  Transaction = "Transaction",
 }
 
 export type SpendCategory = {
@@ -127,6 +133,7 @@ export enum SpendGroup {
 export type Transaction = Record & {
   id: Scalars["ID"]
   account: Account
+  type: RecordType
   amount: Scalars["Int"]
   incoming: Scalars["Boolean"]
   category: SpendCategory
@@ -135,6 +142,7 @@ export type Transaction = Record & {
 export type Transfer = Record & {
   id: Scalars["ID"]
   account: Account
+  type: RecordType
   amount: Scalars["Int"]
   incoming: Scalars["Boolean"]
   pair: Transfer
@@ -276,6 +284,7 @@ export type QueryResolvers<Context = any, ParentType = Query> = {
 export type RecordResolvers<Context = any, ParentType = Record> = {
   __resolveType: TypeResolveFn<"Transaction" | "Transfer", ParentType, Context>
   id?: Resolver<Scalars["ID"], ParentType, Context>
+  type?: Resolver<RecordType, ParentType, Context>
   account?: Resolver<Account, ParentType, Context>
   amount?: Resolver<Scalars["Int"], ParentType, Context>
   incoming?: Resolver<Scalars["Boolean"], ParentType, Context>
@@ -293,6 +302,7 @@ export type SpendCategoryResolvers<
 export type TransactionResolvers<Context = any, ParentType = Transaction> = {
   id?: Resolver<Scalars["ID"], ParentType, Context>
   account?: Resolver<Account, ParentType, Context>
+  type?: Resolver<RecordType, ParentType, Context>
   amount?: Resolver<Scalars["Int"], ParentType, Context>
   incoming?: Resolver<Scalars["Boolean"], ParentType, Context>
   category?: Resolver<SpendCategory, ParentType, Context>
@@ -301,6 +311,7 @@ export type TransactionResolvers<Context = any, ParentType = Transaction> = {
 export type TransferResolvers<Context = any, ParentType = Transfer> = {
   id?: Resolver<Scalars["ID"], ParentType, Context>
   account?: Resolver<Account, ParentType, Context>
+  type?: Resolver<RecordType, ParentType, Context>
   amount?: Resolver<Scalars["Int"], ParentType, Context>
   incoming?: Resolver<Scalars["Boolean"], ParentType, Context>
   pair?: Resolver<Transfer, ParentType, Context>

@@ -4,6 +4,7 @@ import { SpendCategory } from "~/entity/SpendCategory"
 import { Account } from "~/entity/Account"
 import { Currency } from "~/entity/Currency"
 import { User } from "~/entity/User"
+import { Budget } from "~/entity/Budget"
 
 const Query: QueryResolvers<Context> = {
   async accounts(obj, args, ctx) {
@@ -15,7 +16,13 @@ const Query: QueryResolvers<Context> = {
       },
     })
 
-    return accounts
+    return accounts as any
+  },
+
+  budgets(_, { userId }, { connection }) {
+    return connection
+      .getRepository(Budget)
+      .find({ where: { user: { id: userId } } }) as any
   },
 
   currencies(_, __, { connection }) {
