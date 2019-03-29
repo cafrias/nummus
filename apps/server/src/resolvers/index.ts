@@ -1,19 +1,27 @@
 import Query from "./Query"
 import Mutation from "./Mutation"
+import { Resolvers } from "@nummus/schema"
 
-import Account from "./Account"
-import Budget from "./Budget"
-import Record from "./Record"
-import Transaction from "./Transaction"
+import { AccountResolver } from "~/models/Account"
+import { BudgetResolver } from "~/models/Budget"
+import { RecordResolver } from "~/models/Record"
+import { TransactionResolver } from "~/models/Transaction"
+import { TransferResolver } from "~/models/Transfer"
+import { UserResolver } from "~/models/User"
 
-const resolverMap = {
+const resolverMap: Resolvers = {
   Query,
   Mutation,
 
-  Account,
-  Budget,
-  Record,
-  Transaction,
+  //
+  // Models
+  //
+  Account: AccountResolver,
+  Budget: BudgetResolver,
+  Record: RecordResolver,
+  Transaction: TransactionResolver,
+  Transfer: TransferResolver,
+  User: UserResolver,
 }
 
 export default resolverMap

@@ -1,10 +1,10 @@
-import { SpendCategory } from "~/entity/SpendCategory"
+import { SpendCategory } from "~/models/SpendCategory"
 import { SpendGroup, AccountType } from "@nummus/schema"
-import { Budget } from "~/entity/Budget"
-import { Currency } from "~/entity/Currency"
-import { User } from "~/entity/User"
+import { Budget } from "~/models/Budget"
+import { Currency } from "~/models/Currency"
+import { User } from "~/models/User"
 import { initDB } from "../init"
-import { Account } from "~/entity/Account"
+import { Account } from "~/models/Account"
 
 function exec() {
   initDB()

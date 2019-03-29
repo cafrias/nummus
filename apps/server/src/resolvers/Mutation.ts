@@ -1,19 +1,19 @@
 import { MutationResolvers } from "@nummus/schema"
 import { Context } from ".."
-import { User } from "~/entity/User"
-import { Currency } from "~/entity/Currency"
-import { Budget } from "~/entity/Budget"
-import { Account } from "~/entity/Account"
-import { SpendCategory } from "~/entity/SpendCategory"
-import { Transaction } from "~/entity/Transaction"
+import { User } from "~/models/User"
+import { Currency } from "~/models/Currency"
+import { Budget } from "~/models/Budget"
+import { Account } from "~/models/Account"
+import { SpendCategory } from "~/models/SpendCategory"
+import { Transaction } from "~/models/Transaction"
 
 const Mutation: MutationResolvers<Context> = {
-  async createAccount(_, { input }, { connection }) {
+  async createAccount(_, { input }, { orm }) {
     const [budget] = await Promise.all([
-      connection.getRepository(Budget).findOneOrFail({ id: input.budgetId }),
+      orm.getRepository(Budget).findOneOrFail({ id: input.budgetId }),
     ])
 
-    return connection.getRepository(Account).save(
+    return orm.getRepository(Account).save(
       new Account({
         budget,
         initialBalance: input.initialBalance,
@@ -23,15 +23,13 @@ const Mutation: MutationResolvers<Context> = {
     )
   },
 
-  async createBudget(_, { input }, { connection }) {
+  async createBudget(_, { input }, { orm }) {
     const [currency, user] = await Promise.all([
-      connection
-        .getRepository(Currency)
-        .findOneOrFail({ id: input.currencyCode }),
-      connection.getRepository(User).findOneOrFail({ id: input.userId }),
+      orm.getRepository(Currency).findOneOrFail({ id: input.currencyCode }),
+      orm.getRepository(User).findOneOrFail({ id: input.userId }),
     ])
 
-    return connection.getRepository(Budget).save(
+    return orm.getRepository(Budget).save(
       new Budget({
         user,
         currency,
@@ -40,13 +38,13 @@ const Mutation: MutationResolvers<Context> = {
     )
   },
 
-  async createTransaction(_, { input }, { connection }) {
+  async createTransaction(_, { input }, { orm }) {
     const [account, category] = await Promise.all([
-      connection.getRepository(Account).findOneOrFail(input.accountId),
-      connection.getRepository(SpendCategory).findOneOrFail(input.categoryId),
+      orm.getRepository(Account).findOneOrFail(input.accountId),
+      orm.getRepository(SpendCategory).findOneOrFail(input.categoryId),
     ])
 
-    return connection.getRepository(Transaction).save(
+    return orm.getRepository(Transaction).save(
       new Transaction({
         account,
         category,

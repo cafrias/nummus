@@ -10,13 +10,13 @@ import { initDB } from "./db/init"
 const typeDefs = gql(readSchema())
 
 export interface Context {
-  connection: Connection
+  orm: Connection
 }
 
 initDB()
   .then(connection => {
     const context: Context = {
-      connection,
+      orm: connection,
     }
     const server = new ApolloServer({
       typeDefs,

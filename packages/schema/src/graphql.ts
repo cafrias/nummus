@@ -150,6 +150,7 @@ export type Transfer = Record & {
 
 export type User = {
   id: Scalars["ID"]
+  budgets: Array<Budget>
 }
 
 import { GraphQLResolveInfo } from "graphql"
@@ -319,6 +320,7 @@ export type TransferResolvers<Context = any, ParentType = Transfer> = {
 
 export type UserResolvers<Context = any, ParentType = User> = {
   id?: Resolver<Scalars["ID"], ParentType, Context>
+  budgets?: Resolver<Array<Budget>, ParentType, Context>
 }
 
 export type Resolvers<Context = any> = {
