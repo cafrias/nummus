@@ -3,6 +3,7 @@ import { ViewProps } from "../Root"
 
 import classNames from "classnames"
 
+import IconButton from "@material-ui/core/IconButton"
 import Chip from "@material-ui/core/Chip"
 import ExpansionPanel from "@material-ui/core/ExpansionPanel"
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary"
@@ -12,14 +13,15 @@ import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
+import TableFooter from "@material-ui/core/TableFooter"
 import Typography from "@material-ui/core/Typography"
 import Fab from "@material-ui/core/Fab"
+
 import AddIcon from "@material-ui/icons/Add"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 
 import green from "@material-ui/core/colors/green"
 import grey from "@material-ui/core/colors/grey"
-import deepOrange from "@material-ui/core/colors/deepOrange"
 import red from "@material-ui/core/colors/red"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
@@ -143,6 +145,18 @@ const BudgetsShow: React.SFC<BudgetsShowProps> = props => {
                 </TableCell>
               </TableRow>
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell />
+                <TableCell className={classes.hideXS} />
+                <TableCell className={classes.hideXS} />
+                <TableCell align="center">
+                  <IconButton color="default">
+                    <AddIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </ExpansionPanelDetails>
       </ExpansionPanel>
