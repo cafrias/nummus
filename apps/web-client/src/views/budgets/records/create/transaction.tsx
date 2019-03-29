@@ -11,6 +11,7 @@ import gql from "graphql-tag"
 import { CreateTransactionInput } from "~/types/Transaction"
 import { SpendGroup, SpendCategory } from "@nummus/schema"
 import { IdName } from "~/types/IdLabel"
+import { marshalMoney } from "~/utils/moneyMarshaler"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Component
@@ -45,7 +46,7 @@ const BudgetsRecordsCreateTransaction: React.SFC<
                     variables: {
                       input: {
                         accountId: values.account,
-                        amount: values.amount,
+                        amount: marshalMoney(values.amount),
                         categoryId: values.category,
                         incoming: values.incoming,
                       },

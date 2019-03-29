@@ -26,6 +26,7 @@ import { CreateTransferInput } from "@nummus/schema"
 import { IdName } from "~/types/IdLabel"
 import { TransferFormsCreateValues } from "~/components/Transfer/Forms/Create"
 import { submitTransferFormsCreate } from "~/components/Transfer/Forms/Create.test"
+import { marshalMoney } from "~/utils/moneyMarshaler"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data
@@ -74,7 +75,7 @@ describe("Transfer: create view", () => {
       account: "1",
     }
     const createInput: CreateTransferInput = {
-      amount: formValues.amount,
+      amount: marshalMoney(formValues.amount),
       destination: destinationId,
       origin: originAccount,
     }

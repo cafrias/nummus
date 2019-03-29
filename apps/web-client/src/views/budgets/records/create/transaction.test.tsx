@@ -27,6 +27,7 @@ import { submitTransactionFormsCreate } from "~/components/Transaction/Forms/Cre
 import { MockedProvider } from "react-apollo/test-utils"
 import { SpendCategory, SpendGroup } from "@nummus/schema"
 import { IdName } from "~/types/IdLabel"
+import { marshalMoney } from "~/utils/moneyMarshaler"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data
@@ -78,13 +79,13 @@ describe("Transaction: create view", () => {
     const categoryId = "1"
 
     const formValues: TransactionFormsCreateValues = {
-      amount: 800,
+      amount: 800.63,
       incoming: false,
       category: categoryId,
       account: accountId,
     }
     const createInput: CreateTransactionInput = {
-      amount: formValues.amount,
+      amount: marshalMoney(formValues.amount),
       categoryId,
       accountId: accountId,
       incoming: formValues.incoming,
