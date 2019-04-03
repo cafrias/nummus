@@ -55,9 +55,6 @@ describe("Transaction/Forms/Create", () => {
     {
       incoming: false,
       category: "1",
-    },
-    wrapper => {
-      expect(wrapper.getByText("Select a category")).toBeVisible()
     }
   )
 })

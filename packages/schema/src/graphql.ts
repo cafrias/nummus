@@ -46,7 +46,7 @@ export type CreateBudgetInput = {
 
 export type CreateTransactionInput = {
   accountId: Scalars["ID"]
-  categoryId: Scalars["ID"]
+  categoryId?: Maybe<Scalars["ID"]>
   amount: Scalars["Int"]
   incoming: Scalars["Boolean"]
 }
@@ -136,7 +136,7 @@ export type Transaction = Record & {
   type: RecordType
   amount: Scalars["Int"]
   incoming: Scalars["Boolean"]
-  category: SpendCategory
+  category?: Maybe<SpendCategory>
 }
 
 export type Transfer = Record & {
@@ -306,7 +306,7 @@ export type TransactionResolvers<Context = any, ParentType = Transaction> = {
   type?: Resolver<RecordType, ParentType, Context>
   amount?: Resolver<Scalars["Int"], ParentType, Context>
   incoming?: Resolver<Scalars["Boolean"], ParentType, Context>
-  category?: Resolver<SpendCategory, ParentType, Context>
+  category?: Resolver<Maybe<SpendCategory>, ParentType, Context>
 }
 
 export type TransferResolvers<Context = any, ParentType = Transfer> = {

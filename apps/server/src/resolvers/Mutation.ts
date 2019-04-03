@@ -27,8 +27,8 @@ const Mutation: MutationResolvers<Context> = {
 
   async createBudget(_, { input }, { orm }) {
     const [currency, user] = await Promise.all([
-      orm.getRepository(Currency).findOneOrFail({ id: input.currencyCode }),
-      orm.getRepository(User).findOneOrFail({ id: input.userId }),
+      orm.getRepository(Currency).findOneOrFail(input.currencyCode),
+      orm.getRepository(User).findOneOrFail(input.userId),
     ])
 
     return orm.getRepository(Budget).save(
@@ -43,10 +43,12 @@ const Mutation: MutationResolvers<Context> = {
   async createTransaction(_, { input }, { orm }) {
     const [account, category] = await Promise.all([
       orm.getRepository(Account).findOneOrFail(input.accountId),
-      orm.getRepository(SpendCategory).findOneOrFail(input.categoryId),
+      orm
+        .getRepository(SpendCategory)
+        .findOne({ where: { id: input.categoryId } }),
     ])
 
-    return orm.getRepository(Transaction).save(
+    const trans = await orm.getRepository(Transaction).save(
       new Transaction({
         account,
         category,
@@ -54,6 +56,8 @@ const Mutation: MutationResolvers<Context> = {
         incoming: input.incoming,
       })
     )
+
+    return trans
   },
 
   async createTransfer(_, { input }, { orm }) {

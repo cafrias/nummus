@@ -78,7 +78,6 @@ const TransactionFormsCreate: React.SFC<
         const errors: FormikErrors<TransactionFormsCreateValues> = {}
         if (!values.account) errors.account = "Should select an origin account"
         if (values.amount <= 0) errors.amount = "Should be greater than 0"
-        if (!values.category) errors.category = "Select a category"
         return errors
       }}
     >
@@ -145,6 +144,7 @@ const TransactionFormsCreate: React.SFC<
                     id: "category",
                     label: "Category",
                     select: true,
+                    helperText: "If empty, it goes to 'To be budgeted'",
                     children: [
                       <option key={0} value="" />,
                       renderCategories(props.categories),

@@ -10,8 +10,8 @@ import { Account } from "./Account"
 // ---------------------------------------------------------------------------------------------------------------------
 @ChildEntity()
 export class Transaction extends Record {
-  @ManyToOne(type => SpendCategory)
-  category: SpendCategory
+  @ManyToOne(_ => SpendCategory, category => category.id, { nullable: true })
+  category?: SpendCategory
 
   constructor(input?: Partial<Transaction>) {
     super()
@@ -32,6 +32,8 @@ export const TransactionResolver: TransactionResolvers<Context> = {
     return orm.getRepository(Account).findOneOrFail(transaction.account)
   },
   category(transaction, _, { orm }) {
-    return orm.getRepository(SpendCategory).findOneOrFail(transaction.category)
+    return orm
+      .getRepository(SpendCategory)
+      .findOne({ where: { id: transaction.category } })
   },
 }

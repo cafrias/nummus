@@ -112,12 +112,12 @@ type Transaction implements Record {
   amount: Int!
   incoming: Boolean!
 
-  category: SpendCategory!
+  category: SpendCategory
 }
 
 input CreateTransactionInput {
   accountId: ID!
-  categoryId: ID!
+  categoryId: ID
   amount: Int!
   incoming: Boolean!
 }
