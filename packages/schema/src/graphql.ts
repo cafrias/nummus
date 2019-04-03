@@ -13,7 +13,7 @@ export type Account = {
   type: AccountType
   name: Scalars["String"]
   budget: Budget
-  initialBalance: Scalars["Int"]
+  balance: Scalars["Int"]
   records: Array<Record>
 }
 
@@ -29,6 +29,7 @@ export type Budget = {
   user: User
   currency: Currency
   accounts: Array<Account>
+  categories: Array<SpendCategory>
 }
 
 export type CreateAccountInput = {
@@ -93,9 +94,11 @@ export type MutationCreateTransferArgs = {
 export type Query = {
   accounts: Array<Account>
   budgets: Array<Budget>
-  spendCategories: Array<SpendCategory>
+  budget: Budget
   currencies: Array<Currency>
   me: User
+  spendCategories: Array<SpendCategory>
+  toBeBudgeted: Array<Transaction>
 }
 
 export type QueryAccountsArgs = {
@@ -104,6 +107,18 @@ export type QueryAccountsArgs = {
 
 export type QueryBudgetsArgs = {
   userId: Scalars["String"]
+}
+
+export type QueryBudgetArgs = {
+  budgetId: Scalars["ID"]
+}
+
+export type QuerySpendCategoriesArgs = {
+  budgetId: Scalars["ID"]
+}
+
+export type QueryToBeBudgetedArgs = {
+  budgetId: Scalars["ID"]
 }
 
 export type Record = {
@@ -123,6 +138,9 @@ export type SpendCategory = {
   id: Scalars["ID"]
   name: Scalars["String"]
   group: SpendGroup
+  budget: Budget
+  budgeted: Scalars["Int"]
+  transactions: Array<Transaction>
 }
 
 export enum SpendGroup {
@@ -227,7 +245,7 @@ export type AccountResolvers<Context = any, ParentType = Account> = {
   type?: Resolver<AccountType, ParentType, Context>
   name?: Resolver<Scalars["String"], ParentType, Context>
   budget?: Resolver<Budget, ParentType, Context>
-  initialBalance?: Resolver<Scalars["Int"], ParentType, Context>
+  balance?: Resolver<Scalars["Int"], ParentType, Context>
   records?: Resolver<Array<Record>, ParentType, Context>
 }
 
@@ -237,6 +255,7 @@ export type BudgetResolvers<Context = any, ParentType = Budget> = {
   user?: Resolver<User, ParentType, Context>
   currency?: Resolver<Currency, ParentType, Context>
   accounts?: Resolver<Array<Account>, ParentType, Context>
+  categories?: Resolver<Array<SpendCategory>, ParentType, Context>
 }
 
 export type CreateTransferOutputResolvers<
@@ -277,9 +296,21 @@ export type MutationResolvers<Context = any, ParentType = Mutation> = {
 export type QueryResolvers<Context = any, ParentType = Query> = {
   accounts?: Resolver<Array<Account>, ParentType, Context, QueryAccountsArgs>
   budgets?: Resolver<Array<Budget>, ParentType, Context, QueryBudgetsArgs>
-  spendCategories?: Resolver<Array<SpendCategory>, ParentType, Context>
+  budget?: Resolver<Budget, ParentType, Context, QueryBudgetArgs>
   currencies?: Resolver<Array<Currency>, ParentType, Context>
   me?: Resolver<User, ParentType, Context>
+  spendCategories?: Resolver<
+    Array<SpendCategory>,
+    ParentType,
+    Context,
+    QuerySpendCategoriesArgs
+  >
+  toBeBudgeted?: Resolver<
+    Array<Transaction>,
+    ParentType,
+    Context,
+    QueryToBeBudgetedArgs
+  >
 }
 
 export type RecordResolvers<Context = any, ParentType = Record> = {
@@ -298,6 +329,9 @@ export type SpendCategoryResolvers<
   id?: Resolver<Scalars["ID"], ParentType, Context>
   name?: Resolver<Scalars["String"], ParentType, Context>
   group?: Resolver<SpendGroup, ParentType, Context>
+  budget?: Resolver<Budget, ParentType, Context>
+  budgeted?: Resolver<Scalars["Int"], ParentType, Context>
+  transactions?: Resolver<Array<Transaction>, ParentType, Context>
 }
 
 export type TransactionResolvers<Context = any, ParentType = Transaction> = {

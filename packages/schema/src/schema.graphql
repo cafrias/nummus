@@ -2,12 +2,16 @@ type Query {
   accounts(budgetId: ID!): [Account!]!
 
   budgets(userId: String!): [Budget!]!
-
-  spendCategories: [SpendCategory!]!
+  budget(budgetId: ID!): Budget!
 
   currencies: [Currency!]!
 
   me: User!
+
+  spendCategories(budgetId: ID!): [SpendCategory!]!
+
+  # All transactions without `SpendCategory` defined
+  toBeBudgeted(budgetId: ID!): [Transaction!]!
 }
 
 type Mutation {
@@ -27,7 +31,7 @@ type Account {
   type: AccountType!
   name: String!
   budget: Budget!
-  initialBalance: Int!
+  balance: Int!
   records: [Record!]!
 }
 
@@ -63,6 +67,7 @@ type Budget {
   user: User!
   currency: Currency!
   accounts: [Account!]!
+  categories: [SpendCategory!]!
 }
 
 input CreateBudgetInput {
@@ -95,6 +100,9 @@ type SpendCategory {
   id: ID!
   name: String!
   group: SpendGroup!
+  budget: Budget!
+  budgeted: Int!
+  transactions: [Transaction!]!
 }
 
 enum SpendGroup {

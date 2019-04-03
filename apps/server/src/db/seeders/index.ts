@@ -59,13 +59,13 @@ function exec() {
       const accounts = {
         bank: new Account({
           budget,
-          initialBalance: 0,
+          balance: 0,
           name: "My bank account",
           type: AccountType.Bank,
         }),
         creditCard: new Account({
           budget,
-          initialBalance: -500,
+          balance: 0,
           name: "My credit card",
           type: AccountType.CreditCard,
         }),

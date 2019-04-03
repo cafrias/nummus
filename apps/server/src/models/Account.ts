@@ -25,7 +25,7 @@ export class Account {
   name: string
 
   @Column("int")
-  initialBalance: number
+  balance: number
 
   @ManyToOne(type => Budget, budget => budget.accounts)
   budget: Budget

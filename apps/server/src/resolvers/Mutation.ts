@@ -15,14 +15,32 @@ const Mutation: MutationResolvers<Context> = {
       orm.getRepository(Budget).findOneOrFail({ id: input.budgetId }),
     ])
 
-    return orm.getRepository(Account).save(
-      new Account({
-        budget,
-        initialBalance: input.initialBalance,
-        name: input.name,
-        type: input.type,
-      })
-    )
+    return orm.transaction(async tManager => {
+      const accountRepo = tManager.getRepository(Account)
+
+      const newAccount = await accountRepo.save(
+        new Account({
+          budget,
+          balance: 0,
+          name: input.name,
+          type: input.type,
+        })
+      )
+
+      if (input.initialBalance) {
+        await tManager.getRepository(Transaction).save(
+          new Transaction({
+            account: newAccount,
+            amount: Math.abs(input.initialBalance),
+            incoming: input.initialBalance > 0,
+          })
+        )
+        newAccount.balance = input.initialBalance
+        await accountRepo.save(newAccount)
+      }
+
+      return newAccount
+    })
   },
 
   async createBudget(_, { input }, { orm }) {
@@ -89,8 +107,6 @@ const Mutation: MutationResolvers<Context> = {
         return entityManager.save([outgoing, incoming])
       }
     )
-    console.log("origin: ", originTransfer.id)
-    console.log("destination: ", destinationTransfer.id)
 
     return {
       origin: originTransfer,
