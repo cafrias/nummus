@@ -94,7 +94,7 @@ export class BudgetsRecordsCreateTransactionInitQuery extends Query<
 > {
   static gql = gql`
     query BudgetsRecordsCreateTransactionInit($budgetId: ID!) {
-      spendCategories {
+      spendCategories(budgetId: $budgetId) {
         id
         name
         group

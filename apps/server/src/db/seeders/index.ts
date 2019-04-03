@@ -12,21 +12,6 @@ function exec() {
       const toSave = []
 
       //
-      // Categories
-      //
-      const categories = [
-        new SpendCategory({
-          name: "Electricity",
-          group: SpendGroup.ImmediateObligations,
-        }),
-        new SpendCategory({
-          name: "Internet",
-          group: SpendGroup.ImmediateObligations,
-        }),
-      ]
-      toSave.push(...categories)
-
-      //
       // User
       //
       const user = new User()
@@ -50,6 +35,23 @@ function exec() {
         user,
       })
       toSave.push(budget)
+
+      //
+      // Categories
+      //
+      const categories = [
+        new SpendCategory({
+          name: "Electricity",
+          group: SpendGroup.ImmediateObligations,
+          budget,
+        }),
+        new SpendCategory({
+          name: "Internet",
+          group: SpendGroup.ImmediateObligations,
+          budget,
+        }),
+      ]
+      toSave.push(...categories)
 
       //
       // Account

@@ -32,11 +32,12 @@ import { marshalMoney } from "~/utils/moneyMarshaler"
 // ---------------------------------------------------------------------------------------------------------------------
 // Mocked data
 // ---------------------------------------------------------------------------------------------------------------------
-const spendCategories: SpendCategory[] = [
+const spendCategories: Partial<SpendCategory>[] = [
   {
     id: "1",
     name: "Electric",
     group: SpendGroup.ImmediateObligations,
+    budgeted: 0,
   },
 ]
 

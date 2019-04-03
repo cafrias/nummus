@@ -10,6 +10,7 @@ import { Currency } from "./Currency"
 import { Account } from "./Account"
 import { BudgetResolvers } from "@nummus/schema"
 import { Context } from ".."
+import { SpendCategory } from "./SpendCategory"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Entity
@@ -31,6 +32,9 @@ export class Budget {
   @OneToMany(type => Account, account => account.budget)
   accounts: Account[]
 
+  @OneToMany(_ => SpendCategory, category => category.budget)
+  categories: SpendCategory[]
+
   constructor(input?: Partial<Budget>) {
     if (input) {
       for (const key in input) {
@@ -49,6 +53,11 @@ export const BudgetResolver: BudgetResolvers<Context> = {
   accounts(budget, _, { orm }) {
     return orm
       .getRepository(Account)
+      .find({ where: { budget: { id: budget.id } } })
+  },
+  categories(budget, _, { orm }) {
+    return orm
+      .getRepository(SpendCategory)
       .find({ where: { budget: { id: budget.id } } })
   },
   currency(budget, _, { orm }) {
