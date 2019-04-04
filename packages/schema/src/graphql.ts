@@ -28,6 +28,7 @@ export type Budget = {
   name: Scalars["String"]
   user: User
   currency: Currency
+  toBeBudgeted: Scalars["Int"]
   accounts: Array<Account>
   categories: Array<SpendCategory>
 }
@@ -98,7 +99,6 @@ export type Query = {
   currencies: Array<Currency>
   me: User
   spendCategories: Array<SpendCategory>
-  toBeBudgeted: Array<Transaction>
 }
 
 export type QueryAccountsArgs = {
@@ -114,10 +114,6 @@ export type QueryBudgetArgs = {
 }
 
 export type QuerySpendCategoriesArgs = {
-  budgetId: Scalars["ID"]
-}
-
-export type QueryToBeBudgetedArgs = {
   budgetId: Scalars["ID"]
 }
 
@@ -254,6 +250,7 @@ export type BudgetResolvers<Context = any, ParentType = Budget> = {
   name?: Resolver<Scalars["String"], ParentType, Context>
   user?: Resolver<User, ParentType, Context>
   currency?: Resolver<Currency, ParentType, Context>
+  toBeBudgeted?: Resolver<Scalars["Int"], ParentType, Context>
   accounts?: Resolver<Array<Account>, ParentType, Context>
   categories?: Resolver<Array<SpendCategory>, ParentType, Context>
 }
@@ -304,12 +301,6 @@ export type QueryResolvers<Context = any, ParentType = Query> = {
     ParentType,
     Context,
     QuerySpendCategoriesArgs
-  >
-  toBeBudgeted?: Resolver<
-    Array<Transaction>,
-    ParentType,
-    Context,
-    QueryToBeBudgetedArgs
   >
 }
 

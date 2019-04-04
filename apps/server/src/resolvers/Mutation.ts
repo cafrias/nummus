@@ -8,6 +8,7 @@ import { SpendCategory } from "~/models/SpendCategory"
 import { Transaction } from "~/models/Transaction"
 import { Record } from "~/models/Record"
 import { Transfer } from "~/models/Transfer"
+import { createTransaction } from "~/db/services/transaction"
 
 const Mutation: MutationResolvers<Context> = {
   async createAccount(_, { input }, { orm }) {
@@ -16,30 +17,23 @@ const Mutation: MutationResolvers<Context> = {
     ])
 
     return orm.transaction(async tManager => {
-      const accountRepo = tManager.getRepository(Account)
-
-      const newAccount = await accountRepo.save(
-        new Account({
-          budget,
-          balance: 0,
-          name: input.name,
-          type: input.type,
-        })
-      )
+      const newAccount = new Account({
+        budget,
+        balance: 0,
+        name: input.name,
+        type: input.type,
+      })
 
       if (input.initialBalance) {
-        await tManager.getRepository(Transaction).save(
-          new Transaction({
-            account: newAccount,
-            amount: Math.abs(input.initialBalance),
-            incoming: input.initialBalance > 0,
-          })
-        )
-        newAccount.balance = input.initialBalance
-        await accountRepo.save(newAccount)
+        const entities = await createTransaction({
+          account: newAccount,
+          amount: input.initialBalance,
+        })
+        await tManager.save(entities)
+        return entities[1]
       }
 
-      return newAccount
+      return tManager.save(newAccount)
     })
   },
 

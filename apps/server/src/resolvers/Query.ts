@@ -42,16 +42,16 @@ const Query: QueryResolvers<Context> = {
     return orm.manager.find(SpendCategory)
   },
 
-  async toBeBudgeted(obj, { budgetId }, { orm }) {
-    return orm
-      .getRepository(Transaction)
-      .createQueryBuilder("transaction")
-      .leftJoin("transaction.account", "account")
-      .leftJoin("account.budget", "budget")
-      .where("budget.id = :budgetId", { budgetId })
-      .andWhere("transaction.category IS NULL")
-      .getMany()
-  },
+  // async toBeBudgeted(obj, { budgetId }, { orm }) {
+  //   return orm
+  //     .getRepository(Transaction)
+  //     .createQueryBuilder("transaction")
+  //     .leftJoin("transaction.account", "account")
+  //     .leftJoin("account.budget", "budget")
+  //     .where("budget.id = :budgetId", { budgetId })
+  //     .andWhere("transaction.category IS NULL")
+  //     .getMany()
+  // },
 }
 
 export default Query

@@ -29,6 +29,11 @@ export class Budget {
   @ManyToOne(type => Currency)
   currency: Currency
 
+  @Column("int", {
+    default: 0,
+  })
+  toBeBudgeted: number
+
   @OneToMany(type => Account, account => account.budget)
   accounts: Account[]
 

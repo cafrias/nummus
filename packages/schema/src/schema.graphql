@@ -9,9 +9,6 @@ type Query {
   me: User!
 
   spendCategories(budgetId: ID!): [SpendCategory!]!
-
-  # All transactions without `SpendCategory` defined
-  toBeBudgeted(budgetId: ID!): [Transaction!]!
 }
 
 type Mutation {
@@ -66,6 +63,7 @@ type Budget {
   name: String!
   user: User!
   currency: Currency!
+  toBeBudgeted: Int!
   accounts: [Account!]!
   categories: [SpendCategory!]!
 }
