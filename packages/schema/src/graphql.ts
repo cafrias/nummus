@@ -136,6 +136,7 @@ export type SpendCategory = {
   group: SpendGroup
   budget: Budget
   budgeted: Scalars["Int"]
+  spent: Scalars["Int"]
   transactions: Array<Transaction>
 }
 
@@ -322,6 +323,7 @@ export type SpendCategoryResolvers<
   group?: Resolver<SpendGroup, ParentType, Context>
   budget?: Resolver<Budget, ParentType, Context>
   budgeted?: Resolver<Scalars["Int"], ParentType, Context>
+  spent?: Resolver<Scalars["Int"], ParentType, Context>
   transactions?: Resolver<Array<Transaction>, ParentType, Context>
 }
 

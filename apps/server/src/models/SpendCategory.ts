@@ -32,6 +32,11 @@ export class SpendCategory {
   })
   budgeted!: number
 
+  @Column({
+    default: 0,
+  })
+  spent: number
+
   @OneToMany(_ => Transaction, transaction => transaction.category)
   transactions: Transaction[]
 

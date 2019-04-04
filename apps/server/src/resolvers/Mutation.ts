@@ -25,7 +25,7 @@ const Mutation: MutationResolvers<Context> = {
       })
 
       if (input.initialBalance) {
-        const entities = await createTransaction({
+        const { entities } = await createTransaction({
           account: newAccount,
           amount: input.initialBalance,
         })
@@ -54,22 +54,29 @@ const Mutation: MutationResolvers<Context> = {
 
   async createTransaction(_, { input }, { orm }) {
     const [account, category] = await Promise.all([
-      orm.getRepository(Account).findOneOrFail(input.accountId),
+      orm
+        .getRepository(Account)
+        .findOneOrFail(input.accountId, { relations: ["budget"] }),
       orm
         .getRepository(SpendCategory)
         .findOne({ where: { id: input.categoryId } }),
     ])
 
-    const trans = await orm.getRepository(Transaction).save(
-      new Transaction({
-        account,
-        category,
-        amount: input.amount,
-        incoming: input.incoming,
-      })
-    )
+    const {
+      entities: [transaction, ...rest],
+      optionals,
+    } = await createTransaction({
+      account,
+      category,
+      amount: input.incoming ? input.amount : -input.amount,
+    })
+    const results = await Promise.all([
+      orm.manager.save(transaction),
+      orm.manager.save(rest),
+      optionals.category ? orm.manager.save(optionals.category) : undefined,
+    ])
 
-    return trans
+    return results[0]
   },
 
   async createTransfer(_, { input }, { orm }) {
