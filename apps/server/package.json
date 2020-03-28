@@ -24,6 +24,6 @@
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.0.6",
     "typeorm": "^0.2.16",
-    "@nummus/schema": "1.0.0"
+    "@nummus/engine": "1.0.0"
   }
 }
