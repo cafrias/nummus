@@ -19,11 +19,11 @@
     "tsconfig-paths": "^3.8.0"
   },
   "dependencies": {
+    "@nummus/engine": "1.0.0",
     "apollo-server": "^2.4.8",
-    "graphql": "^14.1.1",
+    "graphql": "^14.6.0",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.0.6",
-    "typeorm": "^0.2.16",
-    "@nummus/engine": "1.0.0"
+    "typeorm": "^0.2.16"
   }
 }
