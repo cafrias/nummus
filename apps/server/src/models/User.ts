@@ -4,6 +4,7 @@ import PasswordService from "../services/PasswordService"
 export interface IUser extends Document {
   email: string
   password: string
+  tokens: string[]
 }
 
 const UserSchema = new Schema(

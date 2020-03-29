@@ -34,6 +34,15 @@ export class UserEmailTaken extends ApolloError {
   }
 }
 
+export class InternalError extends ApolloError {
+  static CODE = "INTERNAL_SERVER_ERROR"
+
+  constructor() {
+    const message = "Internal Server Error"
+    super(message, InternalError.CODE)
+  }
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Resolver
 // ---------------------------------------------------------------------------------------------------------------------
@@ -44,22 +53,21 @@ export default async function signup(
   const user = new User(input)
 
   try {
-    await user.save()
     const token = JWTService.createToken<UserTokenPayload>({
       _id: user.id,
       email: user.email,
     })
+    user.tokens.push(token)
+    await user.save()
     return {
       user,
       token,
     }
   } catch (err) {
-    // TODO: handle duplicate email
-    // TODO: handle internal error
-  }
+    if (err.message.startsWith("E11000 duplicate key")) {
+      throw new UserEmailTaken(user)
+    }
 
-  return {
-    user: await user.save(),
-    token: "",
+    throw new InternalError()
   }
 }
