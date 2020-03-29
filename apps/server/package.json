@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon -e js -e ts -w src/ -x 'ts-node src/index.ts'",
-    "test": "babel-jest",
-    "test:watch": "babel-jest --watch --runInBand"
+    "test": "jest",
+    "test:watch": "jest --watch --runInBand"
   },
   "author": "Carlos Frias <carlos.a.frias@gmail.com>",
   "license": "ISC",
@@ -16,10 +16,12 @@
     "@babel/preset-typescript": "^7.9.0",
     "@types/bcrypt": "^3.0.0",
     "@types/jest": "^25.1.4",
+    "@types/jsonwebtoken": "^8.3.8",
     "@types/mongoose": "^5.7.8",
     "@types/node": "^13.9.5",
     "babel-jest": "^25.2.3",
     "jest": "^25.2.3",
+    "mongodb-memory-server": "^6.5.0",
     "node-ts": "^5.0.0",
     "nodemon": "^2.0.2",
     "ts-node": "^8.0.3",
@@ -30,6 +32,7 @@
     "apollo-server": "^2.4.8",
     "bcrypt": "^4.0.1",
     "graphql": "^14.6.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.6"
   }
 }
