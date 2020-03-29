@@ -1,7 +1,5 @@
-# Nummus Server
+# Nummus
 
-## DB commands
+> Server
 
-Seed database:
-
-    yarn db:seed
+The back-end of the Nummus application
