@@ -1,6 +1,8 @@
 import User, { IUser } from "../../models/User"
 import { ApolloError } from "apollo-server"
 import JWTService from "../../services/JWTService"
+import PasswordService from "../../services/PasswordService"
+import InternalError from "../../lib/errors/InternalError"
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Types
@@ -25,21 +27,36 @@ export interface UserTokenPayload {
 // ---------------------------------------------------------------------------------------------------------------------
 // Errors
 // ---------------------------------------------------------------------------------------------------------------------
-export class UserEmailTaken extends ApolloError {
-  static CODE = "USER_EMAIL_TAKEN"
-
-  constructor(user: IUser) {
-    const message = `Email ${user.email} is already taken`
-    super(message, UserEmailTaken.CODE)
+abstract class SignUpError extends ApolloError {
+  constructor(message: string, code: string) {
+    super(`Sign Up Error: ${message}`, code)
   }
 }
 
-export class InternalError extends ApolloError {
-  static CODE = "INTERNAL_SERVER_ERROR"
+export class SignUpEmailTakenError extends SignUpError {
+  static CODE = "SIGN_UP_EMAIL_TAKEN"
+
+  constructor(user: IUser) {
+    const message = `Email ${user.email} is already taken`
+    super(message, SignUpEmailTakenError.CODE)
+  }
+}
+
+export class SignUpWeakPasswordError extends SignUpError {
+  static CODE = "SIGN_UP_WEAK_PASSWORD"
 
   constructor() {
-    const message = "Internal Server Error"
-    super(message, InternalError.CODE)
+    const message = "Password is too weak"
+    super(message, SignUpWeakPasswordError.CODE)
+  }
+}
+
+export class SignUpInvalidEmailError extends SignUpError {
+  static CODE = "SIGN_UP_INVALID_EMAIL"
+
+  constructor() {
+    const message = "Email has invalid format"
+    super(message, SignUpInvalidEmailError.CODE)
   }
 }
 
@@ -47,7 +64,7 @@ export class InternalError extends ApolloError {
 // Resolver
 // ---------------------------------------------------------------------------------------------------------------------
 export default async function signup(
-  _,
+  _: any,
   { input }: SignupInput
 ): Promise<SignupOutput> {
   const user = new User(input)
@@ -64,8 +81,16 @@ export default async function signup(
       token,
     }
   } catch (err) {
+    if (err.message.startsWith("User validation failed: password")) {
+      throw new SignUpWeakPasswordError()
+    }
+
+    if (err.message.startsWith("User validation failed: email")) {
+      throw new SignUpInvalidEmailError()
+    }
+
     if (err.message.startsWith("E11000 duplicate key")) {
-      throw new UserEmailTaken(user)
+      throw new SignUpEmailTakenError(user)
     }
 
     throw new InternalError()

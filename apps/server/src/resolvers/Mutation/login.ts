@@ -7,7 +7,7 @@ interface LoginInput {
   }
 }
 
-export default async function login(_, { input }: LoginInput) {
+export default async function login(_: any, { input }: LoginInput) {
   try {
     const user = await User.find({
       email: input.email,
@@ -18,4 +18,4 @@ export default async function login(_, { input }: LoginInput) {
     // Something went wrong
     throw new Error("DO better with errors")
   }
-},
+}

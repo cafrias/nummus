@@ -1,5 +1,5 @@
 import { ApolloServer } from "apollo-server"
-import resolverMap from "./resolvers"
+import resolverMap from "./resolvers/index"
 
 import schema from "./schema/schema"
 import { getConnection } from "./db/db"
