@@ -1,3 +1,6 @@
+//
+// Shared TS config
+//
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,

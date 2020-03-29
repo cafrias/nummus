@@ -1,0 +1,17 @@
+{
+  "name": "@nummus/engine",
+  "version": "1.0.0",
+  "description": "Nummus | Business logic engine",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "postinstall": "npm run build",
+    "build": "npx tsc -p tsconfig.json"
+  },
+  "keywords": [],
+  "author": "Carlos Frias <carlos.a.frias@gmail.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}
