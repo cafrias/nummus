@@ -6,7 +6,7 @@ const schema = gql`
   }
 
   type Mutation {
-    createUser(input: CreateUserInput!): User!
+    signup(input: SignupInput!): SignupOutput!
     login(input: LoginInput!): LoginOutput!
   }
 
@@ -18,9 +18,14 @@ const schema = gql`
     email: String!
   }
 
-  input CreateUserInput {
+  input SignupInput {
     email: String!
     password: String!
+  }
+
+  type SignupOutput {
+    user: User!
+    token: String!
   }
 
   input LoginInput {
