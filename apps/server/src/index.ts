@@ -3,14 +3,22 @@ import resolverMap from "./resolvers/index"
 
 import schema from "./schema/schema"
 import { getConnection } from "./db/db"
+import AuthenticationService from "./services/AuthenticationService"
+import { Context } from "./global"
 
 getConnection()
   .then(connection => {
     const server = new ApolloServer({
       typeDefs: schema,
       resolvers: resolverMap,
-      context: {
-        db: connection,
+      async context({ req }): Promise<Context> {
+        const user = await AuthenticationService.getUserFromAuthHeader(
+          req.headers.authorization
+        )
+        return {
+          db: connection,
+          user,
+        }
       },
     })
 

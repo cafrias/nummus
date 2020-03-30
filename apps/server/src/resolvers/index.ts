@@ -1,4 +1,4 @@
-import Query from "./Query"
+import Query from "./Query/index"
 import Mutation from "./Mutation/index"
 
 const resolverMap = {
