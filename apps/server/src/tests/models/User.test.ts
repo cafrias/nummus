@@ -27,6 +27,9 @@ describe("User", () => {
       const password = "123456"
       const savingUser = {
         password,
+        isModified() {
+          return true
+        },
       }
       const preSave = userPreSave.bind(savingUser)
       await preSave()
@@ -35,6 +38,20 @@ describe("User", () => {
       expect(await PasswordService.compare(password, savingUser.password)).toBe(
         true
       )
+    })
+
+    it("when password did not change, do not re hash", async () => {
+      const password = "123456"
+      const savingUser = {
+        password,
+        isModified() {
+          return false
+        },
+      }
+      const preSave = userPreSave.bind(savingUser)
+      await preSave()
+
+      expect(savingUser.password).toBe(password)
     })
   })
 

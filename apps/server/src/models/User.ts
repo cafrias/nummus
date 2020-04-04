@@ -74,7 +74,9 @@ UserSchema.methods.removeToken = function removeToken(token: string) {
 // Middleware
 // -------------------------------------------------------------------------------------------------
 export async function userPreSave() {
-  this.password = await PasswordService.hashPassword(this.password)
+  if (this.isModified("password")) {
+    this.password = await PasswordService.hashPassword(this.password)
+  }
 }
 UserSchema.pre("save", userPreSave)
 
