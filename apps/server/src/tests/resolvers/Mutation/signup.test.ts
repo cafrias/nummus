@@ -10,16 +10,23 @@ import JWTService from "../../../services/JWTService"
 import PasswordService from "../../../services/PasswordService"
 import User from "../../../models/User"
 
+// -------------------------------------------------------------------------------------------------
+// Helpers
+// -------------------------------------------------------------------------------------------------
+async function cleanup() {
+  await User.deleteMany({})
+}
+
+// -------------------------------------------------------------------------------------------------
+// Suite
+// -------------------------------------------------------------------------------------------------
+
 describe("signup resolver", () => {
   const email = "user@example.com"
   const password = "12/31IsAGreatDate!"
 
   beforeAll(async () => {
     await getTestConnection()
-  })
-
-  beforeEach(async () => {
-    await User.deleteMany({})
   })
 
   it("when signup valid, returns correctly", async () => {
@@ -50,6 +57,8 @@ describe("signup resolver", () => {
 
     // Token is saved in model
     expect(fetchedUser.tokens).toContain(result.token)
+
+    return cleanup()
   })
 
   it("when email is already taken, fails", async () => {
@@ -70,6 +79,8 @@ describe("signup resolver", () => {
     await expect(signup({}, input)).rejects.toBeInstanceOf(
       SignUpEmailTakenError
     )
+
+    return cleanup()
   })
 
   it("when password is not strong, fails", async () => {

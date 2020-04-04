@@ -37,4 +37,23 @@ describe("User", () => {
       )
     })
   })
+
+  describe("removeToken", () => {
+    it("removes correctly", () => {
+      const newUser = new User({
+        email: "e@e.com",
+        password: "usKJHDlk!!1..",
+      })
+      const anotherToken = "myToken"
+      const targetToken = "targetToken"
+      const coolToken = "coolToken"
+      newUser.tokens = [anotherToken, targetToken, coolToken]
+
+      newUser.removeToken(targetToken)
+
+      expect(newUser.tokens).toHaveLength(2)
+      expect(newUser.tokens[0]).toBe(anotherToken)
+      expect(newUser.tokens[1]).toBe(coolToken)
+    })
+  })
 })

@@ -12,12 +12,16 @@ getConnection()
       typeDefs: schema,
       resolvers: resolverMap,
       async context({ req }): Promise<Context> {
-        const user = await AuthenticationService.getUserFromAuthHeader(
+        const [
+          user,
+          token,
+        ] = await AuthenticationService.getUserAndTokenFromAuthHeader(
           req.headers.authorization
         )
         return {
           db: connection,
           user,
+          token,
         }
       },
     })

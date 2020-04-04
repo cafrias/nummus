@@ -1,14 +1,17 @@
 import JWTService from "./JWTService"
 import { UserTokenPayload } from "../resolvers/Mutation/signup"
-import User from "../models/User"
+import User, { IUser } from "../models/User"
 import { Context } from "../global"
 
 import { AuthenticationError } from "apollo-server"
 
 class AuthenticationService {
-  async getUserFromAuthHeader(authHeader?: string) {
+  // TODO: add test
+  async getUserAndTokenFromAuthHeader(
+    authHeader?: string
+  ): Promise<[IUser | null, string | null]> {
     if (!authHeader) {
-      return null
+      return [null, null]
     }
 
     const token = authHeader.replace("Bearer ", "")
@@ -21,9 +24,9 @@ class AuthenticationService {
         tokens: { $elemMatch: { $eq: token } },
       })
 
-      return user
+      return [user, token]
     } catch (err) {
-      return null
+      return [null, null]
     }
   }
 

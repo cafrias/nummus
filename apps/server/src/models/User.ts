@@ -10,6 +10,8 @@ export interface IUser extends Document {
   email: string
   password: string
   tokens: string[]
+
+  removeToken(token: string): void
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -60,6 +62,13 @@ const UserSchema = new Schema(
     timestamps: true,
   }
 )
+
+UserSchema.methods.removeToken = function removeToken(token: string) {
+  const idx = (this.tokens as string[]).indexOf(token)
+  if (idx >= 0) {
+    ;(this.tokens as string[]).splice(idx, 1)
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // Middleware
